@@ -18,23 +18,22 @@ namespace DevilDaggersCustomLeaderboards
 
 		public static void Main()
 		{
-			FindWindow();
-
 			for (; ; )
 			{
-				Thread.Sleep(50);
-				Console.Clear();
+				FindWindow();
 
 				if (Process == null)
 				{
 					Console.WriteLine($"Process '{ProcessNameToFind}' not found");
-					FindWindow();
 					continue;
 				}
 
-				Console.WriteLine($"Scanning process '{Process.ProcessName}'");
+				Console.WriteLine($"Scanning process '{Process.ProcessName}' - {Process.MainWindowTitle}");
 
 				Scan();
+
+				Thread.Sleep(50);
+				Console.Clear();
 			}
 		}
 
@@ -67,11 +66,14 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static void OutputResult<T>(GameVariable<T> gameVariable) where T : struct
 		{
-			byte[] bytes = Memory.PointerRead(gameVariable, out _);
+			byte[] bytes = Memory.PointerRead(gameVariable, out int bytesRead);
+
+			Console.Write(gameVariable.Name.PadRight(30));
 			if (typeof(T) == typeof(float))
-				Console.WriteLine($"{gameVariable.Name.PadRight(30)}{BitConverter.ToSingle(bytes, 0)}");
+				Console.Write(BitConverter.ToSingle(bytes, 0));
 			else if (typeof(T) == typeof(int))
-				Console.WriteLine($"{gameVariable.Name.PadRight(30)}{Address.ToDec(Address.MakeAddress(bytes))}");
+				Console.Write(Address.ToDec(Address.MakeAddress(bytes)));
+			Console.WriteLine($"\t{bytesRead}");
 		}
 	}
 }
