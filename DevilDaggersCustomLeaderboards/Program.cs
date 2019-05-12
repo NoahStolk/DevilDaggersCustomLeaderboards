@@ -11,10 +11,10 @@ namespace DevilDaggersCustomLeaderboards
 		private static Process Process;
 		private static readonly Memory Memory = new Memory();
 
-		private static readonly GameVariable time = new GameVariable((IntPtr)0x001F8084, new int[] { 0x1A0 /*test*/ }, "Time", typeof(float));
-		private static readonly GameVariable homing = new GameVariable((IntPtr)0x001F8084, new int[] { 0x220B4B68 /*this address is different every time, taken from CE table for now*/}, "Homing", typeof(int));
-		private static readonly GameVariable gems = new GameVariable((IntPtr)0x001F8084, new int[] { 0x233C834C /*this address is different every time, taken from CE table for now*/}, "Gems", typeof(int));
-		private static readonly GameVariable daggersFired = new GameVariable((IntPtr)0x001F8084, new int[] { 0x012FF7CC /*this address is different every time, taken from CE table for now*/}, "Daggers Fired", typeof(int));
+		private static readonly GameVariable<float> time = new GameVariable<float>((IntPtr)0x001F8084, new int[] { 0x1A0 /*test*/ }, "Time");
+		private static readonly GameVariable<int> homing = new GameVariable<int>((IntPtr)0x001F8084, new int[] { 0x220B4B68 /*this address is different every time, taken from CE table for now*/}, "Homing");
+		private static readonly GameVariable<int> gems = new GameVariable<int>((IntPtr)0x001F8084, new int[] { 0x233C834C /*this address is different every time, taken from CE table for now*/}, "Gems");
+		private static readonly GameVariable<int> daggersFired = new GameVariable<int>((IntPtr)0x001F8084, new int[] { 0x012FF7CC /*this address is different every time, taken from CE table for now*/}, "Daggers Fired");
 
 		public static void Main()
 		{
@@ -65,12 +65,12 @@ namespace DevilDaggersCustomLeaderboards
 			OutputResult(daggersFired);
 		}
 
-		private static void OutputResult(GameVariable gameVariable)
+		private static void OutputResult<T>(GameVariable<T> gameVariable) where T : struct
 		{
 			byte[] bytes = Memory.PointerRead(gameVariable, out _);
-			if (gameVariable.Type == typeof(float))
+			if (typeof(T) == typeof(float))
 				Console.WriteLine($"{gameVariable.Name.PadRight(30)}{BitConverter.ToSingle(bytes, 0)}");
-			else if (gameVariable.Type == typeof(int))
+			else if (typeof(T) == typeof(int))
 				Console.WriteLine($"{gameVariable.Name.PadRight(30)}{Address.ToDec(Address.MakeAddress(bytes))}");
 		}
 	}

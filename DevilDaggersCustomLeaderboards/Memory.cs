@@ -34,9 +34,9 @@ namespace DevilDaggersCustomLeaderboards
 			return buffer;
 		}
 
-		public byte[] PointerRead(GameVariable gameVariable, out int bytesRead)
+		public byte[] PointerRead<T>(GameVariable<T> gameVariable, out int bytesRead) where T : struct
 		{
-			return PointerRead(gameVariable.ParentOffset, (uint)Marshal.SizeOf(gameVariable.Type), gameVariable.Offsets, out bytesRead);
+			return PointerRead(gameVariable.ParentOffset, (uint)Marshal.SizeOf(typeof(T)), gameVariable.Offsets, out bytesRead);
 		}
 
 		public byte[] PointerRead(IntPtr memoryAddress, uint bytesToRead, int[] offset, out int bytesRead)
