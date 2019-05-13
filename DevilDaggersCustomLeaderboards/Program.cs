@@ -4,6 +4,11 @@ using System.Threading;
 
 namespace DevilDaggersCustomLeaderboards
 {
+	/// <summary>
+	/// Handles the main program and GUI-related tasks.
+	/// Special Write methods are used to output to the console, as clearing the console after every update makes everything flicker which is ugly.
+	/// So instead of clearing the console using Console.Clear(), we just reset the cursor to the top-left, and then overwrite everything from the previous update using the special Write methods.
+	/// </summary>
 	public static class Program
 	{
 		public static void Main()
@@ -18,13 +23,13 @@ namespace DevilDaggersCustomLeaderboards
 
 				if (scanner.Memory.ReadProcess == null)
 				{
-					Console.WriteLine($"Process '{Scanner.ProcessNameToFind}' not found");
-					Thread.Sleep(50);
+					Write($"Process '{Scanner.ProcessNameToFind}' not found");
+					Thread.Sleep(1000);
 					Console.Clear();
 					continue;
 				}
 
-				Console.WriteLine($"Scanning process '{scanner.Memory.ReadProcess.ProcessName}' ({scanner.Memory.ReadProcess.MainWindowTitle})");
+				Write($"Scanning process '{scanner.Memory.ReadProcess.ProcessName}' ({scanner.Memory.ReadProcess.MainWindowTitle})");
 
 				scanner.Memory.Open();
 
@@ -42,7 +47,7 @@ namespace DevilDaggersCustomLeaderboards
 				Write("Replay", scanner.IsReplay);
 				Write();
 
-				Write("Accuracy", $"{scanner.DaggersHit.Value / (float)scanner.DaggersFired.Value * 100}%");
+				Write("Accuracy", $"{(scanner.DaggersHit.Value / (float)scanner.DaggersFired.Value * 100).ToString("0.00")}%");
 
 				Thread.Sleep(50);
 				Console.SetCursorPosition(0, 0);
