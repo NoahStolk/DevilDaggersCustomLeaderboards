@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DevilDaggersCustomLeaderboards
+namespace DevilDaggersCustomLeaderboards.MemoryHandling
 {
 	public class MemoryAPI
 	{

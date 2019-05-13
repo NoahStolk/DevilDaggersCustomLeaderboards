@@ -1,79 +1,72 @@
-﻿using System;
-using System.Diagnostics;
+﻿using DevilDaggersCustomLeaderboards.Variables;
+using System;
 using System.Threading;
 
 namespace DevilDaggersCustomLeaderboards
 {
 	public static class Program
 	{
-		private const string ProcessNameToFind = "dd";
-
-		private static Process Process;
-		private static readonly Memory Memory = new Memory();
-
-		private static readonly GameVariable<float> time = new GameVariable<float>((IntPtr)0x001F8084, new int[] { 0x1A0 /*test*/ }, "Time");
-		private static readonly GameVariable<int> homing = new GameVariable<int>((IntPtr)0x001F8084, new int[] { 0x220B4B68 /*this address is different every time, taken from CE table for now*/}, "Homing");
-		private static readonly GameVariable<int> gems = new GameVariable<int>((IntPtr)0x001F8084, new int[] { 0x233C834C /*this address is different every time, taken from CE table for now*/}, "Gems");
-		private static readonly GameVariable<int> daggersFired = new GameVariable<int>((IntPtr)0x001F8084, new int[] { 0x012FF7CC /*this address is different every time, taken from CE table for now*/}, "Daggers Fired");
-
 		public static void Main()
 		{
+			Console.CursorVisible = false;
+
+			Scanner scanner = Scanner.Instance;
+
 			for (; ; )
 			{
-				FindWindow();
+				scanner.FindWindow();
 
-				if (Process == null)
+				if (scanner.Memory.ReadProcess == null)
 				{
-					Console.WriteLine($"Process '{ProcessNameToFind}' not found");
+					Console.WriteLine($"Process '{Scanner.ProcessNameToFind}' not found");
+					Thread.Sleep(50);
+					Console.Clear();
 					continue;
 				}
 
-				Console.WriteLine($"Scanning process '{Process.ProcessName}' - {Process.MainWindowTitle}");
+				Console.WriteLine($"Scanning process '{scanner.Memory.ReadProcess.ProcessName}' ({scanner.Memory.ReadProcess.MainWindowTitle})");
 
-				Scan();
+				scanner.Memory.Open();
+
+				Write();
+				Write("PlayerID", scanner.PlayerID);
+				Write();
+
+				Write("Time", scanner.Time);
+				Write("Gems", scanner.Gems);
+				Write("Kills", scanner.Kills);
+				Write("Daggers Fired", scanner.DaggersFired);
+				Write("Daggers Hit", scanner.DaggersHit);
+				Write("Enemies Alive", scanner.EnemiesAlive);
+				Write("Alive", scanner.IsAlive);
+				Write("Replay", scanner.IsReplay);
+				Write();
+
+				Write("Accuracy", $"{scanner.DaggersHit.Value / (float)scanner.DaggersFired.Value * 100}%");
 
 				Thread.Sleep(50);
-				Console.Clear();
+				Console.SetCursorPosition(0, 0);
 			}
 		}
 
-		private static void FindWindow()
+		private static void Write<T>(string name, AbstractVariable<T> gameVariable)
 		{
-			foreach (Process proc in Process.GetProcesses())
-			{
-				if (proc.ProcessName.Contains(ProcessNameToFind))
-				{
-					Process = proc;
-					return;
-				}
-				else
-				{
-					Process = null;
-				}
-			}
+			Console.WriteLine($"{name.PadRight(20)}{gameVariable.ToString().PadRight(20)}");
 		}
 
-		private static void Scan()
+		private static void Write()
 		{
-			Memory.ReadProcess = Process;
-			Memory.Open();
-
-			OutputResult(time);
-			OutputResult(homing);
-			OutputResult(gems);
-			OutputResult(daggersFired);
+			Console.WriteLine(new string(' ', 40));
 		}
 
-		private static void OutputResult<T>(GameVariable<T> gameVariable) where T : struct
+		private static void Write(string text)
 		{
-			byte[] bytes = Memory.PointerRead(gameVariable, out int bytesRead);
+			Console.WriteLine(text.PadRight(40));
+		}
 
-			Console.Write(gameVariable.Name.PadRight(30));
-			if (typeof(T) == typeof(float))
-				Console.Write(BitConverter.ToSingle(bytes, 0));
-			else if (typeof(T) == typeof(int))
-				Console.Write(Address.ToDec(Address.MakeAddress(bytes)));
-			Console.WriteLine($"\t{bytesRead}");
+		private static void Write(string textLeft, string textRight)
+		{
+			Console.WriteLine($"{textLeft.PadRight(20)}{textRight.PadRight(20)}");
 		}
 	}
 }

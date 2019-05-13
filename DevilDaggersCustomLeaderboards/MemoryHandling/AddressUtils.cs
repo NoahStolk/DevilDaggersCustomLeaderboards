@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Globalization;
 
-namespace DevilDaggersCustomLeaderboards
+namespace DevilDaggersCustomLeaderboards.MemoryHandling
 {
-	public static class Address
+	/// <summary>
+	/// Provides some utility functions regarding addresses.
+	/// </summary>
+	public static class AddressUtils
 	{
 		public static string MakeAddress(byte[] buffer)
 		{

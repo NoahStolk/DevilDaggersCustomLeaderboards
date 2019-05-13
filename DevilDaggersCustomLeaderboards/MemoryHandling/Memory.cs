@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 
-namespace DevilDaggersCustomLeaderboards
+namespace DevilDaggersCustomLeaderboards.MemoryHandling
 {
 	public class Memory
 	{
@@ -34,11 +33,6 @@ namespace DevilDaggersCustomLeaderboards
 			return buffer;
 		}
 
-		public byte[] PointerRead<T>(GameVariable<T> gameVariable, out int bytesRead) where T : struct
-		{
-			return PointerRead(gameVariable.ParentOffset, (uint)Marshal.SizeOf(typeof(T)), gameVariable.Offsets, out bytesRead);
-		}
-
 		public byte[] PointerRead(IntPtr memoryAddress, uint bytesToRead, int[] offset, out int bytesRead)
 		{
 			int iPointerCount = offset.Length - 1;
@@ -50,7 +44,7 @@ namespace DevilDaggersCustomLeaderboards
 			if (iPointerCount == 0)
 			{
 				MemoryAPI.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
-				tempAddress = Address.ToDec(Address.MakeAddress(buffer)) + offset[0]; //Final Address
+				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[0]; //Final Address
 
 				buffer = new byte[bytesToRead];
 				MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
@@ -64,7 +58,7 @@ namespace DevilDaggersCustomLeaderboards
 				if (i == iPointerCount)
 				{
 					MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
-					tempAddress = Address.ToDec(Address.MakeAddress(buffer)) + offset[i]; //Final Address
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i]; //Final Address
 
 					buffer = new byte[bytesToRead];
 					MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
@@ -75,12 +69,12 @@ namespace DevilDaggersCustomLeaderboards
 				else if (i == 0)
 				{
 					MemoryAPI.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
-					tempAddress = Address.ToDec(Address.MakeAddress(buffer)) + offset[1];
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[1];
 				}
 				else
 				{
 					MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
-					tempAddress = Address.ToDec(Address.MakeAddress(buffer)) + offset[i];
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i];
 				}
 			}
 
@@ -104,11 +98,11 @@ namespace DevilDaggersCustomLeaderboards
 			if (iPointerCount == 0)
 			{
 				MemoryAPI.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
-				tempAddress = Address.ToDec(Address.MakeAddress(buffer)) + Offset[0]; //Final Address
+				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[0]; //Final Address
 				MemoryAPI.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
 
 				bytesWritten = ptrBytesWritten.ToInt32();
-				return Address.ToHex(tempAddress);
+				return AddressUtils.ToHex(tempAddress);
 			}
 
 			for (int i = 0; i <= iPointerCount; i++)
@@ -116,25 +110,25 @@ namespace DevilDaggersCustomLeaderboards
 				if (i == iPointerCount)
 				{
 					MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
-					tempAddress = Address.ToDec(Address.MakeAddress(buffer)) + Offset[i]; //Final Address
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[i]; //Final Address
 					MemoryAPI.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
 
 					bytesWritten = ptrBytesWritten.ToInt32();
-					return Address.ToHex(tempAddress);
+					return AddressUtils.ToHex(tempAddress);
 				}
 				else if (i == 0)
 				{
 					MemoryAPI.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
-					tempAddress = Address.ToDec(Address.MakeAddress(buffer)) + Offset[i];
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[i];
 				}
 				else
 				{
 					MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
-					tempAddress = Address.ToDec(Address.MakeAddress(buffer)) + Offset[i];
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[i];
 				}
 			}
 
-			return Address.ToHex(tempAddress);
+			return AddressUtils.ToHex(tempAddress);
 		}
 
 		public int PID()
@@ -144,7 +138,7 @@ namespace DevilDaggersCustomLeaderboards
 
 		public string BaseAddressH()
 		{
-			return Address.ToHex(ReadProcess.MainModule.BaseAddress.ToInt32());
+			return AddressUtils.ToHex(ReadProcess.MainModule.BaseAddress.ToInt32());
 		}
 
 		public int BaseAddressD()
