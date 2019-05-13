@@ -11,6 +11,9 @@ namespace DevilDaggersCustomLeaderboards
 	/// </summary>
 	public static class Program
 	{
+		private static bool wasAlive;
+		private static bool recording = true;
+
 		public static void Main()
 		{
 			Console.CursorVisible = false;
@@ -21,36 +24,67 @@ namespace DevilDaggersCustomLeaderboards
 			{
 				scanner.FindWindow();
 
-				if (scanner.Memory.ReadProcess == null)
+				if (scanner.Process == null)
 				{
-					Write($"Process '{Scanner.ProcessNameToFind}' not found");
+					Write($"Process '{Scanner.ProcessNameToFind}' not found. Retrying in a second.");
 					Thread.Sleep(1000);
 					Console.Clear();
 					continue;
 				}
 
-				Write($"Scanning process '{scanner.Memory.ReadProcess.ProcessName}' ({scanner.Memory.ReadProcess.MainWindowTitle})");
+				if (recording)
+				{
+					scanner.Memory.ReadProcess = scanner.Process;
+					scanner.Memory.Open();
 
-				scanner.Memory.Open();
+					Write($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
+					Write("Recording...");
+					Write();
 
-				Write();
-				Write("PlayerID", scanner.PlayerID);
-				Write();
+					Write("PlayerID", scanner.PlayerID);
+					Write();
 
-				Write("Time", scanner.Time);
-				Write("Gems", scanner.Gems);
-				Write("Kills", scanner.Kills);
-				Write("Daggers Fired", scanner.DaggersFired);
-				Write("Daggers Hit", scanner.DaggersHit);
-				Write("Enemies Alive", scanner.EnemiesAlive);
-				Write("Alive", scanner.IsAlive);
-				Write("Replay", scanner.IsReplay);
-				Write();
+					Write("Time", scanner.Time);
+					Write("Gems", scanner.Gems);
+					Write("Kills", scanner.Kills);
+					Write("Daggers Fired", scanner.DaggersFired);
+					Write("Daggers Hit", scanner.DaggersHit);
+					Write("Enemies Alive", scanner.EnemiesAlive);
+					Write("Alive", scanner.IsAlive);
+					Write("Replay", scanner.IsReplay);
+					Write();
 
-				Write("Accuracy", $"{(scanner.DaggersHit.Value / (float)scanner.DaggersFired.Value * 100).ToString("0.00")}%");
+					Write("Accuracy", $"{(scanner.DaggersHit.Value / (float)scanner.DaggersFired.Value * 100).ToString("0.00")}%");
 
-				Thread.Sleep(50);
-				Console.SetCursorPosition(0, 0);
+					Thread.Sleep(50);
+					Console.SetCursorPosition(0, 0);
+				}
+
+				if (!scanner.IsAlive.Value && wasAlive)
+				{
+					recording = false;
+					string hash = Utils.CalculateSurvivalHash();
+
+					if (hash == Utils.V3Hash)
+					{
+						Write("V3 found. Custom leaderboards disabled.");
+						Thread.Sleep(1000);
+						Console.Clear();
+
+						if (!wasAlive && scanner.IsAlive.Value)
+						{
+							recording = true;
+						}
+					}
+					else
+					{
+						Write("Uploading...");
+
+						// Block the thread because this is easy and doesn't matter anyway
+					}
+				}
+
+				wasAlive = scanner.IsAlive.Value;
 			}
 		}
 

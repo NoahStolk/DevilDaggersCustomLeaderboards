@@ -10,6 +10,7 @@ namespace DevilDaggersCustomLeaderboards
 		public const string ProcessNameToFind = "dd";
 		private const int Magic = 0x001F30C0;
 
+		public Process Process { get; set; }
 		public Memory Memory { get; private set; } = new Memory();
 
 		public IntVariable PlayerID { get; private set; } = new IntVariable(Magic, 0x5C);
@@ -36,12 +37,12 @@ namespace DevilDaggersCustomLeaderboards
 			{
 				if (proc.ProcessName.Contains(ProcessNameToFind))
 				{
-					Memory.ReadProcess = proc;
+					Process = proc;
 					return;
 				}
 				else
 				{
-					Memory.ReadProcess = null;
+					Process = null;
 				}
 			}
 		}
