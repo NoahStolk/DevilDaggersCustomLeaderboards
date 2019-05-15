@@ -13,9 +13,14 @@ namespace DevilDaggersCustomLeaderboards
 	/// </summary>
 	public static class Program
 	{
-		private static bool wasAlive;
-		private static bool recording = true;
 		private static readonly Scanner scanner = Scanner.Instance;
+		private static bool recording = true;
+
+		private static bool wasAlive;
+		public static int homing;
+		public static readonly float[] levelUpTimes = new float[3] { 0, 0, 0 };
+		private static int handCurrent = 1;
+		private static int handPrevious = 1;
 
 		public static void Main()
 		{
@@ -64,8 +69,13 @@ namespace DevilDaggersCustomLeaderboards
 					int levelGems = BitConverter.ToInt32(bytes);
 
 					bytes = scanner.Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
-					int homing = BitConverter.ToInt32(bytes);
-					Write("Level gems", levelGems.ToString());
+					homing = BitConverter.ToInt32(bytes);
+
+					handCurrent = GetHand(levelGems);
+					if (handCurrent > handPrevious)
+						levelUpTimes[handPrevious - 1] = scanner.Time.Value;
+
+					Write("Hand", handCurrent.ToString());
 					Write("Homing", homing.ToString());
 					Write();
 
@@ -107,7 +117,19 @@ namespace DevilDaggersCustomLeaderboards
 				}
 
 				wasAlive = scanner.IsAlive.Value;
+				handPrevious = handCurrent;
 			}
+		}
+
+		private static int GetHand(int gems)
+		{
+			if (gems < 10)
+				return 1;
+			if (gems < 70)
+				return 2;
+			if (gems == 70)
+				return 3;
+			return 4;
 		}
 
 		private static void Write<T>(string name, AbstractVariable<T> gameVariable, ConsoleColor color = ConsoleColor.White)

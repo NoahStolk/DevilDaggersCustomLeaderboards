@@ -23,7 +23,7 @@ namespace DevilDaggersCustomLeaderboards.Network
 				Scanner scanner = Scanner.Instance;
 
 				JsonResult jsonResult;
-				string query = $"spawnsetHash={Utils.CalculateSpawnsetHash()}&playerID={scanner.PlayerID}&username={scanner.PlayerName}&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing=0&levelUpTime2=0&levelUpTime3=0&levelUpTime4=0";
+				string query = $"spawnsetHash={Utils.CalculateSpawnsetHash()}&playerID={scanner.PlayerID}&username={scanner.PlayerName}&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing={Program.homing}&levelUpTime2={Program.levelUpTimes[0]}&levelUpTime3={Program.levelUpTimes[1]}&levelUpTime4={Program.levelUpTimes[2]}";
 				using (WebClient wc = new WebClient())
 				{
 					jsonResult = JsonConvert.DeserializeObject<JsonResult>(wc.DownloadString($"{BaseURL}/CustomLeaderboards/Upload?{query}"));
