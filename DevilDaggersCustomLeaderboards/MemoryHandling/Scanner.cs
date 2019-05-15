@@ -1,9 +1,8 @@
-﻿using DevilDaggersCustomLeaderboards.MemoryHandling;
-using DevilDaggersCustomLeaderboards.Variables;
+﻿using DevilDaggersCustomLeaderboards.Variables;
 using System;
 using System.Diagnostics;
 
-namespace DevilDaggersCustomLeaderboards
+namespace DevilDaggersCustomLeaderboards.MemoryHandling
 {
 	public sealed class Scanner
 	{
@@ -14,6 +13,7 @@ namespace DevilDaggersCustomLeaderboards
 		public Memory Memory { get; private set; } = new Memory();
 
 		public IntVariable PlayerID { get; private set; } = new IntVariable(Magic, 0x5C);
+		public StringVariable PlayerName { get; private set; } = new StringVariable(Magic, 0x60);
 		public FloatVariable Time { get; private set; } = new FloatVariable(Magic, 0x1A0);
 		public IntVariable Gems { get; private set; } = new IntVariable(Magic, 0x1C0);
 		public IntVariable Kills { get; private set; } = new IntVariable(Magic, 0x1BC);

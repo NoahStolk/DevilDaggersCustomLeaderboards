@@ -1,6 +1,7 @@
-﻿using DevilDaggersCustomLeaderboards.Variables;
+﻿using DevilDaggersCustomLeaderboards.MemoryHandling;
+using DevilDaggersCustomLeaderboards.Network;
+using DevilDaggersCustomLeaderboards.Variables;
 using System;
-using System.Net;
 using System.Threading;
 
 namespace DevilDaggersCustomLeaderboards
@@ -43,6 +44,7 @@ namespace DevilDaggersCustomLeaderboards
 					Write();
 
 					Write("PlayerID", scanner.PlayerID);
+					Write("Player name", scanner.PlayerName);
 					Write();
 
 					Write("Time", scanner.Time);
@@ -64,19 +66,23 @@ namespace DevilDaggersCustomLeaderboards
 				// If player just died
 				if (!scanner.IsAlive.Value && wasAlive)
 				{
-					Console.Clear();
 					recording = false;
-					Write("Uploading...");
 
-					// Block the thread because this is easy and doesn't matter anyway
-					string query = $"spawnsetHash={Utils.CalculateSpawnsetHash()}&playerID={scanner.PlayerID}&username=WIP&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing=0&levelUpTime2=0&levelUpTime3=0&levelUpTime4=0";
-					string jsonResult;
-					using (WebClient wc = new WebClient())
+					JsonResult jsonResult;
+					do
 					{
-						jsonResult = wc.DownloadString($"http://localhost:2963/CustomLeaderboards/Upload?{query}");
-					}
+						jsonResult = NetworkHandler.Instance.Upload();
+						Console.Clear();
+						Write("Uploading...");
 
-					Write(jsonResult);
+						Console.Clear();
+						if (jsonResult.success)
+							Write("Upload successful", ConsoleColor.Green);
+						else
+							Write("Upload failed", ConsoleColor.Red);
+						Write(jsonResult.message);
+					}
+					while (!jsonResult.success);
 				}
 
 				// On restart
@@ -90,9 +96,11 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		private static void Write<T>(string name, AbstractVariable<T> gameVariable)
+		private static void Write<T>(string name, AbstractVariable<T> gameVariable, ConsoleColor color = ConsoleColor.White)
 		{
+			Console.ForegroundColor = color;
 			Console.WriteLine($"{name.PadRight(20)}{gameVariable.ToString().PadRight(20)}");
+			Console.ForegroundColor = ConsoleColor.White;
 		}
 
 		private static void Write()
@@ -100,14 +108,18 @@ namespace DevilDaggersCustomLeaderboards
 			Console.WriteLine(new string(' ', 40));
 		}
 
-		private static void Write(string text)
+		private static void Write(string text, ConsoleColor color = ConsoleColor.White)
 		{
+			Console.ForegroundColor = color;
 			Console.WriteLine(text.PadRight(40));
+			Console.ForegroundColor = ConsoleColor.White;
 		}
 
-		private static void Write(string textLeft, string textRight)
+		private static void Write(string textLeft, string textRight, ConsoleColor color = ConsoleColor.White)
 		{
+			Console.ForegroundColor = color;
 			Console.WriteLine($"{textLeft.PadRight(20)}{textRight.PadRight(20)}");
+			Console.ForegroundColor = ConsoleColor.White;
 		}
 	}
 }
