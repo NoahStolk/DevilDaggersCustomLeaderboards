@@ -56,6 +56,19 @@ namespace DevilDaggersCustomLeaderboards
 					Write("Replay", scanner.IsReplay);
 					Write();
 
+					byte[] bytes = scanner.Memory.Read(scanner.Process.MainModule.BaseAddress + 0x001F8084, 4, out _);
+					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
+					bytes = scanner.Memory.Read(new IntPtr(ptr), 4, out _);
+					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
+					bytes = scanner.Memory.Read(new IntPtr(ptr) + 0x218, 4, out _);
+					int levelGems = BitConverter.ToInt32(bytes);
+
+					bytes = scanner.Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
+					int homing = BitConverter.ToInt32(bytes);
+					Write("Level gems", levelGems.ToString());
+					Write("Homing", homing.ToString());
+					Write();
+
 					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
 
 					Thread.Sleep(50);
