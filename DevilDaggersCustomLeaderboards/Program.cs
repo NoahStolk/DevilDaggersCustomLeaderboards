@@ -15,12 +15,11 @@ namespace DevilDaggersCustomLeaderboards
 	{
 		private static bool wasAlive;
 		private static bool recording = true;
+		private static readonly Scanner scanner = Scanner.Instance;
 
 		public static void Main()
 		{
 			Console.CursorVisible = false;
-
-			Scanner scanner = Scanner.Instance;
 
 			for (; ; )
 			{
@@ -57,7 +56,7 @@ namespace DevilDaggersCustomLeaderboards
 					Write("Replay", scanner.IsReplay);
 					Write();
 
-					Write("Accuracy", $"{(scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
+					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
 
 					Thread.Sleep(50);
 					Console.SetCursorPosition(0, 0);
@@ -81,6 +80,8 @@ namespace DevilDaggersCustomLeaderboards
 						else
 							Write("Upload failed", ConsoleColor.Red);
 						Write(jsonResult.message);
+
+						Thread.Sleep(500);
 					}
 					while (!jsonResult.success);
 				}
