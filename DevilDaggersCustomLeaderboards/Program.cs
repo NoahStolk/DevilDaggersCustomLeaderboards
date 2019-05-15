@@ -1,5 +1,6 @@
 ﻿using DevilDaggersCustomLeaderboards.Variables;
 using System;
+using System.Net;
 using System.Threading;
 
 namespace DevilDaggersCustomLeaderboards
@@ -60,28 +61,29 @@ namespace DevilDaggersCustomLeaderboards
 					Console.SetCursorPosition(0, 0);
 				}
 
+				// If player just died
 				if (!scanner.IsAlive.Value && wasAlive)
 				{
+					Console.Clear();
 					recording = false;
-					string hash = Utils.CalculateSurvivalHash();
+					Write("Uploading...");
 
-					if (hash == Utils.V3Hash)
+					// Block the thread because this is easy and doesn't matter anyway
+					string query = $"spawnsetHash={Utils.CalculateSpawnsetHash()}&playerID={scanner.PlayerID}&username=WIP&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing=0&levelUpTime2=0&levelUpTime3=0&levelUpTime4=0&submitDate={DateTime.Now}";
+					string jsonResult;
+					using (WebClient wc = new WebClient())
 					{
-						Write("V3 found. Custom leaderboards disabled.");
-						Thread.Sleep(1000);
-						Console.Clear();
-
-						if (!wasAlive && scanner.IsAlive.Value)
-						{
-							recording = true;
-						}
+						jsonResult = wc.DownloadString($"http://localhost:2963/CustomLeaderboards/Upload?{query}");
 					}
-					else
-					{
-						Write("Uploading...");
 
-						// Block the thread because this is easy and doesn't matter anyway
-					}
+					Write(jsonResult);
+				}
+
+				// On restart
+				if (scanner.IsAlive.Value && !wasAlive)
+				{
+					Console.Clear();
+					recording = true;
 				}
 
 				wasAlive = scanner.IsAlive.Value;
