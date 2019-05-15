@@ -69,7 +69,7 @@ namespace DevilDaggersCustomLeaderboards
 					Write("Uploading...");
 
 					// Block the thread because this is easy and doesn't matter anyway
-					string query = $"spawnsetHash={Utils.CalculateSpawnsetHash()}&playerID={scanner.PlayerID}&username=WIP&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing=0&levelUpTime2=0&levelUpTime3=0&levelUpTime4=0&submitDate={DateTime.Now}";
+					string query = $"spawnsetHash={Utils.CalculateSpawnsetHash()}&playerID={scanner.PlayerID}&username=WIP&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing=0&levelUpTime2=0&levelUpTime3=0&levelUpTime4=0";
 					string jsonResult;
 					using (WebClient wc = new WebClient())
 					{
