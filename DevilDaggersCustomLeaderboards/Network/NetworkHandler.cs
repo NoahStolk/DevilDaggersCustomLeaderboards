@@ -7,7 +7,8 @@ namespace DevilDaggersCustomLeaderboards.Network
 {
 	public sealed class NetworkHandler
 	{
-		private const string BaseURL = "http://localhost:2963";
+		//private const string BaseURL = "http://localhost:2963";
+		private const string BaseURL = "https://devildaggers.info";
 
 		private static readonly Lazy<NetworkHandler> lazy = new Lazy<NetworkHandler>(() => new NetworkHandler());
 		public static NetworkHandler Instance => lazy.Value;

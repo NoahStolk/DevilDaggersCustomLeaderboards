@@ -13,6 +13,8 @@ namespace DevilDaggersCustomLeaderboards
 	/// </summary>
 	public static class Program
 	{
+		private static readonly Version version = new Version(0, 1);
+
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
@@ -43,7 +45,7 @@ namespace DevilDaggersCustomLeaderboards
 					scanner.Memory.ReadProcess = scanner.Process;
 					scanner.Memory.Open();
 
-					Write($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
+					Write($"DevilDaggersCustomLeaderboards version {version}\n\nScanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
 					Write("Recording...");
 					Write();
 
