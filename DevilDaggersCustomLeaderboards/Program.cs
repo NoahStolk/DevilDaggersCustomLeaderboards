@@ -47,14 +47,14 @@ namespace DevilDaggersCustomLeaderboards
 					Write("Time", scanner.Time);
 					Write("Gems", scanner.Gems);
 					Write("Kills", scanner.Kills);
-					Write("Daggers Fired", scanner.DaggersFired);
-					Write("Daggers Hit", scanner.DaggersHit);
+					Write("Shots Hit", scanner.ShotsHit);
+					Write("Shots Fired", scanner.ShotsFired);
 					Write("Enemies Alive", scanner.EnemiesAlive);
 					Write("Alive", scanner.IsAlive);
 					Write("Replay", scanner.IsReplay);
 					Write();
 
-					Write("Accuracy", $"{(scanner.DaggersHit.Value / (float)scanner.DaggersFired.Value * 100).ToString("0.00")}%");
+					Write("Accuracy", $"{(scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
 
 					Thread.Sleep(50);
 					Console.SetCursorPosition(0, 0);

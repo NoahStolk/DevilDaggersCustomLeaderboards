@@ -10,7 +10,7 @@ namespace DevilDaggersCustomLeaderboards
 
 		public static string SurvivalFilePath = Path.Combine(Path.GetDirectoryName(Scanner.Instance.Process.MainModule.FileName), "dd", "survival");
 
-		public static string CalculateSurvivalHash()
+		public static string CalculateSpawnsetHash()
 		{
 			using (MD5 md5 = MD5.Create())
 			{

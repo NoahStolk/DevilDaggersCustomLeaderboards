@@ -18,8 +18,8 @@ namespace DevilDaggersCustomLeaderboards
 		public IntVariable Gems { get; private set; } = new IntVariable(Magic, 0x1C0);
 		public IntVariable Kills { get; private set; } = new IntVariable(Magic, 0x1BC);
 		public IntVariable DeathType { get; private set; } = new IntVariable(Magic, 0x1C4);
-		public IntVariable DaggersFired { get; private set; } = new IntVariable(Magic, 0x1B4);
-		public IntVariable DaggersHit { get; private set; } = new IntVariable(Magic, 0x1B8);
+		public IntVariable ShotsFired { get; private set; } = new IntVariable(Magic, 0x1B4);
+		public IntVariable ShotsHit { get; private set; } = new IntVariable(Magic, 0x1B8);
 		public IntVariable EnemiesAlive { get; private set; } = new IntVariable(Magic, 0x1FC);
 		public BoolVariable IsAlive { get; private set; } = new BoolVariable(Magic, 0x1A4);
 		public BoolVariable IsReplay { get; private set; } = new BoolVariable(Magic, 0x35D);
