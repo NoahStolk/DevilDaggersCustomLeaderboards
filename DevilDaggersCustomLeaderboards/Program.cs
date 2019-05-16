@@ -14,7 +14,7 @@ namespace DevilDaggersCustomLeaderboards
 	/// </summary>
 	public static class Program
 	{
-		private static readonly Version version = new Version(0, 1);
+		private static readonly Version version = new Version(0, 1, 0, 2);
 
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
