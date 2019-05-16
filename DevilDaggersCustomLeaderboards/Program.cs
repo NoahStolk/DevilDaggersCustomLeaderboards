@@ -2,6 +2,7 @@
 using DevilDaggersCustomLeaderboards.Network;
 using DevilDaggersCustomLeaderboards.Variables;
 using System;
+using System.Globalization;
 using System.Threading;
 
 namespace DevilDaggersCustomLeaderboards
@@ -27,6 +28,8 @@ namespace DevilDaggersCustomLeaderboards
 		public static void Main()
 		{
 			Console.CursorVisible = false;
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 
 			for (; ; )
 			{
@@ -80,6 +83,9 @@ namespace DevilDaggersCustomLeaderboards
 					Write("Hand", handCurrent.ToString());
 					Write("Homing", homing.ToString());
 					Write();
+
+					//Write("HASH", Utils.CalculateSpawnsetHash());
+					//Write();
 
 					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
 
