@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="MemoryHandling\AddressUtils.cs" />
     <Compile Include="MemoryHandling\Memory.cs" />
     <Compile Include="MemoryHandling\MemoryAPI.cs" />

@@ -2,7 +2,6 @@
 using DDCL.Network;
 using DDCL.Variables;
 using System;
-using System.Globalization;
 using System.Threading;
 
 namespace DDCL
@@ -14,8 +13,6 @@ namespace DDCL
 	/// </summary>
 	public static class Program
 	{
-		private static readonly Version version = new Version(0, 1, 0, 3);
-
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
@@ -32,11 +29,12 @@ namespace DDCL
 		public static void Main()
 		{
 			Console.CursorVisible = false;
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			Thread.CurrentThread.CurrentCulture = Constants.Culture;
+			Thread.CurrentThread.CurrentUICulture = Constants.Culture;
 
 			for (; ; )
 			{
+				Write($"DDCL {Constants.Version}\n");
 				scanner.FindWindow();
 
 				if (scanner.Process == null)
@@ -52,7 +50,7 @@ namespace DDCL
 					scanner.Memory.ReadProcess = scanner.Process;
 					scanner.Memory.Open();
 
-					Write($"DevilDaggersCustomLeaderboards version {version}\n\nScanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
+					Write($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
 					Write("Recording...");
 					Write();
 
