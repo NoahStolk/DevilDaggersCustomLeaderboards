@@ -143,13 +143,13 @@ namespace DDCL
 			}
 		}
 
-		private static int GetHand(int gems)
+		private static int GetHand(int levelGems)
 		{
-			if (gems < 10)
+			if (levelGems < 10)
 				return 1;
-			if (gems < 70)
+			if (levelGems < 70)
 				return 2;
-			if (gems == 70)
+			if (levelGems == 70)
 				return 3;
 			return 4;
 		}
