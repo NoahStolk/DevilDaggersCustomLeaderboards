@@ -13,6 +13,11 @@ namespace DDCL
 	/// </summary>
 	public static class Program
 	{
+		/// <summary>
+		/// I don't think you can die before 2.5 seconds in Devil Daggers unless there is no arena. This should fix the broken submissions that occasionally get sent for some reason.
+		/// </summary>
+		private const float MinimalTime = 2.5f;
+
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
@@ -100,7 +105,7 @@ namespace DDCL
 				}
 
 				// If player just died
-				if (!scanner.IsAlive.Value && wasAlive)
+				if (!scanner.IsAlive.Value && wasAlive && scanner.Time.Value > MinimalTime && scanner.PlayerID.Value > 0)
 				{
 					recording = false;
 
