@@ -11,13 +11,20 @@ namespace DDCL
 
 		public static string CalculateSpawnsetHash()
 		{
-			using (MD5 md5 = MD5.Create())
+			try
 			{
-				using (FileStream stream = File.OpenRead(SurvivalFilePath))
+				using (MD5 md5 = MD5.Create())
 				{
-					byte[] hash = md5.ComputeHash(stream);
-					return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+					using (FileStream stream = File.OpenRead(SurvivalFilePath))
+					{
+						byte[] hash = md5.ComputeHash(stream);
+						return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+					}
 				}
+			}
+			catch
+			{
+				return "";
 			}
 		}
 	}
