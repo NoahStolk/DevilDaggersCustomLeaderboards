@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevilDaggersCustomLeaderboards", "DevilDaggersCustomLeaderboards\DevilDaggersCustomLeaderboards.csproj", "{C7129686-D406-45FC-B8AD-24FEEE8D05D5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DDCL", "DDCL\DDCL.csproj", "{FD7FEA29-AB64-43B3-9CC6-09EC076E310C}"
 EndProject
 Global
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C7129686-D406-45FC-B8AD-24FEEE8D05D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7129686-D406-45FC-B8AD-24FEEE8D05D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7129686-D406-45FC-B8AD-24FEEE8D05D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7129686-D406-45FC-B8AD-24FEEE8D05D5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD7FEA29-AB64-43B3-9CC6-09EC076E310C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD7FEA29-AB64-43B3-9CC6-09EC076E310C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD7FEA29-AB64-43B3-9CC6-09EC076E310C}.Release|Any CPU.ActiveCfg = Release|Any CPU
