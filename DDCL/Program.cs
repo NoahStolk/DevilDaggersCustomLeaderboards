@@ -34,8 +34,10 @@ namespace DDCL
 
 			for (; ; )
 			{
-				Write($"DDCL {Constants.Version}\n");
 				scanner.FindWindow();
+
+				if (scanner.Process == null || recording)
+					Write($"DDCL {Constants.Version}\n");
 
 				if (scanner.Process == null)
 				{
