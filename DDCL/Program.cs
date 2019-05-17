@@ -25,7 +25,7 @@ namespace DDCL
 		public static int homing;
 
 		// TODO: Fix
-		public static readonly float[] levelUpTimes = new float[3] { 0, 0, 0 };
+		public static float[] levelUpTimes = new float[3] { 0, 0, 0 };
 
 		// TODO: Add previous variables for all game variables
 		private static int handCurrent = 1;
@@ -135,6 +135,7 @@ namespace DDCL
 				// TODO: Check for increasing time instead
 				if (!recording && scanner.IsAlive.Value && !wasAlive)
 				{
+					levelUpTimes = new float[3] { 0, 0, 0 };
 					Console.Clear();
 					recording = true;
 				}
