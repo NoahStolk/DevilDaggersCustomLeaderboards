@@ -105,7 +105,7 @@ namespace DDCL
 				}
 
 				// If player just died
-				if (!scanner.IsAlive.Value && wasAlive && scanner.Time.Value > MinimalTime && scanner.PlayerID.Value > 0)
+				if (!scanner.IsAlive.Value && wasAlive && scanner.Time.Value > MinimalTime && scanner.PlayerID.Value > 0 && !scanner.IsReplay.Value)
 				{
 					recording = false;
 
