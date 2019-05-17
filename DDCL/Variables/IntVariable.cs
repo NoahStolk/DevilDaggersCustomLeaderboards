@@ -7,7 +7,7 @@ namespace DDCL.Variables
 		public override int Value => BitConverter.ToInt32(GetBytes(), 0);
 
 		public IntVariable(int localBaseAddress, int offset)
-			: base(localBaseAddress, offset)
+			: base(localBaseAddress, offset, sizeof(int))
 		{
 		}
 	}

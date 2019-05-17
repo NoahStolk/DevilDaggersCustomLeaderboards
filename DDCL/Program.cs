@@ -84,6 +84,7 @@ namespace DDCL
 					handCurrent = GetHand(levelGems);
 					if (handCurrent > handPrevious)
 						levelUpTimes[handPrevious - 1] = scanner.Time.Value;
+					handPrevious = handCurrent;
 
 					Write("Hand", handCurrent.ToString());
 					Write("Homing", homing.ToString());
@@ -134,7 +135,6 @@ namespace DDCL
 				}
 
 				wasAlive = scanner.IsAlive.Value;
-				handPrevious = handCurrent;
 			}
 		}
 

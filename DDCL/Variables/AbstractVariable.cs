@@ -11,11 +11,13 @@ namespace DDCL.Variables
 
 		public int LocalBaseAddress { get; set; }
 		public int Offset { get; set; }
+		public uint Size { get; set; }
 
-		public AbstractVariable(int localBaseAddress, int offset)
+		public AbstractVariable(int localBaseAddress, int offset, uint size)
 		{
 			LocalBaseAddress = localBaseAddress;
 			Offset = offset;
+			Size = size;
 		}
 
 		/// <summary>
@@ -39,8 +41,7 @@ namespace DDCL.Variables
 				byte[] bytes = mem.Read(mem.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, PointerSize, out _);
 				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
 
-				// TODO: For strings, read until \0 (32 characters is max for usernames)
-				return mem.Read(new IntPtr(ptr) + Offset, PointerSize, out _);
+				return mem.Read(new IntPtr(ptr) + Offset, Size, out _);
 			}
 			catch
 			{

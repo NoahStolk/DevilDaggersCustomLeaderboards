@@ -14,7 +14,7 @@ namespace DDCL.MemoryHandling
 		public Memory Memory { get; private set; } = new Memory();
 
 		public IntVariable PlayerID { get; private set; } = new IntVariable(Magic, 0x5C);
-		public StringVariable PlayerName { get; private set; } = new StringVariable(Magic, 0x60);
+		public StringVariable PlayerName { get; private set; } = new StringVariable(Magic, 0x60, 32);
 		public FloatVariable Time { get; private set; } = new FloatVariable(Magic, 0x1A0);
 		public IntVariable Gems { get; private set; } = new IntVariable(Magic, 0x1C0);
 		public IntVariable Kills { get; private set; } = new IntVariable(Magic, 0x1BC);

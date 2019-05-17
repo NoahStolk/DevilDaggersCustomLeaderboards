@@ -7,7 +7,7 @@ namespace DDCL.Variables
 		public override float Value => BitConverter.ToSingle(GetBytes(), 0);
 
 		public FloatVariable(int localBaseAddress, int offset)
-			: base(localBaseAddress, offset)
+			: base(localBaseAddress, offset, sizeof(float))
 		{
 		}
 	}
