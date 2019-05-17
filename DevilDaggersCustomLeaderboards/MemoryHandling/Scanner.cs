@@ -6,7 +6,8 @@ namespace DevilDaggersCustomLeaderboards.MemoryHandling
 {
 	public sealed class Scanner
 	{
-		public const string ProcessNameToFind = "dd";
+		private const string ProcessNameToFind = "dd";
+		private const string ProcessMainWindowTitle = "Devil Daggers";
 		private const int Magic = 0x001F30C0;
 
 		public Process Process { get; set; }
@@ -33,16 +34,13 @@ namespace DevilDaggersCustomLeaderboards.MemoryHandling
 
 		public void FindWindow()
 		{
-			foreach (Process proc in Process.GetProcesses())
+			Process = null;
+			foreach (Process proc in Process.GetProcessesByName(ProcessNameToFind))
 			{
-				if (proc.ProcessName.Contains(ProcessNameToFind))
+				if (proc.MainWindowTitle == ProcessMainWindowTitle)
 				{
 					Process = proc;
 					return;
-				}
-				else
-				{
-					Process = null;
 				}
 			}
 		}

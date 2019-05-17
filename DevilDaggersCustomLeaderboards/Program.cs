@@ -14,14 +14,18 @@ namespace DevilDaggersCustomLeaderboards
 	/// </summary>
 	public static class Program
 	{
-		private static readonly Version version = new Version(0, 1, 0, 2);
+		private static readonly Version version = new Version(0, 1, 0, 3);
 
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
 		private static bool wasAlive;
 		public static int homing;
+
+		// TODO: Fix
 		public static readonly float[] levelUpTimes = new float[3] { 0, 0, 0 };
+
+		// TODO: Add previous variables for all game variables
 		private static int handCurrent = 1;
 		private static int handPrevious = 1;
 
@@ -37,7 +41,7 @@ namespace DevilDaggersCustomLeaderboards
 
 				if (scanner.Process == null)
 				{
-					Write($"Process '{Scanner.ProcessNameToFind}' not found. Retrying in a second.");
+					Write($"Devil Daggers not found. Retrying in a second.");
 					Thread.Sleep(1000);
 					Console.Clear();
 					continue;
@@ -66,6 +70,7 @@ namespace DevilDaggersCustomLeaderboards
 					Write("Replay", scanner.IsReplay);
 					Write();
 
+					// TODO: Clean up
 					byte[] bytes = scanner.Memory.Read(scanner.Process.MainModule.BaseAddress + 0x001F8084, 4, out _);
 					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
 					bytes = scanner.Memory.Read(new IntPtr(ptr), 4, out _);
@@ -84,8 +89,8 @@ namespace DevilDaggersCustomLeaderboards
 					Write("Homing", homing.ToString());
 					Write();
 
-					//Write("HASH", Utils.CalculateSpawnsetHash());
-					//Write();
+					Write("HASH", Utils.CalculateSpawnsetHash());
+					Write();
 
 					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
 
@@ -107,18 +112,22 @@ namespace DevilDaggersCustomLeaderboards
 
 						Console.Clear();
 						if (jsonResult.success)
+						{
 							Write("Upload successful", ConsoleColor.Green);
+							Write(jsonResult.message);
+						}
 						else
+						{
 							Write("Upload failed", ConsoleColor.Red);
-						Write(jsonResult.message);
-
-						Thread.Sleep(500);
+							Write(jsonResult.message);
+							Thread.Sleep(500);
+						}
 					}
 					while (!jsonResult.success);
 				}
 
-				// On restart
-				if (scanner.IsAlive.Value && !wasAlive)
+				// TODO: Check for increasing time instead
+				if (!recording && scanner.IsAlive.Value && !wasAlive)
 				{
 					Console.Clear();
 					recording = true;

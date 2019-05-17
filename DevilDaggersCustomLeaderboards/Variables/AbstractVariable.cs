@@ -39,6 +39,7 @@ namespace DevilDaggersCustomLeaderboards.Variables
 				byte[] bytes = mem.Read(mem.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, PointerSize, out _);
 				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
 
+				// TODO: For strings, read until \0 (32 characters is max for usernames)
 				return mem.Read(new IntPtr(ptr) + Offset, PointerSize, out _);
 			}
 			catch
