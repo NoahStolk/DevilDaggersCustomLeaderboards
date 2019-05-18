@@ -1,6 +1,5 @@
 ﻿using DDCL.MemoryHandling;
 using DDCL.Network;
-using DDCL.Variables;
 using System;
 using System.Threading;
 
@@ -42,7 +41,7 @@ namespace DDCL
 				scanner.FindWindow();
 
 				if (scanner.Process == null || recording)
-					Write($"DDCL {Constants.Version}\n");
+					Write($"DDCL {Utils.GetVersion()}\n");
 
 				if (scanner.Process == null)
 				{
