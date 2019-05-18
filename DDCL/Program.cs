@@ -84,6 +84,7 @@ namespace DDCL
 					// If player just died
 					if (!scanner.IsAlive.Value && scanner.IsAlive.ValuePrevious && scanner.Time.Value > MinimalTime && scanner.PlayerID.Value > 0 && !scanner.IsReplay.Value)
 					{
+						scanner.PrepareUpload();
 						recording = false;
 
 						JsonResult jsonResult;

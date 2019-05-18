@@ -27,11 +27,13 @@ namespace DDCL.MemoryHandling
 		public BoolVariable IsAlive { get; private set; } = new BoolVariable(Magic, 0x1A4);
 		public BoolVariable IsReplay { get; private set; } = new BoolVariable(Magic, 0x35D);
 
-		public int Homing { get; private set; }
+		public int HandPrevious { get; private set; } = 1;
+		public int Hand { get; private set; } = 1;
+
 		public float[] LevelUpTimes { get; private set; } = new float[3] { 0, 0, 0 };
 
-		public int HandPrevious = 1;
-		public int Hand = 1;
+		public int HomingPrevious { get; private set; }
+		public int Homing { get; private set; }
 
 		private static readonly Lazy<Scanner> lazy = new Lazy<Scanner>(() => new Scanner());
 		public static Scanner Instance => lazy.Value;
@@ -77,6 +79,7 @@ namespace DDCL.MemoryHandling
 				EnemiesAlive.PreScan();
 
 				HandPrevious = Hand;
+				HomingPrevious = Homing;
 			}
 
 			// Only scan death type when dead
@@ -129,6 +132,13 @@ namespace DDCL.MemoryHandling
 
 			if (Time.Value < 1)
 				SpawnsetHash = Utils.CalculateSpawnsetHash();
+		}
+
+		public void PrepareUpload()
+		{
+			// HACK
+			if (Homing == 0 && HomingPrevious > 30)
+				Homing = HomingPrevious;
 		}
 
 		public void Reset()
