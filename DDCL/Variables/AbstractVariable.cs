@@ -7,7 +7,9 @@ namespace DDCL.Variables
 	{
 		private const uint PointerSize = 4; // For 32-bit applications
 
-		public byte[] Bytes { get; private set; }
+		protected byte[] BytesPrevious { get; private set; }
+		protected byte[] Bytes { get; private set; }
+		public abstract T ValuePrevious { get; }
 		public abstract T Value { get; }
 
 		public int LocalBaseAddress { get; set; }
@@ -19,6 +21,14 @@ namespace DDCL.Variables
 			LocalBaseAddress = localBaseAddress;
 			Offset = offset;
 			Size = size;
+
+			BytesPrevious = new byte[Size];
+			Bytes = new byte[Size];
+		}
+
+		public void PreScan()
+		{
+			BytesPrevious = Bytes;
 		}
 
 		/// <summary>
@@ -41,10 +51,7 @@ namespace DDCL.Variables
 
 				Bytes = mem.Read(new IntPtr(ptr) + Offset, Size, out _);
 			}
-			catch
-			{
-				Bytes = new byte[4] { 0, 0, 0, 0 };
-			}
+			catch { }
 		}
 
 		public override string ToString()

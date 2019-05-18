@@ -13,6 +13,8 @@ namespace DDCL.MemoryHandling
 		public Process Process { get; set; }
 		public Memory Memory { get; private set; } = new Memory();
 
+		public string SpawnsetHash { get; private set; }
+
 		public IntVariable PlayerID { get; private set; } = new IntVariable(Magic, 0x5C);
 		public StringVariable PlayerName { get; private set; } = new StringVariable(Magic, 0x60, 32);
 		public FloatVariable Time { get; private set; } = new FloatVariable(Magic, 0x1A0);
@@ -45,19 +47,66 @@ namespace DDCL.MemoryHandling
 			}
 		}
 
+		public void PreScan()
+		{
+			// Always scan these values
+			PlayerID.PreScan();
+			PlayerName.PreScan();
+
+			// Stop scanning if it is a replay
+			IsReplay.PreScan();
+			if (IsReplay.Value)
+				return;
+
+			IsAlive.PreScan();
+			Time.PreScan();
+			Gems.PreScan();
+			Kills.PreScan();
+			ShotsFired.PreScan();
+			ShotsHit.PreScan();
+
+			// Enemy count might increase on death
+			if (IsAlive.Value)
+				EnemiesAlive.PreScan();
+
+			// Only scan death type when dead
+			if (!IsAlive.Value)
+				DeathType.PreScan();
+		}
+
 		public void Scan()
 		{
+			// Always scan these values
 			PlayerID.Scan();
 			PlayerName.Scan();
+
+			// Stop scanning if it is a replay
+			IsReplay.Scan();
+			if (IsReplay.Value)
+				return;
+
+			IsAlive.Scan();
 			Time.Scan();
 			Gems.Scan();
 			Kills.Scan();
-			DeathType.Scan();
 			ShotsFired.Scan();
 			ShotsHit.Scan();
-			EnemiesAlive.Scan();
-			IsAlive.Scan();
-			IsReplay.Scan();
+
+			// Enemy count might increase on death
+			if (IsAlive.Value)
+				EnemiesAlive.Scan();
+
+			// Only scan death type when dead
+			if (!IsAlive.Value)
+				DeathType.Scan();
+
+			if (Time.Value < 1)
+				SpawnsetHash = Utils.CalculateSpawnsetHash();
+		}
+
+		public void Reset()
+		{
+			SpawnsetHash = string.Empty;
 		}
 	}
 }

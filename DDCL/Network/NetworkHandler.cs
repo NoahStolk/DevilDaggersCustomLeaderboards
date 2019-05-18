@@ -22,7 +22,10 @@ namespace DDCL.Network
 			{
 				Scanner scanner = Scanner.Instance;
 
-				string query = $"spawnsetHash={Utils.CalculateSpawnsetHash()}&playerID={scanner.PlayerID}&username={scanner.PlayerName}&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing={Program.homing}&levelUpTime2={Program.levelUpTimes[0]}&levelUpTime3={Program.levelUpTimes[1]}&levelUpTime4={Program.levelUpTimes[2]}";
+				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
+					return new JsonResult(false, "Not the entire run has been recorded. Unable to validate.");
+
+				string query = $"spawnsetHash={scanner.SpawnsetHash}&playerID={scanner.PlayerID}&username={scanner.PlayerName}&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing={Program.homing}&levelUpTime2={Program.levelUpTimes[0]}&levelUpTime3={Program.levelUpTimes[1]}&levelUpTime4={Program.levelUpTimes[2]}";
 				using (WebClient wc = new WebClient())
 					return JsonConvert.DeserializeObject<JsonResult>(wc.DownloadString($"{BaseURL}/CustomLeaderboards/Upload?{query}"));
 			}

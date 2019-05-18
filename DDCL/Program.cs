@@ -20,7 +20,6 @@ namespace DDCL
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
-		private static bool wasAlive;
 		public static int homing;
 
 		// TODO: Fix
@@ -51,13 +50,14 @@ namespace DDCL
 					continue;
 				}
 
+				scanner.Memory.ReadProcess = scanner.Process;
+				scanner.Memory.Open();
+
+				scanner.PreScan();
+				scanner.Scan();
+
 				if (recording)
 				{
-					scanner.Memory.ReadProcess = scanner.Process;
-					scanner.Memory.Open();
-
-					scanner.Scan();
-
 					Write($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
 					Write("Recording...");
 					Write();
@@ -72,6 +72,7 @@ namespace DDCL
 					Write("Shots Hit", scanner.ShotsHit.Value.ToString());
 					Write("Shots Fired", scanner.ShotsFired.Value.ToString());
 					Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
+					Write("Death Type", scanner.DeathType.Value.ToString());
 					Write("Alive", scanner.IsAlive.Value.ToString());
 					Write("Replay", scanner.IsReplay.Value.ToString());
 					Write();
@@ -101,46 +102,47 @@ namespace DDCL
 
 					Thread.Sleep(50);
 					Console.SetCursorPosition(0, 0);
-				}
 
-				// If player just died
-				if (!scanner.IsAlive.Value && wasAlive && scanner.Time.Value > MinimalTime && scanner.PlayerID.Value > 0 && !scanner.IsReplay.Value)
-				{
-					recording = false;
-
-					JsonResult jsonResult;
-					do
+					// If player just died
+					if (!scanner.IsAlive.Value && scanner.IsAlive.ValuePrevious && scanner.Time.Value > MinimalTime && scanner.PlayerID.Value > 0 && !scanner.IsReplay.Value)
 					{
-						jsonResult = NetworkHandler.Instance.Upload();
-						Console.Clear();
-						Write("Uploading...");
+						recording = false;
 
-						Console.Clear();
-						if (jsonResult.success)
+						JsonResult jsonResult;
+						do
 						{
-							Write("Upload successful", ConsoleColor.Green);
-							Write(jsonResult.message);
+							Console.Clear();
+							Write("Uploading...");
+							jsonResult = NetworkHandler.Instance.Upload();
+							// Thread is being blocked
+
+							Console.Clear();
+							if (jsonResult.success)
+							{
+								Write("Upload successful", ConsoleColor.Green);
+								Write(jsonResult.message);
+
+								// OUTPUT VALUES or don't clear console
+							}
+							else
+							{
+								Write("Upload failed", ConsoleColor.Red);
+								Write(jsonResult.message);
+								Thread.Sleep(500);
+							}
 						}
-						else
-						{
-							Write("Upload failed", ConsoleColor.Red);
-							Write(jsonResult.message);
-							Thread.Sleep(500);
-						}
+						while (!jsonResult.success);
 					}
-					while (!jsonResult.success);
 				}
-
 				// TODO: Check for increasing time instead
-				if (!recording && scanner.IsAlive.Value && !wasAlive)
+				else if (scanner.IsAlive.Value && !scanner.IsAlive.ValuePrevious)
 				{
 					levelUpTimes = new float[3] { 0, 0, 0 };
 					homing = 0;
+					scanner.Reset();
 					Console.Clear();
 					recording = true;
 				}
-
-				wasAlive = scanner.IsAlive.Value;
 			}
 		}
 
