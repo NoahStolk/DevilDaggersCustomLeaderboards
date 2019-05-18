@@ -25,7 +25,7 @@ namespace DDCL.Network
 				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
 					return new JsonResult(false, "Not the entire run has been recorded. Unable to validate.");
 
-				string query = $"spawnsetHash={scanner.SpawnsetHash}&playerID={scanner.PlayerID}&username={scanner.PlayerName}&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing={scanner.Homing}&levelUpTime2={scanner.LevelUpTimes[0]}&levelUpTime3={scanner.LevelUpTimes[1]}&levelUpTime4={scanner.LevelUpTimes[2]}";
+				string query = $"spawnsetHash={scanner.SpawnsetHash}&playerID={scanner.PlayerID}&username={scanner.PlayerName}&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing={scanner.Homing}&levelUpTime2={scanner.LevelUpTimes[0]}&levelUpTime3={scanner.LevelUpTimes[1]}&levelUpTime4={scanner.LevelUpTimes[2]}&ddclClientVersion={Utils.GetVersion()}";
 				using (WebClient wc = new WebClient())
 					return JsonConvert.DeserializeObject<JsonResult>(wc.DownloadString($"{BaseURL}/CustomLeaderboards/Upload?{query}"));
 			}
