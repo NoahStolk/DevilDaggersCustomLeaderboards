@@ -61,18 +61,18 @@ namespace DDCL
 					Write("Recording...");
 					Write();
 
-					Write("PlayerID", scanner.PlayerID);
-					Write("Player name", scanner.PlayerName);
+					Write("PlayerID", scanner.PlayerID.Value.ToString());
+					Write("Player name", scanner.PlayerName.Value);
 					Write();
 
-					Write("Time", scanner.Time);
-					Write("Gems", scanner.Gems);
-					Write("Kills", scanner.Kills);
-					Write("Shots Hit", scanner.ShotsHit);
-					Write("Shots Fired", scanner.ShotsFired);
-					Write("Enemies Alive", scanner.EnemiesAlive);
-					Write("Alive", scanner.IsAlive);
-					Write("Replay", scanner.IsReplay);
+					Write("Time", scanner.Time.Value.ToString("0.0000"));
+					Write("Gems", scanner.Gems.Value.ToString());
+					Write("Kills", scanner.Kills.Value.ToString());
+					Write("Shots Hit", scanner.ShotsHit.Value.ToString());
+					Write("Shots Fired", scanner.ShotsFired.Value.ToString());
+					Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
+					Write("Alive", scanner.IsAlive.Value.ToString());
+					Write("Replay", scanner.IsReplay.Value.ToString());
 					Write();
 
 					// TODO: Clean up
@@ -93,9 +93,6 @@ namespace DDCL
 
 					Write("Hand", handCurrent.ToString());
 					Write("Homing", homing.ToString());
-					Write();
-
-					Write("HASH", Utils.CalculateSpawnsetHash());
 					Write();
 
 					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
@@ -153,13 +150,6 @@ namespace DDCL
 			if (levelGems == 70)
 				return 3;
 			return 4;
-		}
-
-		private static void Write<T>(string name, AbstractVariable<T> gameVariable, ConsoleColor color = ConsoleColor.White)
-		{
-			Console.ForegroundColor = color;
-			Console.WriteLine($"{name.PadRight(20)}{gameVariable.ToString().PadRight(20)}");
-			Console.ForegroundColor = ConsoleColor.White;
 		}
 
 		private static void Write()
