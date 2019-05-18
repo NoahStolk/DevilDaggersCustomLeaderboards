@@ -84,7 +84,9 @@ namespace DDCL
 					int levelGems = BitConverter.ToInt32(bytes, 0);
 
 					bytes = scanner.Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
-					homing = BitConverter.ToInt32(bytes, 0);
+					int homingVal = BitConverter.ToInt32(bytes, 0);
+					if (homing < homingVal)
+						homing = homingVal;
 
 					handCurrent = GetHand(levelGems);
 					if (handCurrent > handPrevious)
@@ -133,6 +135,7 @@ namespace DDCL
 				if (!recording && scanner.IsAlive.Value && !wasAlive)
 				{
 					levelUpTimes = new float[3] { 0, 0, 0 };
+					homing = 0;
 					Console.Clear();
 					recording = true;
 				}
