@@ -1,5 +1,6 @@
 ﻿using DDCL.MemoryHandling;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -10,7 +11,7 @@ namespace DDCL
 	public static class Utils
 	{
 		private static string version;
-		
+
 		public static string GetVersion()
 		{
 			if (string.IsNullOrEmpty(version))
@@ -39,5 +40,10 @@ namespace DDCL
 				return string.Empty;
 			}
 		}
+
+		public static List<string> Deaths = new List<string>()
+		{
+			"FALLEN", "SWARMED", "IMPALED", "GORED", "INFESTED", "OPENED", "PURGED", "DESECRATED", "SACRIFICED", "EVISCERATED", "ANNIHILATED", "INTOXICATED", "ENVENOMATED", "INCARNATED", "DISCARNATED", "BARBED"
+		};
 	}
 }

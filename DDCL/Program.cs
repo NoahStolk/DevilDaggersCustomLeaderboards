@@ -64,7 +64,7 @@ namespace DDCL
 					Write("Shots Fired", scanner.ShotsFired.Value.ToString());
 					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
 					Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
-					Write("Death Type", scanner.DeathType.Value.ToString());
+					Write("Death Type", Utils.Deaths[scanner.DeathType.Value]);
 					Write("Alive", scanner.IsAlive.Value.ToString());
 					Write("Replay", scanner.IsReplay.Value.ToString());
 					Write();
@@ -106,12 +106,12 @@ namespace DDCL
 								Write("Gems", scanner.Gems.Value.ToString());
 								Write("Kills", scanner.Kills.Value.ToString());
 								Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
-								Write("Death Type", scanner.DeathType.Value.ToString());
+								Write("Death Type", Utils.Deaths[scanner.DeathType.Value]);
 								Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
 								Write("Homing", scanner.Homing.ToString());
-								Write("Level 2", scanner.LevelUpTimes[0].ToString());
-								Write("Level 3", scanner.LevelUpTimes[1].ToString());
-								Write("Level 4", scanner.LevelUpTimes[2].ToString());
+								Write("Level 2", scanner.LevelUpTimes[0].ToString("0.0000"));
+								Write("Level 3", scanner.LevelUpTimes[1].ToString("0.0000"));
+								Write("Level 4", scanner.LevelUpTimes[2].ToString("0.0000"));
 							}
 							else
 							{
