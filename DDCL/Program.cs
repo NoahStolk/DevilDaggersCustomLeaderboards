@@ -56,6 +56,8 @@ namespace DDCL
 					scanner.Memory.ReadProcess = scanner.Process;
 					scanner.Memory.Open();
 
+					scanner.Scan();
+
 					Write($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
 					Write("Recording...");
 					Write();

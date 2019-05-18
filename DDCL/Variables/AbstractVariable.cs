@@ -7,6 +7,7 @@ namespace DDCL.Variables
 	{
 		private const uint PointerSize = 4; // For 32-bit applications
 
+		public byte[] Bytes { get; private set; }
 		public abstract T Value { get; }
 
 		public int LocalBaseAddress { get; set; }
@@ -23,16 +24,13 @@ namespace DDCL.Variables
 		/// <summary>
 		/// Gets the bytes for this <see cref="AbstractGameVariable"/>.
 		/// 
-		/// Explanation:
-		/// 
 		/// Process.MainModule.BaseAddress is where the process has its memory start point.
 		/// <see cref="LocalBaseAddress"/> bytes ahead of the process base address brings us to 4 bytes (32-bit application), which contain a memory address.
 		/// 
 		/// Use that memory address and add the <see cref="Offset"/> to it to get to the bytes that contain the actual value.
 		/// Note that in the second read the process's base address is not needed.
 		/// </summary>
-		/// <returns>The bytes read from the process's memory.</returns>
-		protected byte[] GetBytes()
+		public void Scan()
 		{
 			try
 			{
@@ -41,11 +39,11 @@ namespace DDCL.Variables
 				byte[] bytes = mem.Read(mem.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, PointerSize, out _);
 				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
 
-				return mem.Read(new IntPtr(ptr) + Offset, Size, out _);
+				Bytes = mem.Read(new IntPtr(ptr) + Offset, Size, out _);
 			}
 			catch
 			{
-				return new byte[4] { 0, 0, 0, 0 };
+				Bytes = new byte[4] { 0, 0, 0, 0 };
 			}
 		}
 

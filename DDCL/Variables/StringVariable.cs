@@ -8,7 +8,7 @@ namespace DDCL.Variables
 		{
 			get
 			{
-				string val = Encoding.UTF8.GetString(GetBytes());
+				string val = Encoding.UTF8.GetString(Bytes);
 				return val.Substring(0, val.IndexOf('\0'));
 			}
 		}

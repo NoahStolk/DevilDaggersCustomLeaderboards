@@ -44,5 +44,20 @@ namespace DDCL.MemoryHandling
 				}
 			}
 		}
+
+		public void Scan()
+		{
+			PlayerID.Scan();
+			PlayerName.Scan();
+			Time.Scan();
+			Gems.Scan();
+			Kills.Scan();
+			DeathType.Scan();
+			ShotsFired.Scan();
+			ShotsHit.Scan();
+			EnemiesAlive.Scan();
+			IsAlive.Scan();
+			IsReplay.Scan();
+		}
 	}
 }
