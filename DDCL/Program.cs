@@ -84,9 +84,8 @@ namespace DDCL
 					int levelGems = BitConverter.ToInt32(bytes, 0);
 
 					bytes = scanner.Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
-					int homingVal = BitConverter.ToInt32(bytes, 0);
-					if (homing < homingVal)
-						homing = homingVal;
+					if (scanner.IsAlive.Value)
+						homing = BitConverter.ToInt32(bytes, 0);
 
 					handCurrent = GetHand(levelGems);
 					if (handCurrent > handPrevious)
