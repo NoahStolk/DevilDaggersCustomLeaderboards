@@ -27,6 +27,12 @@ namespace DDCL.MemoryHandling
 		public BoolVariable IsAlive { get; private set; } = new BoolVariable(Magic, 0x1A4);
 		public BoolVariable IsReplay { get; private set; } = new BoolVariable(Magic, 0x35D);
 
+		public int Homing { get; private set; }
+		public float[] LevelUpTimes { get; private set; } = new float[3] { 0, 0, 0 };
+
+		public int HandPrevious = 1;
+		public int Hand = 1;
+
 		private static readonly Lazy<Scanner> lazy = new Lazy<Scanner>(() => new Scanner());
 		public static Scanner Instance => lazy.Value;
 
@@ -67,7 +73,11 @@ namespace DDCL.MemoryHandling
 
 			// Enemy count might increase on death
 			if (IsAlive.Value)
+			{
 				EnemiesAlive.PreScan();
+
+				HandPrevious = Hand;
+			}
 
 			// Only scan death type when dead
 			if (!IsAlive.Value)
@@ -92,9 +102,26 @@ namespace DDCL.MemoryHandling
 			ShotsFired.Scan();
 			ShotsHit.Scan();
 
-			// Enemy count might increase on death
 			if (IsAlive.Value)
+			{
+				// Enemy count might increase on death
 				EnemiesAlive.Scan();
+
+				// TODO: Clean up
+				byte[] bytes = Memory.Read(Process.MainModule.BaseAddress + 0x001F8084, 4, out _);
+				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
+				bytes = Memory.Read(new IntPtr(ptr), 4, out _);
+				ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
+				bytes = Memory.Read(new IntPtr(ptr) + 0x218, 4, out _);
+				int levelGems = BitConverter.ToInt32(bytes, 0);
+
+				bytes = Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
+				Homing = BitConverter.ToInt32(bytes, 0);
+
+				Hand = GetHand(levelGems);
+				if (Hand > HandPrevious)
+					LevelUpTimes[HandPrevious - 1] = Time.Value;
+			}
 
 			// Only scan death type when dead
 			if (!IsAlive.Value)
@@ -107,6 +134,19 @@ namespace DDCL.MemoryHandling
 		public void Reset()
 		{
 			SpawnsetHash = string.Empty;
+			
+			LevelUpTimes = new float[3] { 0, 0, 0 };
+		}
+
+		private int GetHand(int levelGems)
+		{
+			if (levelGems < 10)
+				return 1;
+			if (levelGems < 70)
+				return 2;
+			if (levelGems == 70)
+				return 3;
+			return 4;
 		}
 	}
 }

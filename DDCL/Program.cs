@@ -20,27 +20,18 @@ namespace DDCL
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
-		public static int homing;
-
-		// TODO: Fix
-		public static float[] levelUpTimes = new float[3] { 0, 0, 0 };
-
-		// TODO: Add previous variables for all game variables
-		private static int handCurrent = 1;
-		private static int handPrevious = 1;
-
 		public static void Main()
 		{
 			Console.CursorVisible = false;
+			Console.WindowHeight = 40;
+			Console.Title = $"Devil Daggers Custom Leaderboards - {Utils.GetVersion()}";
+
 			Thread.CurrentThread.CurrentCulture = Constants.Culture;
 			Thread.CurrentThread.CurrentUICulture = Constants.Culture;
 
 			for (; ; )
 			{
 				scanner.FindWindow();
-
-				if (scanner.Process == null || recording)
-					Write($"DDCL {Utils.GetVersion()}\n");
 
 				if (scanner.Process == null)
 				{
@@ -62,7 +53,7 @@ namespace DDCL
 					Write("Recording...");
 					Write();
 
-					Write("PlayerID", scanner.PlayerID.Value.ToString());
+					Write("Player ID", scanner.PlayerID.Value.ToString());
 					Write("Player name", scanner.PlayerName.Value);
 					Write();
 
@@ -71,34 +62,21 @@ namespace DDCL
 					Write("Kills", scanner.Kills.Value.ToString());
 					Write("Shots Hit", scanner.ShotsHit.Value.ToString());
 					Write("Shots Fired", scanner.ShotsFired.Value.ToString());
+					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
 					Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
 					Write("Death Type", scanner.DeathType.Value.ToString());
 					Write("Alive", scanner.IsAlive.Value.ToString());
 					Write("Replay", scanner.IsReplay.Value.ToString());
 					Write();
 
-					// TODO: Clean up
-					byte[] bytes = scanner.Memory.Read(scanner.Process.MainModule.BaseAddress + 0x001F8084, 4, out _);
-					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-					bytes = scanner.Memory.Read(new IntPtr(ptr), 4, out _);
-					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-					bytes = scanner.Memory.Read(new IntPtr(ptr) + 0x218, 4, out _);
-					int levelGems = BitConverter.ToInt32(bytes, 0);
-
-					bytes = scanner.Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
-					if (scanner.IsAlive.Value)
-						homing = BitConverter.ToInt32(bytes, 0);
-
-					handCurrent = GetHand(levelGems);
-					if (handCurrent > handPrevious)
-						levelUpTimes[handPrevious - 1] = scanner.Time.Value;
-					handPrevious = handCurrent;
-
-					Write("Hand", handCurrent.ToString());
-					Write("Homing", homing.ToString());
+					Write("Hand", scanner.Hand.ToString());
+					Write("Homing", scanner.Homing.ToString());
 					Write();
 
-					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
+					Write("Level 2", scanner.LevelUpTimes[0].ToString("0.0000"));
+					Write("Level 3", scanner.LevelUpTimes[1].ToString("0.0000"));
+					Write("Level 4", scanner.LevelUpTimes[2].ToString("0.0000"));
+					Write();
 
 					Thread.Sleep(50);
 					Console.SetCursorPosition(0, 0);
@@ -121,8 +99,19 @@ namespace DDCL
 							{
 								Write("Upload successful", ConsoleColor.Green);
 								Write(jsonResult.message);
+								Write();
 
-								// OUTPUT VALUES or don't clear console
+								Write("Player name", scanner.PlayerName.Value);
+								Write("Time", scanner.Time.Value.ToString("0.0000"));
+								Write("Gems", scanner.Gems.Value.ToString());
+								Write("Kills", scanner.Kills.Value.ToString());
+								Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
+								Write("Death Type", scanner.DeathType.Value.ToString());
+								Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
+								Write("Homing", scanner.Homing.ToString());
+								Write("Level 2", scanner.LevelUpTimes[0].ToString());
+								Write("Level 3", scanner.LevelUpTimes[1].ToString());
+								Write("Level 4", scanner.LevelUpTimes[2].ToString());
 							}
 							else
 							{
@@ -137,24 +126,11 @@ namespace DDCL
 				// TODO: Check for increasing time instead
 				else if (scanner.IsAlive.Value && !scanner.IsAlive.ValuePrevious)
 				{
-					levelUpTimes = new float[3] { 0, 0, 0 };
-					homing = 0;
 					scanner.Reset();
 					Console.Clear();
 					recording = true;
 				}
 			}
-		}
-
-		private static int GetHand(int levelGems)
-		{
-			if (levelGems < 10)
-				return 1;
-			if (levelGems < 70)
-				return 2;
-			if (levelGems == 70)
-				return 3;
-			return 4;
 		}
 
 		private static void Write()
