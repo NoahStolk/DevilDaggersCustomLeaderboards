@@ -161,9 +161,9 @@ namespace DDCL
 			}
 		}
 
-		private static int ClearAmount = 70;
-		private static int TextWidthLeft = 20;
-		private static int TextWidthRight = 20;
+		private static readonly int ClearAmount = 70;
+		private static readonly int TextWidthLeft = 20;
+		private static readonly int TextWidthRight = 20;
 
 		private static void Write()
 		{
