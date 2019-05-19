@@ -106,15 +106,16 @@ namespace DDCL
 						scanner.PrepareUpload();
 						recording = false;
 
+						int tries = 0;
 						JsonResult jsonResult;
 						do
 						{
 							Console.Clear();
-							Write("Uploading...");
+							Write("Uploading... Please wait for the upload to finish before restarting.");
+							Write();
 							jsonResult = NetworkHandler.Instance.Upload();
 							// Thread is being blocked by the upload
 
-							Console.Clear();
 							if (jsonResult.success)
 							{
 								Write("Upload successful", ConsoleColor.Green);
@@ -137,12 +138,18 @@ namespace DDCL
 							{
 								Write("Upload failed", ConsoleColor.Red);
 								Write(jsonResult.message);
+								string attempts = jsonResult.tryCount > 1 ? $"(attempt {++tries} / {jsonResult.tryCount})" : "";
+								Write($"Retrying {attempts}");
 								logger.Warn($"Upload failed - {jsonResult.message}");
 
 								Thread.Sleep(500);
 							}
 						}
-						while (!jsonResult.success);
+						while (!jsonResult.success && tries < jsonResult.tryCount);
+
+						Console.SetCursorPosition(0, 0);
+						Write("Ready to restart");
+						Write();
 					}
 				}
 				else if (scanner.IsAlive.Value && !scanner.IsAlive.ValuePrevious || scanner.Time.Value > scanner.Time.ValuePrevious)
