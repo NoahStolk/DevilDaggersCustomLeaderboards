@@ -51,7 +51,10 @@ namespace DDCL.Variables
 
 				Bytes = mem.Read(new IntPtr(ptr) + Offset, Size, out _);
 			}
-			catch { }
+			catch (Exception ex)
+			{
+				Program.logger.Error($"Error scanning {typeof(T)} variable", ex);
+			}
 		}
 
 		public override string ToString()

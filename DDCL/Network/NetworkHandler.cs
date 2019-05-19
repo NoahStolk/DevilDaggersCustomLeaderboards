@@ -31,6 +31,7 @@ namespace DDCL.Network
 			}
 			catch (Exception ex)
 			{
+				Program.logger.Error("Error trying to submit score", ex);
 				return new JsonResult(false, $"Error uploading score\n\nDetails:\n\n{ex}");
 			}
 		}

@@ -1,6 +1,8 @@
 ﻿using DDCL.MemoryHandling;
 using DDCL.Network;
+using log4net;
 using System;
+using System.Reflection;
 using System.Threading;
 
 namespace DDCL
@@ -19,6 +21,8 @@ namespace DDCL
 
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
+
+		public static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public static void Main()
 		{
@@ -118,6 +122,8 @@ namespace DDCL
 							{
 								Write("Upload failed", ConsoleColor.Red);
 								Write(jsonResult.message);
+								logger.Warn($"Upload failed - {jsonResult.message}");
+
 								Thread.Sleep(500);
 							}
 						}
