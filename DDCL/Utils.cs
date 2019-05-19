@@ -10,6 +10,11 @@ namespace DDCL
 {
 	public static class Utils
 	{
+		private static List<string> Deaths = new List<string>()
+		{
+			"FALLEN", "SWARMED", "IMPALED", "GORED", "INFESTED", "OPENED", "PURGED", "DESECRATED", "SACRIFICED", "EVISCERATED", "ANNIHILATED", "INTOXICATED", "ENVENOMATED", "INCARNATED", "DISCARNATED", "BARBED"
+		};
+
 		private static string version;
 
 		public static string GetVersion()
@@ -41,9 +46,11 @@ namespace DDCL
 			}
 		}
 
-		public static List<string> Deaths = new List<string>()
+		public static string GetDeathName(int value)
 		{
-			"FALLEN", "SWARMED", "IMPALED", "GORED", "INFESTED", "OPENED", "PURGED", "DESECRATED", "SACRIFICED", "EVISCERATED", "ANNIHILATED", "INTOXICATED", "ENVENOMATED", "INCARNATED", "DISCARNATED", "BARBED"
-		};
+			if (value < 0 || value > 15)
+				return "N/A";
+			return Deaths[value];
+		}
 	}
 }
