@@ -161,22 +161,26 @@ namespace DDCL
 			}
 		}
 
+		private static int ClearAmount = 70;
+		private static int TextWidthLeft = 20;
+		private static int TextWidthRight = 20;
+
 		private static void Write()
 		{
-			Console.WriteLine(new string(' ', 100));
+			Console.WriteLine(new string(' ', ClearAmount));
 		}
 
 		private static void Write(string text, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine(text.PadRight(100));
+			Console.WriteLine(text.PadRight(ClearAmount));
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
 		private static void Write(string textLeft, string textRight, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine($"{textLeft.PadRight(20)}{textRight.PadRight(20)}{new string(' ', 60)}");
+			Console.WriteLine($"{textLeft.PadRight(TextWidthLeft)}{textRight.PadRight(TextWidthRight)}{new string(' ', ClearAmount - TextWidthLeft - TextWidthRight)}");
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 	}
