@@ -15,10 +15,14 @@ namespace DDCL
 	/// </summary>
 	public static class Program
 	{
-		const int MF_BYCOMMAND = 0x00000000;
-		const int SC_MINIMIZE = 0xF020;
-		const int SC_MAXIMIZE = 0xF030;
-		const int SC_SIZE = 0xF000;
+		private static readonly int TextWidth = 70;
+		private static readonly int TextWidthLeft = 20;
+		private static readonly int TextWidthRight = 20;
+
+		private const int MF_BYCOMMAND = 0x00000000;
+		private const int SC_MINIMIZE = 0xF020;
+		private const int SC_MAXIMIZE = 0xF030;
+		private const int SC_SIZE = 0xF000;
 
 		[DllImport("user32.dll")]
 		public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
@@ -161,26 +165,22 @@ namespace DDCL
 			}
 		}
 
-		private static readonly int ClearAmount = 70;
-		private static readonly int TextWidthLeft = 20;
-		private static readonly int TextWidthRight = 20;
-
 		private static void Write()
 		{
-			Console.WriteLine(new string(' ', ClearAmount));
+			Console.WriteLine(new string(' ', TextWidth));
 		}
 
 		private static void Write(string text, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine(text.PadRight(ClearAmount));
+			Console.WriteLine(text.PadRight(TextWidth));
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
 		private static void Write(string textLeft, string textRight, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine($"{textLeft.PadRight(TextWidthLeft)}{textRight.PadRight(TextWidthRight)}{new string(' ', ClearAmount - TextWidthLeft - TextWidthRight)}");
+			Console.WriteLine($"{textLeft.PadRight(TextWidthLeft)}{textRight.PadRight(TextWidthRight)}{new string(' ', TextWidth - TextWidthLeft - TextWidthRight)}");
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 	}
