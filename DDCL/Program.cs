@@ -14,11 +14,6 @@ namespace DDCL
 	/// </summary>
 	public static class Program
 	{
-		/// <summary>
-		/// I don't think you can die before 2.5 seconds in Devil Daggers unless there is no arena. This should fix the broken submissions that occasionally get sent for some reason.
-		/// </summary>
-		private const float MinimalTime = 2.5f;
-
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
@@ -86,7 +81,7 @@ namespace DDCL
 					Console.SetCursorPosition(0, 0);
 
 					// If player just died
-					if (!scanner.IsAlive.Value && scanner.IsAlive.ValuePrevious && scanner.Time.Value > MinimalTime && scanner.PlayerID.Value > 0 && !scanner.IsReplay.Value)
+					if (!scanner.IsAlive.Value && scanner.IsAlive.ValuePrevious)
 					{
 						scanner.PrepareUpload();
 						recording = false;
@@ -97,7 +92,7 @@ namespace DDCL
 							Console.Clear();
 							Write("Uploading...");
 							jsonResult = NetworkHandler.Instance.Upload();
-							// Thread is being blocked
+							// Thread is being blocked by the upload
 
 							Console.Clear();
 							if (jsonResult.success)
@@ -130,8 +125,7 @@ namespace DDCL
 						while (!jsonResult.success);
 					}
 				}
-				// TODO: Check for increasing time instead
-				else if (scanner.IsAlive.Value && !scanner.IsAlive.ValuePrevious)
+				else if (scanner.IsAlive.Value && !scanner.IsAlive.ValuePrevious || scanner.Time.Value > scanner.Time.ValuePrevious)
 				{
 					scanner.Reset();
 					Console.Clear();

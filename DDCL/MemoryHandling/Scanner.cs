@@ -6,6 +6,8 @@ namespace DDCL.MemoryHandling
 {
 	public sealed class Scanner
 	{
+		public const float MaxHashTime = 1;
+
 		private const string ProcessNameToFind = "dd";
 		private const string ProcessMainWindowTitle = "Devil Daggers";
 		private const int Magic = 0x001F30C0;
@@ -55,13 +57,14 @@ namespace DDCL.MemoryHandling
 			}
 		}
 
+		/// <summary>
+		/// Used to set previous values for every <see cref="AbstractVariable{T}"/>. Must use the same order and logic as the <see cref="Scan"/> method.
+		/// </summary>
 		public void PreScan()
 		{
-			// Always scan these values
 			PlayerID.PreScan();
 			PlayerName.PreScan();
 
-			// Stop scanning if it is a replay
 			IsReplay.PreScan();
 			if (IsReplay.Value)
 				return;
@@ -73,7 +76,6 @@ namespace DDCL.MemoryHandling
 			ShotsFired.PreScan();
 			ShotsHit.PreScan();
 
-			// Enemy count might increase on death
 			if (IsAlive.Value)
 			{
 				EnemiesAlive.PreScan();
@@ -82,56 +84,62 @@ namespace DDCL.MemoryHandling
 				HomingPrevious = Homing;
 			}
 
-			// Only scan death type when dead
 			if (!IsAlive.Value)
 				DeathType.PreScan();
 		}
 
 		public void Scan()
 		{
-			// Always scan these values
-			PlayerID.Scan();
-			PlayerName.Scan();
-
-			// Stop scanning if it is a replay
-			IsReplay.Scan();
-			if (IsReplay.Value)
-				return;
-
-			IsAlive.Scan();
-			Time.Scan();
-			Gems.Scan();
-			Kills.Scan();
-			ShotsFired.Scan();
-			ShotsHit.Scan();
-
-			if (IsAlive.Value)
+			try
 			{
-				// Enemy count might increase on death
-				EnemiesAlive.Scan();
+				// Always scan these values
+				PlayerID.Scan();
+				PlayerName.Scan();
 
-				// TODO: Clean up
-				byte[] bytes = Memory.Read(Process.MainModule.BaseAddress + 0x001F8084, 4, out _);
-				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-				bytes = Memory.Read(new IntPtr(ptr), 4, out _);
-				ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-				bytes = Memory.Read(new IntPtr(ptr) + 0x218, 4, out _);
-				int levelGems = BitConverter.ToInt32(bytes, 0);
+				// Stop scanning if it is a replay
+				IsReplay.Scan();
+				if (IsReplay.Value)
+					return;
 
-				bytes = Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
-				Homing = BitConverter.ToInt32(bytes, 0);
+				IsAlive.Scan();
+				Time.Scan();
+				Gems.Scan();
+				Kills.Scan();
+				ShotsFired.Scan();
+				ShotsHit.Scan();
 
-				Hand = GetHand(levelGems);
-				if (Hand > HandPrevious)
-					LevelUpTimes[HandPrevious - 1] = Time.Value;
+				if (IsAlive.Value)
+				{
+					// Enemy count might increase on death
+					EnemiesAlive.Scan();
+
+					// TODO: Clean up
+					byte[] bytes = Memory.Read(Process.MainModule.BaseAddress + 0x001F8084, 4, out _);
+					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
+					bytes = Memory.Read(new IntPtr(ptr), 4, out _);
+					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
+					bytes = Memory.Read(new IntPtr(ptr) + 0x218, 4, out _);
+					int levelGems = BitConverter.ToInt32(bytes, 0);
+
+					bytes = Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
+					Homing = BitConverter.ToInt32(bytes, 0);
+
+					Hand = GetHand(levelGems);
+					if (Hand > HandPrevious)
+						LevelUpTimes[HandPrevious - 1] = Time.Value;
+				}
+
+				// Only scan death type when dead
+				if (!IsAlive.Value)
+					DeathType.Scan();
+
+				if (Time.Value < MaxHashTime)
+					SpawnsetHash = Utils.CalculateSpawnsetHash();
 			}
-
-			// Only scan death type when dead
-			if (!IsAlive.Value)
-				DeathType.Scan();
-
-			if (Time.Value < 1)
-				SpawnsetHash = Utils.CalculateSpawnsetHash();
+			catch (Exception ex)
+			{
+				Program.logger.Error("Scan failed", ex);
+			}
 		}
 
 		public void PrepareUpload()
@@ -144,7 +152,7 @@ namespace DDCL.MemoryHandling
 		public void Reset()
 		{
 			SpawnsetHash = string.Empty;
-			
+
 			LevelUpTimes = new float[3] { 0, 0, 0 };
 		}
 
