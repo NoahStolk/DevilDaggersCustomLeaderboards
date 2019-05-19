@@ -15,7 +15,7 @@ namespace DDCL.MemoryHandling
 		public Process Process { get; set; }
 		public Memory Memory { get; private set; } = new Memory();
 
-		public string SpawnsetHash { get; private set; }
+		public string SpawnsetHash { get; private set; } = string.Empty;
 
 		public IntVariable PlayerID { get; private set; } = new IntVariable(Magic, 0x5C);
 		public StringVariable PlayerName { get; private set; } = new StringVariable(Magic, 0x60, 32);
@@ -55,6 +55,13 @@ namespace DDCL.MemoryHandling
 					return;
 				}
 			}
+		}
+
+		public void RestartScan()
+		{
+			SpawnsetHash = string.Empty;
+
+			LevelUpTimes = new float[3] { 0, 0, 0 };
 		}
 
 		/// <summary>
@@ -147,13 +154,6 @@ namespace DDCL.MemoryHandling
 			// HACK
 			if (Homing == 0 && HomingPrevious > 30)
 				Homing = HomingPrevious;
-		}
-
-		public void Reset()
-		{
-			SpawnsetHash = string.Empty;
-
-			LevelUpTimes = new float[3] { 0, 0, 0 };
 		}
 
 		private int GetHand(int levelGems)

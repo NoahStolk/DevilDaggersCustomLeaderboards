@@ -158,9 +158,9 @@ namespace DDCL
 				}
 				else if (scanner.IsAlive.Value && !scanner.IsAlive.ValuePrevious || scanner.Time.Value > scanner.Time.ValuePrevious)
 				{
-					scanner.Reset();
 					Console.Clear();
 					recording = true;
+					scanner.RestartScan();
 				}
 			}
 		}
