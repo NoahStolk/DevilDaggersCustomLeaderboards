@@ -156,20 +156,20 @@ namespace DDCL
 
 		private static void Write()
 		{
-			Console.WriteLine(new string(' ', 40));
+			Console.WriteLine(new string(' ', 100));
 		}
 
 		private static void Write(string text, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine(text.PadRight(40));
+			Console.WriteLine(text.PadRight(100));
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
 		private static void Write(string textLeft, string textRight, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine($"{textLeft.PadRight(20)}{textRight.PadRight(20)}");
+			Console.WriteLine($"{textLeft.PadRight(20)}{textRight.PadRight(20)}{new string(' ', 60)}");
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 	}
