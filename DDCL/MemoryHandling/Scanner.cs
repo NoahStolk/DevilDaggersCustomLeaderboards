@@ -6,7 +6,7 @@ namespace DDCL.MemoryHandling
 {
 	public sealed class Scanner
 	{
-		public const float MaxHashTime = 1;
+		public const float MaxHashTime = 1.5f;
 
 		private const string ProcessNameToFind = "dd";
 		private const string ProcessMainWindowTitle = "Devil Daggers";
