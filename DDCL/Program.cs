@@ -128,8 +128,8 @@ namespace DDCL
 
 								Write("Player name", scanner.PlayerName.Value);
 								Write("Time", scanner.Time.Value.ToString("0.0000"));
-								Write("Gems", scanner.Gems.Value.ToString());
 								Write("Kills", scanner.Kills.Value.ToString());
+								Write("Gems", scanner.Gems.Value.ToString());
 								Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}% ({scanner.ShotsHit.Value} / {scanner.ShotsFired.Value})");
 								Write("Death Type", Utils.GetDeathName(scanner.DeathType.Value));
 								Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());

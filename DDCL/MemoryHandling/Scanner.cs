@@ -78,8 +78,8 @@ namespace DDCL.MemoryHandling
 
 			IsAlive.PreScan();
 			Time.PreScan();
-			Gems.PreScan();
 			Kills.PreScan();
+			Gems.PreScan();
 			ShotsFired.PreScan();
 			ShotsHit.PreScan();
 
@@ -110,8 +110,8 @@ namespace DDCL.MemoryHandling
 
 				IsAlive.Scan();
 				Time.Scan();
-				Gems.Scan();
 				Kills.Scan();
+				Gems.Scan();
 				ShotsFired.Scan();
 				ShotsHit.Scan();
 

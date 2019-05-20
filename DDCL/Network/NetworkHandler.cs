@@ -8,6 +8,7 @@ namespace DDCL.Network
 	public sealed class NetworkHandler
 	{
 		private const string BaseURL = "https://devildaggers.info";
+		//private const string BaseURL = "http://localhost:2963/";
 
 		/// <summary>
 		/// This should fix the broken submissions that occasionally get sent for some reason.
