@@ -29,12 +29,9 @@ namespace DDCL.MemoryHandling
 		public BoolVariable IsAlive { get; private set; } = new BoolVariable(Magic, 0x1A4);
 		public BoolVariable IsReplay { get; private set; } = new BoolVariable(Magic, 0x35D);
 
-		public int HandPrevious { get; private set; } = 1;
-		public int Hand { get; private set; } = 1;
-
 		public float[] LevelUpTimes { get; private set; } = new float[3] { 0, 0, 0 };
 
-		public int HomingPrevious { get; private set; }
+		public int LevelGems { get; private set; }
 		public int Homing { get; private set; }
 
 		private static readonly Lazy<Scanner> lazy = new Lazy<Scanner>(() => new Scanner());
@@ -84,12 +81,7 @@ namespace DDCL.MemoryHandling
 			ShotsHit.PreScan();
 
 			if (IsAlive.Value)
-			{
 				EnemiesAlive.PreScan();
-
-				HandPrevious = Hand;
-				HomingPrevious = Homing;
-			}
 
 			if (!IsAlive.Value)
 				DeathType.PreScan();
@@ -126,14 +118,17 @@ namespace DDCL.MemoryHandling
 					bytes = Memory.Read(new IntPtr(ptr), 4, out _);
 					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
 					bytes = Memory.Read(new IntPtr(ptr) + 0x218, 4, out _);
-					int levelGems = BitConverter.ToInt32(bytes, 0);
+					LevelGems = BitConverter.ToInt32(bytes, 0);
 
 					bytes = Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
 					Homing = BitConverter.ToInt32(bytes, 0);
 
-					Hand = GetHand(levelGems);
-					if (Hand > HandPrevious)
-						LevelUpTimes[HandPrevious - 1] = Time.Value;
+					if (LevelUpTimes[0] == 0 && LevelGems >= 10 && LevelGems < 70)
+						LevelUpTimes[0] = Time.Value;
+					if (LevelUpTimes[1] == 0 && LevelGems == 70)
+						LevelUpTimes[1] = Time.Value;
+					if (LevelUpTimes[2] == 0 && LevelGems == 71)
+						LevelUpTimes[2] = Time.Value;
 				}
 
 				// Only scan death type when dead
@@ -147,24 +142,6 @@ namespace DDCL.MemoryHandling
 			{
 				Program.logger.Error("Scan failed", ex);
 			}
-		}
-
-		public void PrepareUpload()
-		{
-			// HACK
-			if (Homing == 0 && HomingPrevious > 30)
-				Homing = HomingPrevious;
-		}
-
-		private int GetHand(int levelGems)
-		{
-			if (levelGems < 10)
-				return 1;
-			if (levelGems < 70)
-				return 2;
-			if (levelGems == 70)
-				return 3;
-			return 4;
 		}
 	}
 }

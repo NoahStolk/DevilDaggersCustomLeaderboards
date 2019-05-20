@@ -116,7 +116,18 @@ namespace DDCL
 					Write("Replay", scanner.IsReplay.Value.ToString());
 					Write();
 
-					Write("Hand", scanner.Hand.ToString());
+					Write("Hand", GetHand(scanner.LevelGems).ToString());
+					int GetHand(int levelGems)
+					{
+						if (levelGems < 10)
+							return 1;
+						if (levelGems < 70)
+							return 2;
+						if (levelGems == 70)
+							return 3;
+						return 4;
+					}
+
 					Write("Homing", scanner.Homing.ToString());
 					Write();
 
@@ -131,7 +142,6 @@ namespace DDCL
 					// If player just died
 					if (!scanner.IsAlive.Value && scanner.IsAlive.ValuePrevious)
 					{
-						scanner.PrepareUpload();
 						recording = false;
 
 						int tries = 0;
