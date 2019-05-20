@@ -128,7 +128,7 @@ namespace DDCL
 						return 4;
 					}
 
-					Write("Homing", scanner.Homing.ToString());
+					Write("Homing", $"{scanner.Homing} - ({string.Join(", ", scanner.HomingLog)})");
 					Write();
 
 					Write("Level 2", scanner.LevelUpTimes[0].ToString("0.0000"));
@@ -142,6 +142,7 @@ namespace DDCL
 					// If player just died
 					if (!scanner.IsAlive.Value && scanner.IsAlive.ValuePrevious)
 					{
+						scanner.PrepareUpload();
 						recording = false;
 
 						int tries = 0;
