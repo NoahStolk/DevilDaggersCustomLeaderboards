@@ -47,11 +47,35 @@ namespace DDCL
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 
-			Console.Title = $"Devil Daggers Custom Leaderboards - {Utils.GetVersion()}";
+			Console.Title = $"Devil Daggers Custom Leaderboards - {Utils.GetClientVersion()}";
 
 			Thread.CurrentThread.CurrentCulture = Constants.Culture;
 			Thread.CurrentThread.CurrentUICulture = Constants.Culture;
 
+			Write("Checking for updates...");
+
+			bool updateCheckSuccessful = NetworkHandler.Instance.GetVersionNumberFromServer();
+			Console.Clear();
+			if (updateCheckSuccessful)
+			{
+				if (Utils.GetClientVersion() < NetworkHandler.Instance.ServerVersionRequired)
+				{
+					Write("You are using an unsupported and outdated version of DDCL. Please update the program.\n(Press any key to continue.)", ConsoleColor.Red);
+					Console.ReadKey();
+				}
+				else if (Utils.GetClientVersion() < NetworkHandler.Instance.ServerVersion)
+				{
+					Write("An update for DDCL is available.\n(Press any key to continue.)", ConsoleColor.Yellow);
+					Console.ReadKey();
+				}
+			}
+			else
+			{
+				Write("Failed to check for updates.\n(Press any key to continue.)", ConsoleColor.Red);
+				Console.ReadKey();
+			}
+
+			Console.Clear();
 			for (; ; )
 			{
 				scanner.FindWindow();

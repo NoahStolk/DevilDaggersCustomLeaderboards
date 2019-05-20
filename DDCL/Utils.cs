@@ -10,21 +10,21 @@ namespace DDCL
 {
 	public static class Utils
 	{
-		private static List<string> Deaths = new List<string>()
+		private static readonly List<string> Deaths = new List<string>()
 		{
 			"FALLEN", "SWARMED", "IMPALED", "GORED", "INFESTED", "OPENED", "PURGED", "DESECRATED", "SACRIFICED", "EVISCERATED", "ANNIHILATED", "INTOXICATED", "ENVENOMATED", "INCARNATED", "DISCARNATED", "BARBED"
 		};
 
-		private static string version;
+		private static string clientVersion;
 
-		public static string GetVersion()
+		public static Version GetClientVersion()
 		{
-			if (string.IsNullOrEmpty(version))
+			if (string.IsNullOrEmpty(clientVersion))
 			{
 				Assembly assembly = Assembly.GetExecutingAssembly();
-				version = FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
+				clientVersion = FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
 			}
-			return version;
+			return Version.Parse(clientVersion);
 		}
 
 		public static string CalculateSpawnsetHash()
