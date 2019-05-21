@@ -177,8 +177,9 @@ namespace DDCL
 							{
 								Write("Upload failed", ConsoleColor.Red);
 								Write(jsonResult.message);
-								string attempts = jsonResult.tryCount > 1 ? $"(attempt {++tries} / {jsonResult.tryCount})" : "";
-								Write($"Retrying {attempts}");
+								tries++;
+								if (jsonResult.tryCount > 1)
+									Write($"Retrying (attempt {tries} / {jsonResult.tryCount})");
 								logger.Warn($"Upload failed - {jsonResult.message}");
 
 								Thread.Sleep(500);
