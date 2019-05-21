@@ -169,9 +169,9 @@ namespace DDCL
 								Write("Death Type", Utils.GetDeathName(scanner.DeathType.Value));
 								Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
 								Write("Homing", scanner.Homing.ToString());
-								Write("Level 2", scanner.LevelUpTimes[0].ToString("0.0000"));
-								Write("Level 3", scanner.LevelUpTimes[1].ToString("0.0000"));
-								Write("Level 4", scanner.LevelUpTimes[2].ToString("0.0000"));
+								Write("Level 2", scanner.LevelUpTimes[0] == 0 ? "N/A" : scanner.LevelUpTimes[0].ToString("0.0000"));
+								Write("Level 3", scanner.LevelUpTimes[1] == 0 ? "N/A" : scanner.LevelUpTimes[1].ToString("0.0000"));
+								Write("Level 4", scanner.LevelUpTimes[2] == 0 ? "N/A" : scanner.LevelUpTimes[2].ToString("0.0000"));
 							}
 							else
 							{
