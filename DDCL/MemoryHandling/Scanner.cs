@@ -19,7 +19,7 @@ namespace DDCL.MemoryHandling
 		public string SpawnsetHash { get; private set; } = string.Empty;
 
 		public IntVariable PlayerID { get; private set; } = new IntVariable(Magic, 0x5C);
-		public StringVariable PlayerName { get; private set; } = new StringVariable(Magic, 0x60, 32);
+		public StringVariable Username { get; private set; } = new StringVariable(Magic, 0x60, 32);
 		public FloatVariable Time { get; private set; } = new FloatVariable(Magic, 0x1A0);
 		public IntVariable Gems { get; private set; } = new IntVariable(Magic, 0x1C0);
 		public IntVariable Kills { get; private set; } = new IntVariable(Magic, 0x1BC);
@@ -70,7 +70,7 @@ namespace DDCL.MemoryHandling
 		public void PreScan()
 		{
 			PlayerID.PreScan();
-			PlayerName.PreScan();
+			Username.PreScan();
 
 			IsReplay.PreScan();
 			if (IsReplay.Value)
@@ -96,7 +96,7 @@ namespace DDCL.MemoryHandling
 			{
 				// Always scan these values
 				PlayerID.Scan();
-				PlayerName.Scan();
+				Username.Scan();
 
 				// Stop scanning if it is a replay
 				IsReplay.Scan();

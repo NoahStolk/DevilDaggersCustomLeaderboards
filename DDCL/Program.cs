@@ -101,7 +101,7 @@ namespace DDCL
 					Write();
 
 					Write("Player ID", scanner.PlayerID.Value.ToString());
-					Write("Player name", scanner.PlayerName.Value);
+					Write("Username", scanner.Username.Value);
 					Write();
 
 					Write("Time", scanner.Time.Value.ToString("0.0000"));
@@ -161,7 +161,7 @@ namespace DDCL
 								Write(jsonResult.message);
 								Write();
 
-								Write("Player name", scanner.PlayerName.Value);
+								Write("Username", scanner.Username.Value);
 								Write("Time", scanner.Time.Value.ToString("0.0000"));
 								Write("Kills", scanner.Kills.Value.ToString());
 								Write("Gems", scanner.Gems.Value.ToString());
