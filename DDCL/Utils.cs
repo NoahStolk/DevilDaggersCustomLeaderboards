@@ -1,10 +1,10 @@
 ﻿using DDCL.MemoryHandling;
+using DevilDaggersCore.Spawnset;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Security.Cryptography;
 
 namespace DDCL
 {
@@ -12,8 +12,30 @@ namespace DDCL
 	{
 		private static readonly List<string> Deaths = new List<string>()
 		{
-			"FALLEN", "SWARMED", "IMPALED", "GORED", "INFESTED", "OPENED", "PURGED", "DESECRATED", "SACRIFICED", "EVISCERATED", "ANNIHILATED", "INTOXICATED", "ENVENOMATED", "INCARNATED", "DISCARNATED", "BARBED"
+			"FALLEN",
+			"SWARMED",
+			"IMPALED",
+			"GORED",
+			"INFESTED",
+			"OPENED",
+			"PURGED",
+			"DESECRATED",
+			"SACRIFICED",
+			"EVISCERATED",
+			"ANNIHILATED",
+			"INTOXICATED",
+			"ENVENOMATED",
+			"INCARNATED",
+			"DISCARNATED",
+			"BARBED"
 		};
+
+		public static string GetDeathName(int value)
+		{
+			if (value < 0 || value > 15)
+				return "N/A";
+			return Deaths[value];
+		}
 
 		private static string clientVersion;
 
@@ -31,26 +53,16 @@ namespace DDCL
 		{
 			try
 			{
-				using (MD5 md5 = MD5.Create())
-				{
-					using (FileStream stream = File.OpenRead(Path.Combine(Path.GetDirectoryName(Scanner.Instance.Process.MainModule.FileName), "dd", "survival")))
-					{
-						byte[] hash = md5.ComputeHash(stream);
-						return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-					}
-				}
+				using (FileStream fs = new FileStream(Path.Combine(Path.GetDirectoryName(Scanner.Instance.Process.MainModule.FileName), "dd", "survival"), FileMode.Open, FileAccess.Read))
+					if (Spawnset.TryParse(fs, out Spawnset spawnsetObject))
+						return spawnsetObject.GetHashString();
+
+				return string.Empty;
 			}
 			catch
 			{
 				return string.Empty;
 			}
-		}
-
-		public static string GetDeathName(int value)
-		{
-			if (value < 0 || value > 15)
-				return "N/A";
-			return Deaths[value];
 		}
 	}
 }

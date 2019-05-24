@@ -79,6 +79,10 @@
       <Project>{E98B2475-E755-4E8D-9C15-AE20A235A3A9}</Project>
       <Name>AESBaseStandard</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\DevilDaggersCore\DevilDaggersCore\DevilDaggersCore.csproj">
+      <Project>{cff33512-4e7d-4035-b9ea-14ee9cefbeaf}</Project>
+      <Name>DevilDaggersCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

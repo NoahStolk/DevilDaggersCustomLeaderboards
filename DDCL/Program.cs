@@ -100,6 +100,8 @@ namespace DDCL
 					Write("Recording...");
 					Write();
 
+					Write("Spawnset Hash", scanner.SpawnsetHash);
+
 					Write("Player ID", scanner.PlayerID.Value.ToString());
 					Write("Username", scanner.Username.Value);
 					Write();
