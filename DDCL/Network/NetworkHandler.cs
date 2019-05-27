@@ -83,7 +83,7 @@ namespace DDCL.Network
 					}
 				}
 
-				Program.logger.Error("DDCL not found in API/GetToolVersions on the server.");
+				Program.logger.Error($"DDCL not found in {url}.");
 				return false;
 			}
 			catch (Exception ex)
