@@ -1,9 +1,12 @@
-﻿using DDCL.MemoryHandling;
+﻿using AESBaseStandard;
+using DDCL.MemoryHandling;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Web;
 
 namespace DDCL.Network
 {
@@ -46,9 +49,43 @@ namespace DDCL.Network
 				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
 					return new JsonResult(false, $"Not the entire run has been recorded. You must start recording before the timer reaches {Scanner.MaxHashTime.ToString("0.0000")}. Unable to validate.", 3);
 
-				string query = $"spawnsetHash={scanner.SpawnsetHash}&playerID={scanner.PlayerID}&username={scanner.Username}&time={scanner.Time}&gems={scanner.Gems}&kills={scanner.Kills}&deathType={scanner.DeathType}&shotsHit={scanner.ShotsHit}&shotsFired={scanner.ShotsFired}&enemiesAlive={scanner.EnemiesAlive}&homing={scanner.Homing}&levelUpTime2={scanner.LevelUpTimes[0]}&levelUpTime3={scanner.LevelUpTimes[1]}&levelUpTime4={scanner.LevelUpTimes[2]}&ddclClientVersion={Utils.GetClientVersion()}";
+				string toEncrypt = string.Join(";",
+					scanner.PlayerID.Value,
+					scanner.Username.Value,
+					scanner.Time.Value,
+					scanner.Gems.Value,
+					scanner.Kills.Value,
+					scanner.DeathType.Value,
+					scanner.ShotsHit.Value,
+					scanner.ShotsFired.Value,
+					scanner.EnemiesAlive.Value,
+					scanner.Homing,
+					string.Join(",", scanner.LevelUpTimes));
+				AesBase32Wrapper aes = new AesBase32Wrapper("4GDdtUpDelr2wIae", "xx7SXitvxQh4tJzn", "K0sfsKXLZKmKs929");
+				string validation = aes.EncryptAndEncode(toEncrypt);
+
+				List<string> queryValues = new List<string>
+				{
+					$"spawnsetHash={scanner.SpawnsetHash}",
+					$"playerID={scanner.PlayerID}",
+					$"username={scanner.Username}",
+					$"time={scanner.Time}",
+					$"gems={scanner.Gems}",
+					$"kills={scanner.Kills}",
+					$"deathType={scanner.DeathType}",
+					$"shotsHit={scanner.ShotsHit}",
+					$"shotsFired={scanner.ShotsFired}",
+					$"enemiesAlive={scanner.EnemiesAlive}",
+					$"homing={scanner.Homing}",
+					$"levelUpTime2={scanner.LevelUpTimes[0]}",
+					$"levelUpTime3={scanner.LevelUpTimes[1]}",
+					$"levelUpTime4={scanner.LevelUpTimes[2]}",
+					$"ddclClientVersion={Utils.GetClientVersion()}",
+					$"v={HttpUtility.HtmlEncode(validation)}"
+				};
+
 				using (WebClient wc = new WebClient())
-					return JsonConvert.DeserializeObject<JsonResult>(wc.DownloadString($"{BaseURL}/CustomLeaderboards/Upload?{query}"));
+					return JsonConvert.DeserializeObject<JsonResult>(wc.DownloadString($"{BaseURL}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
 			}
 			catch (Exception ex)
 			{
