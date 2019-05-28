@@ -1,6 +1,6 @@
-﻿using AESBaseStandard;
-using DDCL.MemoryHandling;
+﻿using DDCL.MemoryHandling;
 using Newtonsoft.Json;
+using NetBase.Encryption;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -75,13 +75,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AESBaseStandard\AESBaseStandard\AESBaseStandard.csproj">
-      <Project>{E98B2475-E755-4E8D-9C15-AE20A235A3A9}</Project>
-      <Name>AESBaseStandard</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\DevilDaggersCore\DevilDaggersCore\DevilDaggersCore.csproj">
       <Project>{cff33512-4e7d-4035-b9ea-14ee9cefbeaf}</Project>
       <Name>DevilDaggersCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NetBase\NetBase\NetBase.csproj">
+      <Project>{2bdf22b5-8006-4718-acc3-c1205c23e02e}</Project>
+      <Name>NetBase</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
