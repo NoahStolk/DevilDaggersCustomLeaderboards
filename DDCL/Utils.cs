@@ -1,5 +1,5 @@
 ﻿using DDCL.MemoryHandling;
-using DevilDaggersCore.Spawnset;
+using DevilDaggersCore.Spawnsets;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,6 +10,7 @@ namespace DDCL
 {
 	public static class Utils
 	{
+		// TODO: Use DevilDaggersCore
 		private static readonly List<string> Deaths = new List<string>()
 		{
 			"FALLEN",
@@ -30,6 +31,7 @@ namespace DDCL
 			"BARBED"
 		};
 
+		// TODO: Use DevilDaggersCore
 		public static string GetDeathName(int value)
 		{
 			if (value < 0 || value > 15)
