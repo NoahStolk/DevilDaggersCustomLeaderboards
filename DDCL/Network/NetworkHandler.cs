@@ -80,7 +80,7 @@ namespace DDCL.Network
 					$"levelUpTime2={scanner.LevelUpTimes[0]}",
 					$"levelUpTime3={scanner.LevelUpTimes[1]}",
 					$"levelUpTime4={scanner.LevelUpTimes[2]}",
-					$"ddclClientVersion={Utils.ClientVersion()}",
+					$"ddclClientVersion={Utils.ClientVersion}",
 					$"v={HttpUtility.HtmlEncode(validation)}"
 				};
 
