@@ -1,6 +1,8 @@
 ﻿using DDCL.MemoryHandling;
 using DDCL.Network;
+using DevilDaggersCore.Game;
 using log4net;
+using log4net.Config;
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -40,6 +42,8 @@ namespace DDCL
 
 		public static void Main()
 		{
+			XmlConfigurator.Configure();
+
 			Console.CursorVisible = false;
 			Console.WindowHeight = 40;
 
@@ -47,7 +51,7 @@ namespace DDCL
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 
-			Console.Title = $"Devil Daggers Custom Leaderboards - {Utils.GetClientVersion()}";
+			Console.Title = $"Devil Daggers Custom Leaderboards - {Utils.ClientVersion()}";
 
 			Thread.CurrentThread.CurrentCulture = Constants.Culture;
 			Thread.CurrentThread.CurrentUICulture = Constants.Culture;
@@ -58,12 +62,12 @@ namespace DDCL
 			Console.Clear();
 			if (updateCheckSuccessful)
 			{
-				if (Utils.GetClientVersion() < NetworkHandler.Instance.ServerVersionRequired)
+				if (Utils.ClientVersion() < NetworkHandler.Instance.ServerVersionRequired)
 				{
 					Write("You are using an unsupported and outdated version of DDCL. Please update the program.\n(Press any key to continue.)", ConsoleColor.Red);
 					Console.ReadKey();
 				}
-				else if (Utils.GetClientVersion() < NetworkHandler.Instance.ServerVersion)
+				else if (Utils.ClientVersion() < NetworkHandler.Instance.ServerVersion)
 				{
 					Write("An update for DDCL is available.\n(Press any key to continue.)", ConsoleColor.Yellow);
 					Console.ReadKey();
@@ -113,7 +117,7 @@ namespace DDCL
 					Write("Shots Fired", scanner.ShotsFired.Value.ToString());
 					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
 					Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
-					Write("Death Type", Utils.GetDeathName(scanner.DeathType.Value));
+					Write("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
 					Write("Alive", scanner.IsAlive.Value.ToString());
 					Write("Replay", scanner.IsReplay.Value.ToString());
 					Write();
@@ -168,7 +172,7 @@ namespace DDCL
 								Write("Kills", scanner.Kills.Value.ToString());
 								Write("Gems", scanner.Gems.Value.ToString());
 								Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value).ToString("0.00%")} ({scanner.ShotsHit.Value} / {scanner.ShotsFired.Value})");
-								Write("Death Type", Utils.GetDeathName(scanner.DeathType.Value));
+								Write("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
 								Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
 								Write("Homing", scanner.Homing.ToString());
 								Write("Level 2", scanner.LevelUpTimes[0] == 0 ? "N/A" : scanner.LevelUpTimes[0].ToString("0.0000"));

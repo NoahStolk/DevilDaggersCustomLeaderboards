@@ -38,13 +38,13 @@ namespace DDCL.MemoryHandling
 			int iPointerCount = offset.Length - 1;
 			IntPtr ptrBytesRead;
 			bytesRead = 0;
-			byte[] buffer = new byte[4]; //DWORD to hold an Address
+			byte[] buffer = new byte[4]; // DWORD to hold an Address
 			int tempAddress = 0;
 
 			if (iPointerCount == 0)
 			{
 				MemoryAPI.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
-				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[0]; //Final Address
+				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[0]; // Final Address
 
 				buffer = new byte[bytesToRead];
 				MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
@@ -58,7 +58,7 @@ namespace DDCL.MemoryHandling
 				if (i == iPointerCount)
 				{
 					MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
-					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i]; //Final Address
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i]; // Final Address
 
 					buffer = new byte[bytesToRead];
 					MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
@@ -92,13 +92,13 @@ namespace DDCL.MemoryHandling
 			int iPointerCount = Offset.Length - 1;
 			IntPtr ptrBytesWritten;
 			bytesWritten = 0;
-			byte[] buffer = new byte[4]; //DWORD to hold an Address
+			byte[] buffer = new byte[4]; // DWORD to hold an Address
 			int tempAddress = 0;
 
 			if (iPointerCount == 0)
 			{
 				MemoryAPI.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
-				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[0]; //Final Address
+				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[0]; // Final Address
 				MemoryAPI.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
 
 				bytesWritten = ptrBytesWritten.ToInt32();
@@ -110,7 +110,7 @@ namespace DDCL.MemoryHandling
 				if (i == iPointerCount)
 				{
 					MemoryAPI.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
-					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[i]; //Final Address
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[i]; // Final Address
 					MemoryAPI.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
 
 					bytesWritten = ptrBytesWritten.ToInt32();
