@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web;
+using DevilDaggersCore.CustomLeaderboards;
 
 namespace DDCL.Network
 {
@@ -30,7 +31,7 @@ namespace DDCL.Network
 		{
 		}
 
-		public JsonResult Upload()
+		public UploadResult Upload()
 		{
 			try
 			{
@@ -39,15 +40,15 @@ namespace DDCL.Network
 				if (scanner.PlayerID.Value <= 0)
 				{
 					Program.logger.Warn($"Invalid player ID: {scanner.PlayerID.Value}");
-					return new JsonResult(false, "Invalid player ID.", 3);
+					return new UploadResult(false, "Invalid player ID.", 3);
 				}
 
 				if (scanner.IsReplay.Value)
-					return new JsonResult(false, "Run is replay. Unable to validate.", 3);
+					return new UploadResult(false, "Run is replay. Unable to validate.", 3);
 				if (scanner.Time.Value < MinimalTime)
-					return new JsonResult(false, $"Timer is under {MinimalTime.ToString("0.0000")}. Unable to validate.", 3);
+					return new UploadResult(false, $"Timer is under {MinimalTime.ToString("0.0000")}. Unable to validate.", 3);
 				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
-					return new JsonResult(false, $"Not the entire run has been recorded. You must start recording before the timer reaches {Scanner.MaxHashTime.ToString("0.0000")}. Unable to validate.", 3);
+					return new UploadResult(false, $"Not the entire run has been recorded. You must start recording before the timer reaches {Scanner.MaxHashTime.ToString("0.0000")}. Unable to validate.", 3);
 
 				string toEncrypt = string.Join(";",
 					scanner.PlayerID.Value,
@@ -85,12 +86,12 @@ namespace DDCL.Network
 				};
 
 				using (WebClient wc = new WebClient())
-					return JsonConvert.DeserializeObject<JsonResult>(wc.DownloadString($"{BaseURL}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
+					return JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{BaseURL}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
 			}
 			catch (Exception ex)
 			{
 				Program.logger.Error("Error trying to submit score", ex);
-				return new JsonResult(false, $"Error uploading score\n\nDetails:\n\n{ex}");
+				return new UploadResult(false, $"Error uploading score\n\nDetails:\n\n{ex}");
 			}
 		}
 

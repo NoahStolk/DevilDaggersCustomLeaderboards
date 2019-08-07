@@ -56,7 +56,6 @@
     <Compile Include="MemoryHandling\Memory.cs" />
     <Compile Include="MemoryHandling\MemoryAPI.cs" />
     <Compile Include="MemoryHandling\Scanner.cs" />
-    <Compile Include="Network\JsonResult.cs" />
     <Compile Include="Network\NetworkHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,5 +1,6 @@
 ﻿using DDCL.MemoryHandling;
 using DDCL.Network;
+using DevilDaggersCore.CustomLeaderboards;
 using DevilDaggersCore.Game;
 using log4net;
 using log4net.Config;
@@ -152,7 +153,7 @@ namespace DDCL
 						recording = false;
 
 						int tries = 0;
-						JsonResult jsonResult;
+						UploadResult jsonResult;
 						do
 						{
 							Console.Clear();
@@ -161,10 +162,10 @@ namespace DDCL
 							jsonResult = NetworkHandler.Instance.Upload();
 							// Thread is being blocked by the upload
 
-							if (jsonResult.success)
+							if (jsonResult.Success)
 							{
 								Write("Upload successful", ConsoleColor.Green);
-								Write(jsonResult.message);
+								Write(jsonResult.Message);
 								Write();
 
 								Write("Username", scanner.Username.Value);
@@ -182,16 +183,16 @@ namespace DDCL
 							else
 							{
 								Write("Upload failed", ConsoleColor.Red);
-								Write(jsonResult.message);
+								Write(jsonResult.Message);
 								tries++;
-								if (jsonResult.tryCount > 1)
-									Write($"Retrying (attempt {tries} / {jsonResult.tryCount})");
-								logger.Warn($"Upload failed - {jsonResult.message}");
+								if (jsonResult.TryCount > 1)
+									Write($"Retrying (attempt {tries} / {jsonResult.TryCount})");
+								logger.Warn($"Upload failed - {jsonResult.Message}");
 
 								Thread.Sleep(500);
 							}
 						}
-						while (!jsonResult.success && tries < jsonResult.tryCount);
+						while (!jsonResult.Success && tries < jsonResult.TryCount);
 
 						Console.SetCursorPosition(0, 0);
 						Write("Ready to restart");
