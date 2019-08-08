@@ -19,9 +19,6 @@ namespace DDCL.Network
 		public Version ServerVersion { get; private set; }
 		public Version ServerVersionRequired { get; private set; }
 
-		/// <summary>
-		/// This should fix the broken submissions that occasionally get sent for some reason.
-		/// </summary>
 		private const float MinimalTime = 2.5f;
 
 		private static readonly Lazy<NetworkHandler> lazy = new Lazy<NetworkHandler>(() => new NetworkHandler());
@@ -45,10 +42,20 @@ namespace DDCL.Network
 
 				if (scanner.IsReplay.Value)
 					return new UploadResult(false, "Run is replay. Unable to validate.", 3);
+				
+				// This should fix the broken submissions that occasionally get sent for some reason.
 				if (scanner.Time.Value < MinimalTime)
 					return new UploadResult(false, $"Timer is under {MinimalTime.ToString("0.0000")}. Unable to validate.", 3);
+
 				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
-					return new UploadResult(false, $"Not the entire run has been recorded. You must start recording before the timer reaches {Scanner.MaxHashTime.ToString("0.0000")}. Unable to validate.", 3);
+				{
+					Program.logger.Warn("Spawnset hash has not been calculated.");
+					return new UploadResult(false, "Spawnset hash has not been calculated.");
+				}
+				
+				// This is to prevent people from initially starting an easy spawnset to get e.g. 800 seconds, then change the survival file during the run to a different (harder) spawnset to trick the application into uploading it to the wrong leaderboard.
+				if (Utils.CalculateSpawnsetHash() != scanner.SpawnsetHash)
+					return new UploadResult(false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
 
 				string toEncrypt = string.Join(";",
 					scanner.PlayerID.Value,

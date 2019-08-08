@@ -7,8 +7,6 @@ namespace DDCL.MemoryHandling
 {
 	public sealed class Scanner
 	{
-		public const float MaxHashTime = 1.5f;
-
 		private const string ProcessNameToFind = "dd";
 		private const string ProcessMainWindowTitle = "Devil Daggers";
 		private const int Magic = 0x001F30C0;
@@ -94,11 +92,16 @@ namespace DDCL.MemoryHandling
 		{
 			try
 			{
-				// Always scan these values
+				// Always scan these values.
 				PlayerID.Scan();
 				Username.Scan();
 
-				// Stop scanning if it is a replay
+				// Always calculate the spawnset in menu or lobby.
+				// Otherwise you can first normally load a spawnset to set the hash, exit and load an empty spawnset in the menu/lobby, then during playing the empty spawnset change it back to the same original spawnset and upload a cheated score.
+				if (Time.Value == 0 && Time.ValuePrevious == 0)
+					SpawnsetHash = Utils.CalculateSpawnsetHash();
+
+				// Stop scanning if it is a replay.
 				IsReplay.Scan();
 				if (IsReplay.Value)
 					return;
@@ -112,7 +115,7 @@ namespace DDCL.MemoryHandling
 
 				if (IsAlive.Value)
 				{
-					// Enemy count might increase on death
+					// Enemy count might increase on death, so only scan while player is alive.
 					EnemiesAlive.Scan();
 
 					// TODO: Clean up
@@ -136,12 +139,13 @@ namespace DDCL.MemoryHandling
 					if (LevelUpTimes[2] == 0 && LevelGems == 71)
 						LevelUpTimes[2] = Time.Value;
 				}
-
-				// Only scan death type when dead
-				if (!IsAlive.Value)
+				else
+				{
+					// Only scan death type when dead.
 					DeathType.Scan();
+				}
 
-				if (Time.Value < MaxHashTime)
+				if (string.IsNullOrEmpty(SpawnsetHash))
 					SpawnsetHash = Utils.CalculateSpawnsetHash();
 			}
 			catch (Exception ex)

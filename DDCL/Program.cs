@@ -157,7 +157,7 @@ namespace DDCL
 						do
 						{
 							Console.Clear();
-							Write("Uploading... Please wait for the upload to finish before restarting.");
+							Write("Uploading...");
 							Write();
 							jsonResult = NetworkHandler.Instance.Upload();
 							// Thread is being blocked by the upload
@@ -199,7 +199,7 @@ namespace DDCL
 						Write();
 					}
 				}
-				else if (scanner.IsAlive.Value && !scanner.IsAlive.ValuePrevious || scanner.Time.Value > scanner.Time.ValuePrevious)
+				else if (scanner.Time.Value < scanner.Time.ValuePrevious)
 				{
 					Console.Clear();
 					recording = true;
