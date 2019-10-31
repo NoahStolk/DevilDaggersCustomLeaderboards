@@ -1,11 +1,11 @@
-﻿using DDCL.MemoryHandling;
+﻿using DevilDaggersCore.MemoryHandling;
 using DevilDaggersCore.Spawnsets;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace DDCL
+namespace DevilDaggersCustomLeaderboards
 {
 	public static class Utils
 	{
@@ -29,7 +29,7 @@ namespace DDCL
 					if (Spawnset.TryParse(fs, out Spawnset spawnset))
 						return spawnset.GetHashString();
 
-					Program.logger.Error("Failed to calculate spawnset hash because the survival file could not be parsed.");
+					Program.logger.Error($"Failed to calculate spawnset hash because the survival file could not be parsed to a {nameof(Spawnset)} object.");
 				}
 
 				return string.Empty;

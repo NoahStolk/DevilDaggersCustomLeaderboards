@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DDCL")]
+[assembly: AssemblyTitle("Devil Daggers Custom Leaderboards")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DDCL")]
+[assembly: AssemblyProduct("Devil Daggers Custom Leaderboards")]
 [assembly: AssemblyCopyright("Copyright © Noah Stolk 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

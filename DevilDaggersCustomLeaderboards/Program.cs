@@ -1,15 +1,15 @@
-﻿using DDCL.MemoryHandling;
-using DDCL.Network;
-using DevilDaggersCore.CustomLeaderboards;
+﻿using DevilDaggersCore.CustomLeaderboards;
 using DevilDaggersCore.Game;
+using DevilDaggersCore.MemoryHandling;
 using log4net;
 using log4net.Config;
 using System;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace DDCL
+namespace DevilDaggersCustomLeaderboards
 {
 	/// <summary>
 	/// Handles the main program and GUI-related tasks.
@@ -41,6 +41,8 @@ namespace DDCL
 
 		public static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+		public static CultureInfo culture = new CultureInfo("en-US");
+
 		public static void Main()
 		{
 			XmlConfigurator.Configure();
@@ -54,8 +56,8 @@ namespace DDCL
 
 			Console.Title = $"Devil Daggers Custom Leaderboards - {Utils.ClientVersion}";
 
-			Thread.CurrentThread.CurrentCulture = Constants.Culture;
-			Thread.CurrentThread.CurrentUICulture = Constants.Culture;
+			Thread.CurrentThread.CurrentCulture = culture;
+			Thread.CurrentThread.CurrentUICulture = culture;
 
 			Write("Checking for updates...");
 

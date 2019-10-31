@@ -1,5 +1,4 @@
-﻿using DDCL.MemoryHandling;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NetBase.Encryption;
 using System;
 using System.Collections.Generic;
@@ -8,8 +7,9 @@ using System.Net;
 using System.Text;
 using System.Web;
 using DevilDaggersCore.CustomLeaderboards;
+using DevilDaggersCore.MemoryHandling;
 
-namespace DDCL.Network
+namespace DevilDaggersCustomLeaderboards
 {
 	public sealed class NetworkHandler
 	{
@@ -104,7 +104,7 @@ namespace DDCL.Network
 
 		public bool GetVersionNumberFromServer()
 		{
-			string url = $"{BaseURL}/API/GetToolVersions";
+			string url = $"{BaseURL}/API/GetTools";
 
 			try
 			{

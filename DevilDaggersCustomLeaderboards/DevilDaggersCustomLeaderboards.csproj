@@ -52,19 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="MemoryHandling\AddressUtils.cs" />
-    <Compile Include="MemoryHandling\Memory.cs" />
-    <Compile Include="MemoryHandling\MemoryAPI.cs" />
-    <Compile Include="MemoryHandling\Scanner.cs" />
     <Compile Include="Network\NetworkHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="Variables\AbstractVariable.cs" />
-    <Compile Include="Variables\BoolVariable.cs" />
-    <Compile Include="Variables\FloatVariable.cs" />
-    <Compile Include="Variables\IntVariable.cs" />
-    <Compile Include="Variables\StringVariable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
