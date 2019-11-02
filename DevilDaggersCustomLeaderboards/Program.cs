@@ -1,6 +1,7 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
 using DevilDaggersCore.Game;
 using DevilDaggersCore.MemoryHandling;
+using DevilDaggersCore.Tools;
 using log4net;
 using log4net.Config;
 using System;
@@ -18,6 +19,9 @@ namespace DevilDaggersCustomLeaderboards
 	/// </summary>
 	public static class Program
 	{
+		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
+		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
+
 		private static readonly int TextWidth = 70;
 		private static readonly int TextWidthLeft = 20;
 		private static readonly int TextWidthRight = 20;
@@ -39,9 +43,12 @@ namespace DevilDaggersCustomLeaderboards
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
-		public static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		public static CultureInfo culture = new CultureInfo("en-US");
+
+		public static Assembly Assembly { get; private set; }
+		public static Version LocalVersion { get; private set; }
 
 		public static void Main()
 		{
@@ -54,25 +61,28 @@ namespace DevilDaggersCustomLeaderboards
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 
-			Console.Title = $"Devil Daggers Custom Leaderboards - {Utils.ClientVersion}";
+			Assembly = Assembly.GetExecutingAssembly();
+			LocalVersion = VersionHandler.Instance.GetLocalVersion(Assembly);
+
+			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
 
 			Thread.CurrentThread.CurrentCulture = culture;
 			Thread.CurrentThread.CurrentUICulture = culture;
 
 			Write("Checking for updates...");
 
-			bool updateCheckSuccessful = NetworkHandler.Instance.GetVersionNumberFromServer();
+			VersionResult versionResult = VersionHandler.Instance.GetOnlineVersion(ApplicationName, LocalVersion);
 			Console.Clear();
-			if (updateCheckSuccessful)
+			if (versionResult.IsUpToDate.HasValue)
 			{
-				if (Utils.ClientVersion < NetworkHandler.Instance.ServerVersionRequired)
+				if (LocalVersion < versionResult.Tool.VersionNumberRequired)
 				{
-					Write("You are using an unsupported and outdated version of DDCL. Please update the program.\n(Press any key to continue.)", ConsoleColor.Red);
+					Write($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ConsoleColor.Red);
 					Console.ReadKey();
 				}
-				else if (Utils.ClientVersion < NetworkHandler.Instance.ServerVersion)
+				else if (LocalVersion < versionResult.Tool.VersionNumber)
 				{
-					Write("An update for DDCL is available.\n(Press any key to continue.)", ConsoleColor.Yellow);
+					Write($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ConsoleColor.Yellow);
 					Console.ReadKey();
 				}
 			}
@@ -89,7 +99,7 @@ namespace DevilDaggersCustomLeaderboards
 
 				if (scanner.Process == null)
 				{
-					Write($"Devil Daggers not found. Retrying in a second.");
+					Write($"Devil Daggers not found. Make sure the game is running. Retrying in a second...");
 					Thread.Sleep(1000);
 					Console.Clear();
 					continue;
@@ -189,7 +199,7 @@ namespace DevilDaggersCustomLeaderboards
 								tries++;
 								if (jsonResult.TryCount > 1)
 									Write($"Retrying (attempt {tries} / {jsonResult.TryCount})");
-								logger.Warn($"Upload failed - {jsonResult.Message}");
+								Log.Warn($"Upload failed - {jsonResult.Message}");
 
 								Thread.Sleep(500);
 							}
