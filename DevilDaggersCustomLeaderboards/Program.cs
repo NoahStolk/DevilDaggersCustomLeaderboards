@@ -62,7 +62,7 @@ namespace DevilDaggersCustomLeaderboards
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 
 			Assembly = Assembly.GetExecutingAssembly();
-			LocalVersion = VersionHandler.Instance.GetLocalVersion(Assembly);
+			LocalVersion = VersionHandler.GetLocalVersion(Assembly);
 
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
 
@@ -71,7 +71,8 @@ namespace DevilDaggersCustomLeaderboards
 
 			Write("Checking for updates...");
 
-			VersionResult versionResult = VersionHandler.Instance.GetOnlineVersion(ApplicationName, LocalVersion);
+			VersionHandler.Instance.GetOnlineVersion(ApplicationName, LocalVersion);
+			VersionResult versionResult = VersionHandler.Instance.VersionResult;
 			Console.Clear();
 			if (versionResult.IsUpToDate.HasValue)
 			{
