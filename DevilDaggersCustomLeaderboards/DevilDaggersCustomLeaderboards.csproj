@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FD7FEA29-AB64-43B3-9CC6-09EC076E310C}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DDCL</RootNamespace>
-    <AssemblyName>DDCL</AssemblyName>
+    <RootNamespace>DevilDaggersCustomLeaderboards</RootNamespace>
+    <AssemblyName>DevilDaggersCustomLeaderboards</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
