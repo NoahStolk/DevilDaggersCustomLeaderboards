@@ -94,5 +94,46 @@ namespace DevilDaggersCustomLeaderboards
 				return new UploadResult(false, $"Error uploading score\n\nDetails:\n\n{ex}");
 			}
 		}
+
+		public void FakeUpload()
+		{
+			string toEncrypt = string.Join(";",
+				21854,
+				"xvlv testing",
+				11.3,
+				1,
+				14,
+				3,
+				666,
+				6667,
+				54,
+				3,
+				string.Join(",", new[] { 5, 6, 7.5f }));
+			AesBase32Wrapper aes = new AesBase32Wrapper("4GDdtUpDelr2wIae", "xx7SXitvxQh4tJzn", "K0sfsKXLZKmKs929");
+			string validation = aes.EncryptAndEncode(toEncrypt);
+
+			List<string> queryValues = new List<string>
+			{
+				$"spawnsetHash=abc",
+				$"playerId=21854",
+				$"username=xvlv testing",
+				$"time=11.3",
+				$"gems=1",
+				$"kills=14",
+				$"deathType=3",
+				$"shotsHit=666",
+				$"shotsFired=6667",
+				$"enemiesAlive=54",
+				$"homing=3",
+				$"levelUpTime2=5",
+				$"levelUpTime3=6",
+				$"levelUpTime4=7.5",
+				$"ddclClientVersion={Program.LocalVersion}",
+				$"v={HttpUtility.HtmlEncode(validation)}"
+			};
+
+			using (WebClient wc = new WebClient())
+				Console.WriteLine(JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}")));
+		}
 	}
 }
