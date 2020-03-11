@@ -120,7 +120,7 @@ namespace DevilDaggersCustomLeaderboards
 
 					Write("Spawnset Hash", scanner.SpawnsetHash);
 
-					Write("Player ID", scanner.PlayerID.Value.ToString());
+					Write("Player ID", scanner.PlayerId.Value.ToString());
 					Write("Username", scanner.Username.Value);
 					Write();
 

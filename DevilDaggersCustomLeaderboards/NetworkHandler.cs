@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using DevilDaggersCore.CustomLeaderboards;
+using DevilDaggersCore.MemoryHandling;
+using DevilDaggersCore.Tools;
 using NetBase.Encryption;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Web;
-using DevilDaggersCore.CustomLeaderboards;
-using DevilDaggersCore.MemoryHandling;
-using DevilDaggersCore.Tools;
 
 namespace DevilDaggersCustomLeaderboards
 {
@@ -27,9 +27,9 @@ namespace DevilDaggersCustomLeaderboards
 			{
 				Scanner scanner = Scanner.Instance;
 
-				if (scanner.PlayerID.Value <= 0)
+				if (scanner.PlayerId.Value <= 0)
 				{
-					Program.Log.Warn($"Invalid player ID: {scanner.PlayerID.Value}");
+					Program.Log.Warn($"Invalid player ID: {scanner.PlayerId.Value}");
 					return new UploadResult(false, "Invalid player ID.", 3);
 				}
 
@@ -51,7 +51,7 @@ namespace DevilDaggersCustomLeaderboards
 					return new UploadResult(false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
 
 				string toEncrypt = string.Join(";",
-					scanner.PlayerID.Value,
+					scanner.PlayerId.Value,
 					scanner.Username.Value,
 					scanner.Time.Value,
 					scanner.Gems.Value,
@@ -68,7 +68,7 @@ namespace DevilDaggersCustomLeaderboards
 				List<string> queryValues = new List<string>
 				{
 					$"spawnsetHash={scanner.SpawnsetHash}",
-					$"playerID={scanner.PlayerID}",
+					$"playerId={scanner.PlayerId}",
 					$"username={scanner.Username}",
 					$"time={scanner.Time}",
 					$"gems={scanner.Gems}",
