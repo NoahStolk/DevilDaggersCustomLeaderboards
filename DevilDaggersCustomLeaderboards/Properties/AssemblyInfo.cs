@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Devil Daggers Custom Leaderboards")]
-[assembly: AssemblyCopyright("Copyright © Noah Stolk 2019")]
+[assembly: AssemblyCopyright("Copyright © Noah Stolk 2019 - 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
