@@ -68,6 +68,10 @@
       <Project>{cff33512-4e7d-4035-b9ea-14ee9cefbeaf}</Project>
       <Name>DevilDaggersCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\EncryptionUtils\EncryptionUtils\EncryptionUtils.csproj">
+      <Project>{607f91b9-b677-49f4-9433-5d3d4a78e94e}</Project>
+      <Name>EncryptionUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NetBase\NetBase\NetBase.csproj">
       <Project>{2bdf22b5-8006-4718-acc3-c1205c23e02e}</Project>
       <Name>NetBase</Name>

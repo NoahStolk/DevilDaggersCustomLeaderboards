@@ -1,7 +1,7 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
 using DevilDaggersCore.MemoryHandling;
 using DevilDaggersCore.Tools;
-using NetBase.Encryption;
+using EncryptionUtils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace DevilDaggersCustomLeaderboards
 {
 	public sealed class NetworkHandler
 	{
-		private const float MinimalTime = 2.5f;
+		private const float minimalTime = 2.5f;
 
 		private static readonly Lazy<NetworkHandler> lazy = new Lazy<NetworkHandler>(() => new NetworkHandler());
 		public static NetworkHandler Instance => lazy.Value;
@@ -37,8 +37,8 @@ namespace DevilDaggersCustomLeaderboards
 					return new UploadResult(false, "Run is replay. Unable to validate.", 3);
 
 				// This should fix the broken submissions that occasionally get sent for some reason.
-				if (scanner.Time.Value < MinimalTime)
-					return new UploadResult(false, $"Timer is under {MinimalTime.ToString("0.0000")}. Unable to validate.", 3);
+				if (scanner.Time.Value < minimalTime)
+					return new UploadResult(false, $"Timer is under {minimalTime:0.0000}. Unable to validate.", 3);
 
 				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
 				{
