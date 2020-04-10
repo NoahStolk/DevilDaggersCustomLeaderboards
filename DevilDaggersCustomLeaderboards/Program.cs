@@ -175,7 +175,7 @@ namespace DevilDaggersCustomLeaderboards
 							Write("Uploading...");
 							Write();
 							jsonResult = NetworkHandler.Instance.Upload();
-							// Thread is being blocked by the upload
+							// Thread is being blocked by the upload.
 
 							if (jsonResult.Success)
 							{

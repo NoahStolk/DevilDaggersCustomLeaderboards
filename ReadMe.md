@@ -1,5 +1,5 @@
 # DevilDaggersCustomLeaderboards ([Download](https://devildaggers.info/Api/GetTool?toolName=DevilDaggersCustomLeaderboards))
-DevilDaggersCustomLeaderboards is a console application that records data from custom spawnset runs, and uploads it to a custom leaderboard.
+DevilDaggersCustomLeaderboards is a console application that records data from custom spawnset runs in Devil Daggers by scanning the memory of the application in real-time, and uploads it to a custom leaderboard hosted on [devildaggers.info](https://devildaggers.info).
 
 ## Framework
 - .NET Framework 4.6.1
