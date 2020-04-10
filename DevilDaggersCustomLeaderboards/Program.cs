@@ -26,7 +26,7 @@ namespace DevilDaggersCustomLeaderboards
 		private const int textWidthLeft = 20;
 		private const int textWidthRight = 20;
 
-		private static readonly CultureInfo culture = new CultureInfo("en-US");
+		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
 #pragma warning disable IDE1006
 		private const int MF_BYCOMMAND = 0x00000000;
