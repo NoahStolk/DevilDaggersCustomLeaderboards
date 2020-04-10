@@ -22,14 +22,18 @@ namespace DevilDaggersCustomLeaderboards
 		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
 		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
 
-		private static readonly int TextWidth = 70;
-		private static readonly int TextWidthLeft = 20;
-		private static readonly int TextWidthRight = 20;
+		private const int textWidth = 70;
+		private const int textWidthLeft = 20;
+		private const int textWidthRight = 20;
 
+		private static readonly CultureInfo culture = new CultureInfo("en-US");
+
+#pragma warning disable IDE1006
 		private const int MF_BYCOMMAND = 0x00000000;
 		private const int SC_MINIMIZE = 0xF020;
 		private const int SC_MAXIMIZE = 0xF030;
 		private const int SC_SIZE = 0xF000;
+#pragma warning restore IDE1006
 
 		[DllImport("user32.dll")]
 		public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
@@ -44,8 +48,6 @@ namespace DevilDaggersCustomLeaderboards
 		private static bool recording = true;
 
 		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
-		public static CultureInfo culture = new CultureInfo("en-US");
 
 		public static Assembly Assembly { get; private set; }
 		public static Version LocalVersion { get; private set; }
@@ -129,7 +131,7 @@ namespace DevilDaggersCustomLeaderboards
 					Write("Kills", scanner.Kills.Value.ToString());
 					Write("Shots Hit", scanner.ShotsHit.Value.ToString());
 					Write("Shots Fired", scanner.ShotsFired.Value.ToString());
-					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100).ToString("0.00")}%");
+					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100):0.00}%");
 					Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
 					Write("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
 					Write("Alive", scanner.IsAlive.Value.ToString());
@@ -185,7 +187,7 @@ namespace DevilDaggersCustomLeaderboards
 								Write("Time", scanner.Time.Value.ToString("0.0000"));
 								Write("Kills", scanner.Kills.Value.ToString());
 								Write("Gems", scanner.Gems.Value.ToString());
-								Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value).ToString("0.00%")} ({scanner.ShotsHit.Value} / {scanner.ShotsFired.Value})");
+								Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value):0.00%} ({scanner.ShotsHit.Value} / {scanner.ShotsFired.Value})");
 								Write("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
 								Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
 								Write("Homing", scanner.Homing.ToString());
@@ -223,20 +225,20 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static void Write()
 		{
-			Console.WriteLine(new string(' ', TextWidth));
+			Console.WriteLine(new string(' ', textWidth));
 		}
 
 		private static void Write(string text, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine(text.PadRight(TextWidth));
+			Console.WriteLine(text.PadRight(textWidth));
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
 		private static void Write(string textLeft, string textRight, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine($"{textLeft.PadRight(TextWidthLeft)}{textRight.PadRight(TextWidthRight)}{new string(' ', TextWidth - TextWidthLeft - TextWidthRight)}");
+			Console.WriteLine($"{textLeft,textWidthLeft}{textRight,textWidthRight}{new string(' ', textWidth - textWidthLeft - textWidthRight)}");
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 	}
