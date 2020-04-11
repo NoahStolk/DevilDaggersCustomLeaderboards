@@ -22,9 +22,9 @@ namespace DevilDaggersCustomLeaderboards
 		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
 		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
 
-		private const int textWidth = 70;
-		private const int textWidthLeft = 20;
-		private const int textWidthRight = 20;
+		private const int textWidthFull = 50;
+		private const int textWidthLeft = 15;
+		private const int textWidthRight = 15;
 
 		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
@@ -71,7 +71,7 @@ namespace DevilDaggersCustomLeaderboards
 			Thread.CurrentThread.CurrentCulture = culture;
 			Thread.CurrentThread.CurrentUICulture = culture;
 
-			Write("Checking for updates...");
+			WriteLine("Checking for updates...");
 
 			VersionHandler.Instance.GetOnlineVersion(ApplicationName, LocalVersion);
 			VersionResult versionResult = VersionHandler.Instance.VersionResult;
@@ -80,18 +80,18 @@ namespace DevilDaggersCustomLeaderboards
 			{
 				if (LocalVersion < versionResult.Tool.VersionNumberRequired)
 				{
-					Write($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ConsoleColor.Red);
+					WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ConsoleColor.Red);
 					Console.ReadKey();
 				}
 				else if (LocalVersion < versionResult.Tool.VersionNumber)
 				{
-					Write($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ConsoleColor.Yellow);
+					WriteLine($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ConsoleColor.Yellow);
 					Console.ReadKey();
 				}
 			}
 			else
 			{
-				Write("Failed to check for updates.\n(Press any key to continue.)", ConsoleColor.Red);
+				WriteLine("Failed to check for updates.\n(Press any key to continue.)", ConsoleColor.Red);
 				Console.ReadKey();
 			}
 
@@ -102,7 +102,7 @@ namespace DevilDaggersCustomLeaderboards
 
 				if (scanner.Process == null)
 				{
-					Write($"Devil Daggers not found. Make sure the game is running. Retrying in a second...");
+					WriteLine($"Devil Daggers not found. Make sure the game is running. Retrying in a second...");
 					Thread.Sleep(1000);
 					Console.Clear();
 					continue;
@@ -116,29 +116,27 @@ namespace DevilDaggersCustomLeaderboards
 
 				if (recording)
 				{
-					Write($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
-					Write("Recording...");
-					Write();
+					WriteLine($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
+					WriteLine("Recording...");
+					WriteLine();
 
-					Write("Spawnset Hash", scanner.SpawnsetHash);
+					WriteLine("Player ID", scanner.PlayerId.Value);
+					WriteLine("Username", scanner.Username.Value);
+					WriteLine();
 
-					Write("Player ID", scanner.PlayerId.Value.ToString());
-					Write("Username", scanner.Username.Value);
-					Write();
+					WriteLine("Time", scanner.Time.Value.ToString("0.0000"));
+					WriteLine("Gems", scanner.Gems.Value);
+					WriteLine("Kills", scanner.Kills.Value);
+					WriteLine("Shots Hit", scanner.ShotsHit.Value);
+					WriteLine("Shots Fired", scanner.ShotsFired.Value);
+					WriteLine("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100):0.00}%");
+					WriteLine("Enemies Alive", scanner.EnemiesAlive.Value);
+					WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
+					WriteLine("Alive", scanner.IsAlive.Value);
+					WriteLine("Replay", scanner.IsReplay.Value);
+					WriteLine();
 
-					Write("Time", scanner.Time.Value.ToString("0.0000"));
-					Write("Gems", scanner.Gems.Value.ToString());
-					Write("Kills", scanner.Kills.Value.ToString());
-					Write("Shots Hit", scanner.ShotsHit.Value.ToString());
-					Write("Shots Fired", scanner.ShotsFired.Value.ToString());
-					Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100):0.00}%");
-					Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
-					Write("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
-					Write("Alive", scanner.IsAlive.Value.ToString());
-					Write("Replay", scanner.IsReplay.Value.ToString());
-					Write();
-
-					Write("Hand", GetHand(scanner.LevelGems).ToString());
+					WriteLine("Hand", GetHand(scanner.LevelGems));
 					int GetHand(int levelGems)
 					{
 						if (levelGems < 10)
@@ -150,13 +148,13 @@ namespace DevilDaggersCustomLeaderboards
 						return 4;
 					}
 
-					Write("Homing", $"{scanner.Homing} - ({string.Join(", ", scanner.HomingLog)})");
-					Write();
+					WriteLine("Homing", $"{scanner.Homing} - ({string.Join(", ", scanner.HomingLog)})");
+					WriteLine();
 
-					Write("Level 2", scanner.LevelUpTimes[0].ToString("0.0000"));
-					Write("Level 3", scanner.LevelUpTimes[1].ToString("0.0000"));
-					Write("Level 4", scanner.LevelUpTimes[2].ToString("0.0000"));
-					Write();
+					WriteLine("Level 2", scanner.LevelUpTimes[0].ToString("0.0000"));
+					WriteLine("Level 3", scanner.LevelUpTimes[1].ToString("0.0000"));
+					WriteLine("Level 4", scanner.LevelUpTimes[2].ToString("0.0000"));
+					WriteLine();
 
 					Thread.Sleep(50);
 					Console.SetCursorPosition(0, 0);
@@ -168,50 +166,54 @@ namespace DevilDaggersCustomLeaderboards
 						recording = false;
 
 						int tries = 0;
-						UploadResult jsonResult;
+						UploadResult uploadResult;
 						do
 						{
 							Console.Clear();
-							Write("Uploading...");
-							Write();
-							jsonResult = NetworkHandler.Instance.Upload();
+							WriteLine("Uploading...");
+							WriteLine();
+							uploadResult = NetworkHandler.Instance.Upload();
 							// Thread is being blocked by the upload.
 
-							if (jsonResult.Success)
+							if (uploadResult.Success)
 							{
-								Write("Upload successful", ConsoleColor.Green);
-								Write(jsonResult.Message);
-								Write();
+								WriteLine("Upload successful", ConsoleColor.Green);
+								WriteLine(uploadResult.Message);
+								if (uploadResult.SubmissionInfo != null)
+									WriteSubmissionInfo(uploadResult.SubmissionInfo);
+								WriteLine();
 
-								Write("Username", scanner.Username.Value);
-								Write("Time", scanner.Time.Value.ToString("0.0000"));
-								Write("Kills", scanner.Kills.Value.ToString());
-								Write("Gems", scanner.Gems.Value.ToString());
-								Write("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value):0.00%} ({scanner.ShotsHit.Value} / {scanner.ShotsFired.Value})");
-								Write("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
-								Write("Enemies Alive", scanner.EnemiesAlive.Value.ToString());
-								Write("Homing", scanner.Homing.ToString());
-								Write("Level 2", scanner.LevelUpTimes[0] == 0 ? "N/A" : scanner.LevelUpTimes[0].ToString("0.0000"));
-								Write("Level 3", scanner.LevelUpTimes[1] == 0 ? "N/A" : scanner.LevelUpTimes[1].ToString("0.0000"));
-								Write("Level 4", scanner.LevelUpTimes[2] == 0 ? "N/A" : scanner.LevelUpTimes[2].ToString("0.0000"));
+								WriteLine("Username", scanner.Username.Value);
+								WriteLine("Time", scanner.Time.Value.ToString("0.0000"));
+								WriteLine("Kills", scanner.Kills.Value);
+								WriteLine("Gems", scanner.Gems.Value);
+								WriteLine("Shots Hit", scanner.ShotsHit.Value);
+								WriteLine("Shots Fired", scanner.ShotsFired.Value);
+								WriteLine("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value):0.00%}");
+								WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
+								WriteLine("Enemies Alive", scanner.EnemiesAlive.Value);
+								WriteLine("Homing", scanner.Homing);
+								WriteLine("Level 2", scanner.LevelUpTimes[0] == 0 ? "N/A" : scanner.LevelUpTimes[0].ToString("0.0000"));
+								WriteLine("Level 3", scanner.LevelUpTimes[1] == 0 ? "N/A" : scanner.LevelUpTimes[1].ToString("0.0000"));
+								WriteLine("Level 4", scanner.LevelUpTimes[2] == 0 ? "N/A" : scanner.LevelUpTimes[2].ToString("0.0000"));
 							}
 							else
 							{
-								Write("Upload failed", ConsoleColor.Red);
-								Write(jsonResult.Message);
+								WriteLine("Upload failed", ConsoleColor.Red);
+								WriteLine(uploadResult.Message);
 								tries++;
-								if (jsonResult.TryCount > 1)
-									Write($"Retrying (attempt {tries} / {jsonResult.TryCount})");
-								Log.Warn($"Upload failed - {jsonResult.Message}");
+								if (uploadResult.TryCount > 1)
+									WriteLine($"Retrying (attempt {tries} / {uploadResult.TryCount})");
+								Log.Warn($"Upload failed - {uploadResult.Message}");
 
 								Thread.Sleep(500);
 							}
 						}
-						while (!jsonResult.Success && tries < jsonResult.TryCount);
+						while (!uploadResult.Success && tries < uploadResult.TryCount);
 
 						Console.SetCursorPosition(0, 0);
-						Write("Ready to restart");
-						Write();
+						WriteLine("Ready to restart");
+						WriteLine();
 					}
 				}
 				else if (scanner.Time.Value < scanner.Time.ValuePrevious)
@@ -223,22 +225,82 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		private static void Write()
+		private static void WriteSubmissionInfo(SubmissionInfo si)
 		{
-			Console.WriteLine(new string(' ', textWidth));
+			double accuracy = si.ShotsFired == 0 ? 0 : si.ShotsHit / (double)si.ShotsFired;
+
+			int shotsHitOld = si.ShotsHit - si.ShotsHitDiff;
+			int shotsFiredOld = si.ShotsFired - si.ShotsFiredDiff;
+			double accuracyOld = shotsFiredOld == 0 ? 0 : shotsHitOld / (double)shotsFiredOld;
+			double accuracyDiff = accuracy - accuracyOld;
+
+			Write($"{$"Rank",-textWidthLeft}{$"{si.Rank} / {si.TotalPlayers}",textWidthRight}");
+			Write($" ({si.RankDiff:+0;-#})\n", GetColor(si.RankDiff));
+
+			Write($"{$"Time",-textWidthLeft}{si.Time,textWidthRight:0.0000}");
+			Write($" (+{si.TimeDiff:0.0000})\n", ConsoleColor.Green);
+
+			Write($"{$"Kills",-textWidthLeft}{si.Kills,textWidthRight}");
+			Write($" ({si.KillsDiff:+0;-#})\n", GetColor(si.KillsDiff));
+
+			Write($"{$"Gems",-textWidthLeft}{si.Gems,textWidthRight}");
+			Write($" ({si.GemsDiff:+0;-#})\n", GetColor(si.GemsDiff));
+
+			Write($"{$"Shots Hit",-textWidthLeft}{si.ShotsHit,textWidthRight}");
+			Write($" ({si.ShotsHitDiff:+0;-#})\n", GetColor(si.ShotsHitDiff));
+
+			Write($"{$"Shots Fired",-textWidthLeft}{si.ShotsFired,textWidthRight}");
+			Write($" ({si.ShotsFiredDiff:+0;-#})\n", GetColor(si.ShotsFiredDiff));
+
+			Write($"{$"Accuracy",-textWidthLeft}{accuracy,textWidthRight:0.00%}");
+			Write($" ({(accuracyDiff < 0 ? "" : "+")}{accuracyDiff:0.00%})\n", GetColor(accuracyDiff));
+
+			Write($"{$"Enemies Alive",-textWidthLeft}{si.EnemiesAlive,textWidthRight}");
+			Write($" ({si.EnemiesAliveDiff:+0;-#})\n", GetColor(si.EnemiesAliveDiff));
+
+			Write($"{$"Homing",-textWidthLeft}{si.Homing,textWidthRight}");
+			Write($" ({si.HomingDiff:+0;-#})\n", GetColor(si.HomingDiff));
+
+			Write($"{$"Level 2",-textWidthLeft}{si.LevelUpTime2,textWidthRight:0.0000}");
+			Write($" ({(si.LevelUpTime2Diff < 0 ? "" : "+")}{si.LevelUpTime2Diff:0.0000})\n", GetColor(-si.LevelUpTime2Diff));
+
+			Write($"{$"Level 3",-textWidthLeft}{si.LevelUpTime3,textWidthRight:0.0000}");
+			Write($" ({(si.LevelUpTime3Diff < 0 ? "" : "+")}{si.LevelUpTime3Diff:0.0000})\n", GetColor(-si.LevelUpTime3Diff));
+
+			Write($"{$"Level 4",-textWidthLeft}{si.LevelUpTime4,textWidthRight:0.0000}");
+			Write($" ({(si.LevelUpTime4Diff < 0 ? "" : "+")}{si.LevelUpTime4Diff:0.0000})\n", GetColor(-si.LevelUpTime4Diff));
+
+			ConsoleColor GetColor<T>(T n)
+				where T : IComparable<T>
+			{
+				int comp = n.CompareTo(default(T));
+				return comp == 0 ? ConsoleColor.White : comp == 1 ? ConsoleColor.Green : ConsoleColor.Red;
+			}
 		}
 
-		private static void Write(string text, ConsoleColor color = ConsoleColor.White)
+		private static void Write(object text, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine(text.PadRight(textWidth));
+			Console.Write(text.ToString());
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
-		private static void Write(string textLeft, string textRight, ConsoleColor color = ConsoleColor.White)
+		private static void WriteLine()
+		{
+			Console.WriteLine(new string(' ', textWidthFull));
+		}
+
+		private static void WriteLine(object text, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.WriteLine($"{textLeft,textWidthLeft}{textRight,textWidthRight}{new string(' ', textWidth - textWidthLeft - textWidthRight)}");
+			Console.WriteLine($"{text,-textWidthLeft}");
+			Console.ForegroundColor = ConsoleColor.White;
+		}
+
+		private static void WriteLine(object textLeft, object textRight, ConsoleColor color = ConsoleColor.White)
+		{
+			Console.ForegroundColor = color;
+			Console.WriteLine($"{textLeft,-textWidthLeft}{textRight,textWidthRight}{new string(' ', textWidthFull)}");
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 	}
