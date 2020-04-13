@@ -60,7 +60,9 @@ namespace DevilDaggersCustomLeaderboards
 					scanner.ShotsFired.Value,
 					scanner.EnemiesAlive.Value,
 					scanner.Homing,
-					string.Join(",", scanner.LevelUpTimes));
+					scanner.LevelUpTime2,
+					scanner.LevelUpTime3,
+					scanner.LevelUpTime4);
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 				List<string> queryValues = new List<string>
@@ -76,9 +78,9 @@ namespace DevilDaggersCustomLeaderboards
 					$"shotsFired={scanner.ShotsFired}",
 					$"enemiesAlive={scanner.EnemiesAlive}",
 					$"homing={scanner.Homing}",
-					$"levelUpTime2={scanner.LevelUpTimes[0]}",
-					$"levelUpTime3={scanner.LevelUpTimes[1]}",
-					$"levelUpTime4={scanner.LevelUpTimes[2]}",
+					$"levelUpTime2={scanner.LevelUpTime2}",
+					$"levelUpTime3={scanner.LevelUpTime3}",
+					$"levelUpTime4={scanner.LevelUpTime4}",
 					$"ddclClientVersion={Program.LocalVersion}",
 					$"v={HttpUtility.HtmlEncode(validation)}"
 				};

@@ -151,9 +151,9 @@ namespace DevilDaggersCustomLeaderboards
 					WriteLine("Homing", scanner.Homing);
 					WriteLine();
 
-					WriteLine("Level 2", scanner.LevelUpTimes[0].ToString("0.0000"));
-					WriteLine("Level 3", scanner.LevelUpTimes[1].ToString("0.0000"));
-					WriteLine("Level 4", scanner.LevelUpTimes[2].ToString("0.0000"));
+					WriteLine("Level 2", scanner.LevelUpTime2.ToString("0.0000"));
+					WriteLine("Level 3", scanner.LevelUpTime3.ToString("0.0000"));
+					WriteLine("Level 4", scanner.LevelUpTime4.ToString("0.0000"));
 					WriteLine();
 
 					Thread.Sleep(50);
@@ -192,9 +192,9 @@ namespace DevilDaggersCustomLeaderboards
 								WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
 								WriteLine("Enemies Alive", scanner.EnemiesAlive.Value);
 								WriteLine("Homing", scanner.Homing);
-								WriteLine("Level 2", scanner.LevelUpTimes[0] == 0 ? "N/A" : scanner.LevelUpTimes[0].ToString("0.0000"));
-								WriteLine("Level 3", scanner.LevelUpTimes[1] == 0 ? "N/A" : scanner.LevelUpTimes[1].ToString("0.0000"));
-								WriteLine("Level 4", scanner.LevelUpTimes[2] == 0 ? "N/A" : scanner.LevelUpTimes[2].ToString("0.0000"));
+								WriteLine("Level 2", scanner.LevelUpTime2 == 0 ? "N/A" : scanner.LevelUpTime2.ToString("0.0000"));
+								WriteLine("Level 3", scanner.LevelUpTime3 == 0 ? "N/A" : scanner.LevelUpTime3.ToString("0.0000"));
+								WriteLine("Level 4", scanner.LevelUpTime4 == 0 ? "N/A" : scanner.LevelUpTime4.ToString("0.0000"));
 							}
 							else
 							{
