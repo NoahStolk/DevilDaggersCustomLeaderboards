@@ -148,7 +148,7 @@ namespace DevilDaggersCustomLeaderboards
 						return 4;
 					}
 
-					WriteLine("Homing", $"{scanner.Homing} - ({string.Join(", ", scanner.HomingLog)})");
+					WriteLine("Homing", scanner.Homing);
 					WriteLine();
 
 					WriteLine("Level 2", scanner.LevelUpTimes[0].ToString("0.0000"));
@@ -162,7 +162,6 @@ namespace DevilDaggersCustomLeaderboards
 					// If player just died
 					if (!scanner.IsAlive.Value && scanner.IsAlive.ValuePrevious)
 					{
-						scanner.PrepareUpload();
 						recording = false;
 
 						int tries = 0;
