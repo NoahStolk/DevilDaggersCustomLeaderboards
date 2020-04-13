@@ -272,8 +272,8 @@ namespace DevilDaggersCustomLeaderboards
 			ConsoleColor GetColor<T>(T n)
 				where T : IComparable<T>
 			{
-				int comp = n.CompareTo(default(T));
-				return comp == 0 ? ConsoleColor.White : comp == 1 ? ConsoleColor.Green : ConsoleColor.Red;
+				int comparison = n.CompareTo(default(T));
+				return comparison == 0 ? ConsoleColor.White : comparison == 1 ? ConsoleColor.Green : ConsoleColor.Red;
 			}
 		}
 
