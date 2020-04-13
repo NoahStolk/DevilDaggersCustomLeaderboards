@@ -1,7 +1,6 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
 using DevilDaggersCore.MemoryHandling;
 using DevilDaggersCore.Tools;
-using EncryptionUtils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -62,8 +61,7 @@ namespace DevilDaggersCustomLeaderboards
 					scanner.EnemiesAlive.Value,
 					scanner.Homing,
 					string.Join(",", scanner.LevelUpTimes));
-				AesBase32Wrapper aes = new AesBase32Wrapper("4GDdtUpDelr2wIae", "xx7SXitvxQh4tJzn", "K0sfsKXLZKmKs929");
-				string validation = aes.EncryptAndEncode(toEncrypt);
+				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 				List<string> queryValues = new List<string>
 				{
@@ -109,8 +107,7 @@ namespace DevilDaggersCustomLeaderboards
 				54,
 				3,
 				string.Join(",", new[] { 5, 6, 7.5f }));
-			AesBase32Wrapper aes = new AesBase32Wrapper("4GDdtUpDelr2wIae", "xx7SXitvxQh4tJzn", "K0sfsKXLZKmKs929");
-			string validation = aes.EncryptAndEncode(toEncrypt);
+			string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 			List<string> queryValues = new List<string>
 			{
