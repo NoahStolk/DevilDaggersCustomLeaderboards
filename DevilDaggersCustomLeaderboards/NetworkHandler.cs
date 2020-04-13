@@ -26,17 +26,17 @@ namespace DevilDaggersCustomLeaderboards
 			{
 				Scanner scanner = Scanner.Instance;
 
-				if (scanner.PlayerId.Value <= 0)
+				if (scanner.PlayerId <= 0)
 				{
-					Program.Log.Warn($"Invalid player ID: {scanner.PlayerId.Value}");
+					Program.Log.Warn($"Invalid player ID: {scanner.PlayerId}");
 					return new UploadResult(false, "Invalid player ID.", 3);
 				}
 
-				if (scanner.IsReplay.Value)
+				if (scanner.IsReplay)
 					return new UploadResult(false, "Run is replay. Unable to validate.", 3);
 
 				// This should fix the broken submissions that occasionally get sent for some reason.
-				if (scanner.Time.Value < minimalTime)
+				if (scanner.Time < minimalTime)
 					return new UploadResult(false, $"Timer is under {minimalTime:0.0000}. Unable to validate.", 3);
 
 				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
@@ -50,15 +50,15 @@ namespace DevilDaggersCustomLeaderboards
 					return new UploadResult(false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
 
 				string toEncrypt = string.Join(";",
-					scanner.PlayerId.Value,
-					scanner.Username.Value,
-					scanner.Time.Value,
-					scanner.Gems.Value,
-					scanner.Kills.Value,
-					scanner.DeathType.Value,
-					scanner.ShotsHit.Value,
-					scanner.ShotsFired.Value,
-					scanner.EnemiesAlive.Value,
+					scanner.PlayerId,
+					scanner.Username,
+					scanner.Time,
+					scanner.Gems,
+					scanner.Kills,
+					scanner.DeathType,
+					scanner.ShotsHit,
+					scanner.ShotsFired,
+					scanner.EnemiesAlive,
 					scanner.Homing,
 					scanner.LevelUpTime2,
 					scanner.LevelUpTime3,

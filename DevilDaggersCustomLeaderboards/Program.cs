@@ -120,20 +120,20 @@ namespace DevilDaggersCustomLeaderboards
 					WriteLine("Recording...");
 					WriteLine();
 
-					WriteLine("Player ID", scanner.PlayerId.Value);
-					WriteLine("Username", scanner.Username.Value);
+					WriteLine("Player ID", scanner.PlayerId);
+					WriteLine("Username", scanner.Username);
 					WriteLine();
 
 					WriteLine("Time", scanner.Time.Value.ToString("0.0000"));
-					WriteLine("Gems", scanner.Gems.Value);
-					WriteLine("Kills", scanner.Kills.Value);
-					WriteLine("Shots Hit", scanner.ShotsHit.Value);
-					WriteLine("Shots Fired", scanner.ShotsFired.Value);
-					WriteLine("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value * 100):0.00}%");
-					WriteLine("Enemies Alive", scanner.EnemiesAlive.Value);
-					WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
-					WriteLine("Alive", scanner.IsAlive.Value);
-					WriteLine("Replay", scanner.IsReplay.Value);
+					WriteLine("Gems", scanner.Gems);
+					WriteLine("Kills", scanner.Kills);
+					WriteLine("Shots Hit", scanner.ShotsHit);
+					WriteLine("Shots Fired", scanner.ShotsFired);
+					WriteLine("Accuracy", $"{(scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (float)scanner.ShotsFired * 100):0.00}%");
+					WriteLine("Enemies Alive", scanner.EnemiesAlive);
+					WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType).Name);
+					WriteLine("Alive", scanner.IsAlive);
+					WriteLine("Replay", scanner.IsReplay);
 					WriteLine();
 
 					WriteLine("Hand", GetHand(scanner.LevelGems));
@@ -160,7 +160,7 @@ namespace DevilDaggersCustomLeaderboards
 					Console.SetCursorPosition(0, 0);
 
 					// If player just died
-					if (!scanner.IsAlive.Value && scanner.IsAlive.ValuePrevious)
+					if (!scanner.IsAlive && scanner.IsAlive.ValuePrevious)
 					{
 						recording = false;
 
@@ -182,15 +182,15 @@ namespace DevilDaggersCustomLeaderboards
 									WriteSubmissionInfo(uploadResult.SubmissionInfo);
 								WriteLine();
 
-								WriteLine("Username", scanner.Username.Value);
+								WriteLine("Username", scanner.Username);
 								WriteLine("Time", scanner.Time.Value.ToString("0.0000"));
-								WriteLine("Kills", scanner.Kills.Value);
-								WriteLine("Gems", scanner.Gems.Value);
-								WriteLine("Shots Hit", scanner.ShotsHit.Value);
-								WriteLine("Shots Fired", scanner.ShotsFired.Value);
-								WriteLine("Accuracy", $"{(scanner.ShotsFired.Value == 0 ? 0 : scanner.ShotsHit.Value / (float)scanner.ShotsFired.Value):0.00%}");
-								WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType.Value).Name);
-								WriteLine("Enemies Alive", scanner.EnemiesAlive.Value);
+								WriteLine("Kills", scanner.Kills);
+								WriteLine("Gems", scanner.Gems);
+								WriteLine("Shots Hit", scanner.ShotsHit);
+								WriteLine("Shots Fired", scanner.ShotsFired);
+								WriteLine("Accuracy", $"{(scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (float)scanner.ShotsFired):0.00%}");
+								WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType).Name);
+								WriteLine("Enemies Alive", scanner.EnemiesAlive);
 								WriteLine("Homing", scanner.Homing);
 								WriteLine("Level 2", scanner.LevelUpTime2 == 0 ? "N/A" : scanner.LevelUpTime2.ToString("0.0000"));
 								WriteLine("Level 3", scanner.LevelUpTime3 == 0 ? "N/A" : scanner.LevelUpTime3.ToString("0.0000"));
@@ -215,7 +215,7 @@ namespace DevilDaggersCustomLeaderboards
 						WriteLine();
 					}
 				}
-				else if (scanner.Time.Value < scanner.Time.ValuePrevious)
+				else if (scanner.Time < scanner.Time.ValuePrevious)
 				{
 					Console.Clear();
 					recording = true;
