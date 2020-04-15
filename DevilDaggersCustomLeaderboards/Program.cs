@@ -4,6 +4,7 @@ using DevilDaggersCore.MemoryHandling;
 using DevilDaggersCore.Tools;
 using log4net;
 using log4net.Config;
+using NetBase.Extensions;
 using System;
 using System.Globalization;
 using System.Reflection;
@@ -233,54 +234,90 @@ namespace DevilDaggersCustomLeaderboards
 			double accuracyOld = shotsFiredOld == 0 ? 0 : shotsHitOld / (double)shotsFiredOld;
 			double accuracyDiff = accuracy - accuracyOld;
 
-			Write($"{$"Rank",-textWidthLeft}{$"{si.Rank} / {si.TotalPlayers}",textWidthRight}");
-			Write($" ({si.RankDiff:+0;-#})\n", GetColor(si.RankDiff));
-
-			Write($"{$"Time",-textWidthLeft}{si.Time,textWidthRight:0.0000}");
-			Write($" (+{si.TimeDiff:0.0000})\n", ConsoleColor.Green);
-
-			Write($"{$"Kills",-textWidthLeft}{si.Kills,textWidthRight}");
-			Write($" ({si.KillsDiff:+0;-#})\n", GetColor(si.KillsDiff));
-
-			Write($"{$"Gems",-textWidthLeft}{si.Gems,textWidthRight}");
-			Write($" ({si.GemsDiff:+0;-#})\n", GetColor(si.GemsDiff));
-
-			Write($"{$"Shots Hit",-textWidthLeft}{si.ShotsHit,textWidthRight}");
-			Write($" ({si.ShotsHitDiff:+0;-#})\n", GetColor(si.ShotsHitDiff));
-
-			Write($"{$"Shots Fired",-textWidthLeft}{si.ShotsFired,textWidthRight}");
-			Write($" ({si.ShotsFiredDiff:+0;-#})\n", GetColor(si.ShotsFiredDiff));
-
-			Write($"{$"Accuracy",-textWidthLeft}{accuracy,textWidthRight:0.00%}");
-			Write($" ({(accuracyDiff < 0 ? "" : "+")}{accuracyDiff:0.00%})\n", GetColor(accuracyDiff));
-
-			Write($"{$"Enemies Alive",-textWidthLeft}{si.EnemiesAlive,textWidthRight}");
-			Write($" ({si.EnemiesAliveDiff:+0;-#})\n", GetColor(si.EnemiesAliveDiff));
-
-			Write($"{$"Homing",-textWidthLeft}{si.Homing,textWidthRight}");
-			Write($" ({si.HomingDiff:+0;-#})\n", GetColor(si.HomingDiff));
-
-			Write($"{$"Level 2",-textWidthLeft}{si.LevelUpTime2,textWidthRight:0.0000}");
-			Write($" ({(si.LevelUpTime2Diff < 0 ? "" : "+")}{si.LevelUpTime2Diff:0.0000})\n", GetColor(-si.LevelUpTime2Diff));
-
-			Write($"{$"Level 3",-textWidthLeft}{si.LevelUpTime3,textWidthRight:0.0000}");
-			Write($" ({(si.LevelUpTime3Diff < 0 ? "" : "+")}{si.LevelUpTime3Diff:0.0000})\n", GetColor(-si.LevelUpTime3Diff));
-
-			Write($"{$"Level 4",-textWidthLeft}{si.LevelUpTime4,textWidthRight:0.0000}");
-			Write($" ({(si.LevelUpTime4Diff < 0 ? "" : "+")}{si.LevelUpTime4Diff:0.0000})\n", GetColor(-si.LevelUpTime4Diff));
-
-			ConsoleColor GetColor<T>(T n)
-				where T : IComparable<T>
+			if (si.Rank != 0)
 			{
-				int comparison = n.CompareTo(default(T));
-				return comparison == 0 ? ConsoleColor.White : comparison == 1 ? ConsoleColor.Green : ConsoleColor.Red;
+				Write($"{$"Rank",-textWidthLeft}{$"{si.Rank} / {si.TotalPlayers}",textWidthRight}");
+				Write($" ({si.RankDiff:+0;-#})\n", GetImprovementColor(si.RankDiff));
+
+				Write($"{$"Time",-textWidthLeft}{si.Time,textWidthRight:0.0000}");
+				Write($" (+{si.TimeDiff:0.0000})\n", ConsoleColor.Green);
+
+				Write($"{$"Kills",-textWidthLeft}{si.Kills,textWidthRight}");
+				Write($" ({si.KillsDiff:+0;-#})\n", GetImprovementColor(si.KillsDiff));
+
+				Write($"{$"Gems",-textWidthLeft}{si.Gems,textWidthRight}");
+				Write($" ({si.GemsDiff:+0;-#})\n", GetImprovementColor(si.GemsDiff));
+
+				Write($"{$"Shots Hit",-textWidthLeft}{si.ShotsHit,textWidthRight}");
+				Write($" ({si.ShotsHitDiff:+0;-#})\n", GetImprovementColor(si.ShotsHitDiff));
+
+				Write($"{$"Shots Fired",-textWidthLeft}{si.ShotsFired,textWidthRight}");
+				Write($" ({si.ShotsFiredDiff:+0;-#})\n", GetImprovementColor(si.ShotsFiredDiff));
+
+				Write($"{$"Accuracy",-textWidthLeft}{accuracy,textWidthRight:0.00%}");
+				Write($" ({(accuracyDiff < 0 ? "" : "+")}{accuracyDiff:0.00%})\n", GetImprovementColor(accuracyDiff));
+
+				Write($"{$"Enemies Alive",-textWidthLeft}{si.EnemiesAlive,textWidthRight}");
+				Write($" ({si.EnemiesAliveDiff:+0;-#})\n", GetImprovementColor(si.EnemiesAliveDiff));
+
+				Write($"{$"Homing",-textWidthLeft}{si.Homing,textWidthRight}");
+				Write($" ({si.HomingDiff:+0;-#})\n", GetImprovementColor(si.HomingDiff));
+
+				Write($"{$"Level 2",-textWidthLeft}{si.LevelUpTime2,textWidthRight:0.0000}");
+				Write($" ({(si.LevelUpTime2Diff < 0 ? "" : "+")}{si.LevelUpTime2Diff:0.0000})\n", GetImprovementColor(-si.LevelUpTime2Diff));
+
+				Write($"{$"Level 3",-textWidthLeft}{si.LevelUpTime3,textWidthRight:0.0000}");
+				Write($" ({(si.LevelUpTime3Diff < 0 ? "" : "+")}{si.LevelUpTime3Diff:0.0000})\n", GetImprovementColor(-si.LevelUpTime3Diff));
+
+				Write($"{$"Level 4",-textWidthLeft}{si.LevelUpTime4,textWidthRight:0.0000}");
+				Write($" ({(si.LevelUpTime4Diff < 0 ? "" : "+")}{si.LevelUpTime4Diff:0.0000})\n", GetImprovementColor(-si.LevelUpTime4Diff));
+
+				ConsoleColor GetImprovementColor<T>(T n)
+					where T : IComparable<T>
+				{
+					int comparison = n.CompareTo(default(T));
+					return comparison == 0 ? ConsoleColor.White : comparison == 1 ? ConsoleColor.Green : ConsoleColor.Red;
+				}
+			}
+
+			WriteLine();
+
+			for (int i = 1; i <= si.TotalPlayers; i++)
+			{
+				int spaceCountCurrent = i.ToString().Length;
+				int spaceCountTotal = si.TotalPlayers.ToString().Length;
+
+				CustomEntryBase entry = si.Entries[i - 1];
+				ConsoleColor color = GetDaggerColor(entry.Time, si.Leaderboard);
+
+				if (entry.PlayerId == scanner.PlayerId)
+					Console.BackgroundColor = ConsoleColor.DarkGray;
+				Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i}. ");
+				Write($"{entry.Username.SubstringSafe(0, textWidthLeft),-textWidthLeft}", color);
+				Write($"{entry.Time,textWidthRight:0.0000}\n", color);
+				Console.BackgroundColor = ConsoleColor.Black;
+			}
+
+			ConsoleColor GetDaggerColor(float seconds, CustomLeaderboardBase leaderboard)
+			{
+				if (leaderboard.Homing != 0 && seconds > leaderboard.Homing)
+					return ConsoleColor.Magenta;
+				if (seconds > leaderboard.Devil)
+					return ConsoleColor.Red;
+				if (seconds > leaderboard.Golden)
+					return ConsoleColor.Yellow;
+				if (seconds > leaderboard.Silver)
+					return ConsoleColor.Gray;
+				if (seconds > leaderboard.Bronze)
+					return ConsoleColor.DarkRed;
+				return ConsoleColor.DarkGray;
 			}
 		}
 
 		private static void Write(object text, ConsoleColor color = ConsoleColor.White)
 		{
 			Console.ForegroundColor = color;
-			Console.Write(text.ToString());
+			Console.Write($"{text,-textWidthLeft}");
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
