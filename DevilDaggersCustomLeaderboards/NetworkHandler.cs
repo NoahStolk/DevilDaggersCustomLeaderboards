@@ -60,9 +60,7 @@ namespace DevilDaggersCustomLeaderboards
 					scanner.ShotsFired,
 					scanner.EnemiesAlive,
 					scanner.Homing,
-					scanner.LevelUpTime2,
-					scanner.LevelUpTime3,
-					scanner.LevelUpTime4);
+					string.Join(",", new[] { scanner.LevelUpTime2, scanner.LevelUpTime3, scanner.LevelUpTime4 }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 				List<string> queryValues = new List<string>
