@@ -93,44 +93,67 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		internal void FakeUpload()
+		internal void FakeUpload(int id, float seconds)
 		{
-			string toEncrypt = string.Join(";",
-				21854,
-				"xvlv testing",
-				11.3,
-				1,
-				14,
-				3,
-				666,
-				6667,
-				54,
-				3,
-				string.Join(",", new[] { 5, 6, 7.5f }));
-			string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
-
-			List<string> queryValues = new List<string>
+			try
 			{
-				$"spawnsetHash=abc",
-				$"playerId=21854",
-				$"username=xvlv testing",
-				$"time=11.3",
-				$"gems=1",
-				$"kills=14",
-				$"deathType=3",
-				$"shotsHit=666",
-				$"shotsFired=6667",
-				$"enemiesAlive=54",
-				$"homing=3",
-				$"levelUpTime2=5",
-				$"levelUpTime3=6",
-				$"levelUpTime4=7.5",
-				$"ddclClientVersion={Program.LocalVersion}",
-				$"v={HttpUtility.HtmlEncode(validation)}"
-			};
+				string hash = "7A427E3149DBD1307B9F730BECA13EE9007FC1CEC0B23E493B236DFA8747ED4A"; // DaggerLobby
+				string username = "xvlv testing";
+				int gems = 1;
+				int kills = 14;
+				int deathType = 3;
+				int shotsHit = 666;
+				int shotsFired = 6667;
+				int enemiesAlive = 54;
+				int homing = 3;
+				float levelUpTime2 = 0.5f;
+				float levelUpTime3 = 1.5f;
+				float levelUpTime4 = 2.5f;
 
-			using (WebClient wc = new WebClient())
-				Console.WriteLine(JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}")));
+				string toEncrypt = string.Join(";",
+					id,
+					username,
+					seconds,
+					gems,
+					kills,
+					deathType,
+					shotsHit,
+					shotsFired,
+					enemiesAlive,
+					homing,
+					string.Join(",", new[] { levelUpTime2, levelUpTime3, levelUpTime4 }));
+				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
+
+				List<string> queryValues = new List<string>
+				{
+					$"spawnsetHash={hash}",
+					$"playerId={id}",
+					$"username={username}",
+					$"time={seconds}",
+					$"gems={gems}",
+					$"kills={kills}",
+					$"deathType={deathType}",
+					$"shotsHit={shotsHit}",
+					$"shotsFired={shotsFired}",
+					$"enemiesAlive={enemiesAlive}",
+					$"homing={homing}",
+					$"levelUpTime2={levelUpTime2}",
+					$"levelUpTime3={levelUpTime3}",
+					$"levelUpTime4={levelUpTime4}",
+					$"ddclClientVersion={Program.LocalVersion}",
+					$"v={HttpUtility.HtmlEncode(validation)}"
+				};
+
+				using (WebClient wc = new WebClient())
+				{
+					UploadResult result = JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
+					Console.WriteLine(result.Message);
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error uploading score\n\nDetails:\n\n{ex.Message}");
+			}
 		}
 	}
 }

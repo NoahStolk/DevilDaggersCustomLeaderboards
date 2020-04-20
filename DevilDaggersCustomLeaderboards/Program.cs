@@ -115,6 +115,10 @@ namespace DevilDaggersCustomLeaderboards
 				scanner.PreScan();
 				scanner.Scan();
 
+				//if (scanner.SpawnsetHash == "7A427E3149DBD1307B9F730BECA13EE9007FC1CEC0B23E493B236DFA8747ED4A")
+				//	for (int i = 0; i < 4; i++)
+				//		NetworkHandler.Instance.FakeUpload(500000 + i, i + 0.5f);
+
 				if (recording)
 				{
 					WriteLine($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
@@ -168,7 +172,7 @@ namespace DevilDaggersCustomLeaderboards
 					{
 						recording = false;
 
-						var tries = 0;
+						int tries = 0;
 						UploadResult uploadResult;
 						do
 						{
@@ -185,20 +189,6 @@ namespace DevilDaggersCustomLeaderboards
 								if (uploadResult.SubmissionInfo != null)
 									WriteSubmissionInfo(uploadResult.SubmissionInfo);
 								WriteLine();
-
-								WriteLine("Username", scanner.Username);
-								WriteLine("Time", scanner.Time.Value.ToString("0.0000"));
-								WriteLine("Kills", scanner.Kills);
-								WriteLine("Gems", scanner.Gems);
-								WriteLine("Shots Hit", scanner.ShotsHit);
-								WriteLine("Shots Fired", scanner.ShotsFired);
-								WriteLine("Accuracy", $"{(scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (float)scanner.ShotsFired):0.00%}");
-								WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType).Name);
-								WriteLine("Enemies Alive", scanner.EnemiesAlive);
-								WriteLine("Homing", scanner.Homing);
-								WriteLine("Level 2", scanner.LevelUpTime2 == 0 ? "N/A" : scanner.LevelUpTime2.ToString("0.0000"));
-								WriteLine("Level 3", scanner.LevelUpTime3 == 0 ? "N/A" : scanner.LevelUpTime3.ToString("0.0000"));
-								WriteLine("Level 4", scanner.LevelUpTime4 == 0 ? "N/A" : scanner.LevelUpTime4.ToString("0.0000"));
 							}
 							else
 							{
