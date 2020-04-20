@@ -37,7 +37,7 @@ namespace DevilDaggersCustomLeaderboards
 
 				// This should fix the broken submissions that occasionally get sent for some reason.
 				if (scanner.Time < minimalTime)
-					return new UploadResult(false, $"Timer is under {minimalTime:0.0000}. Unable to validate.", 3);
+					return new UploadResult(false, $"Timer is under {minimalTime:0.0000}. Unable to validate.", 1);
 
 				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
 				{
