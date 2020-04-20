@@ -18,10 +18,10 @@ namespace DevilDaggersCustomLeaderboards
 	/// Special Write methods are used to output to the console, as clearing the console after every update makes everything flicker which is ugly.
 	/// So instead of clearing the console using Console.Clear(), we just reset the cursor to the top-left, and then overwrite everything from the previous update using the special Write methods.
 	/// </summary>
-	public static class Program
+	internal static class Program
 	{
-		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
-		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
+		internal static string ApplicationName => "DevilDaggersCustomLeaderboards";
+		internal static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
 
 		private const int textWidthFull = 50;
 		private const int textWidthLeft = 15;
@@ -37,7 +37,7 @@ namespace DevilDaggersCustomLeaderboards
 #pragma warning restore IDE1006
 
 		[DllImport("user32.dll")]
-		public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
+		internal static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
 
 		[DllImport("user32.dll")]
 		private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
@@ -48,12 +48,12 @@ namespace DevilDaggersCustomLeaderboards
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
-		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		internal static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		public static Assembly Assembly { get; private set; }
-		public static Version LocalVersion { get; private set; }
+		internal static Assembly Assembly { get; private set; }
+		internal static Version LocalVersion { get; private set; }
 
-		public static void Main()
+		internal static void Main()
 		{
 			XmlConfigurator.Configure();
 
@@ -137,6 +137,9 @@ namespace DevilDaggersCustomLeaderboards
 					WriteLine("Replay", scanner.IsReplay);
 					WriteLine();
 
+					if (scanner.LevelGems == 0 && scanner.Gems != 0)
+						WriteLine("WE HAVE A PROBLEM", ConsoleColor.Red);
+
 					WriteLine("Hand", GetHand(scanner.LevelGems));
 					int GetHand(int levelGems)
 					{
@@ -165,7 +168,7 @@ namespace DevilDaggersCustomLeaderboards
 					{
 						recording = false;
 
-						int tries = 0;
+						var tries = 0;
 						UploadResult uploadResult;
 						do
 						{

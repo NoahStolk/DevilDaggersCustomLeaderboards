@@ -9,18 +9,18 @@ using System.Web;
 
 namespace DevilDaggersCustomLeaderboards
 {
-	public sealed class NetworkHandler
+	internal sealed class NetworkHandler
 	{
 		private const float minimalTime = 2.5f;
 
 		private static readonly Lazy<NetworkHandler> lazy = new Lazy<NetworkHandler>(() => new NetworkHandler());
-		public static NetworkHandler Instance => lazy.Value;
+		internal static NetworkHandler Instance => lazy.Value;
 
 		private NetworkHandler()
 		{
 		}
 
-		public UploadResult Upload()
+		internal UploadResult Upload()
 		{
 			try
 			{
@@ -93,7 +93,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		public void FakeUpload()
+		internal void FakeUpload()
 		{
 			string toEncrypt = string.Join(";",
 				21854,

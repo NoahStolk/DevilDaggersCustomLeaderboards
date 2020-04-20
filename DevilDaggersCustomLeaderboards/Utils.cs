@@ -5,9 +5,9 @@ using System.IO;
 
 namespace DevilDaggersCustomLeaderboards
 {
-	public static class Utils
+	internal static class Utils
 	{
-		public static string CalculateSpawnsetHash()
+		internal static string CalculateSpawnsetHash()
 		{
 			try
 			{
@@ -24,7 +24,7 @@ namespace DevilDaggersCustomLeaderboards
 			catch (Exception ex)
 			{
 				Program.Log.Error("Failed to calculate spawnset hash.", ex);
-				
+
 				return string.Empty;
 			}
 		}
