@@ -37,7 +37,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			}
 
 			Cmd.WriteLine("Hand", GetHand(scanner.LevelGems));
-			int GetHand(int levelGems)
+			static int GetHand(int levelGems)
 			{
 				if (levelGems < 10)
 					return 1;
