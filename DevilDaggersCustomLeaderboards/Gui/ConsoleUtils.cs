@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevilDaggersCore.CustomLeaderboards;
+using System;
 
 namespace DevilDaggersCustomLeaderboards.Gui
 {
@@ -36,6 +37,28 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Console.ForegroundColor = color;
 			Console.WriteLine($"{textLeft,-TextWidthLeft}{textRight,TextWidthRight}{new string(' ', TextWidthFull)}");
 			Console.ForegroundColor = ConsoleColor.White;
+		}
+
+		internal static ConsoleColor GetDaggerColor(float seconds, CustomLeaderboardBase leaderboard)
+		{
+			if (leaderboard.Homing != 0 && seconds > leaderboard.Homing)
+				return ConsoleColor.Magenta;
+			if (seconds > leaderboard.Devil)
+				return ConsoleColor.Red;
+			if (seconds > leaderboard.Golden)
+				return ConsoleColor.Yellow;
+			if (seconds > leaderboard.Silver)
+				return ConsoleColor.Gray;
+			if (seconds > leaderboard.Bronze)
+				return ConsoleColor.DarkRed;
+			return ConsoleColor.DarkGray;
+		}
+
+		internal static ConsoleColor GetImprovementColor<T>(T n)
+			where T : IComparable<T>
+		{
+			int comparison = n.CompareTo(default);
+			return comparison == 0 ? ConsoleColor.White : comparison == 1 ? ConsoleColor.Green : ConsoleColor.Red;
 		}
 	}
 }

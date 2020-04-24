@@ -17,7 +17,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				int spaceCountTotal = si.TotalPlayers.ToString().Length;
 
 				CustomEntryBase entry = si.Entries[i];
-				ConsoleColor color = GetDaggerColor(entry.Time, si.Leaderboard);
+				ConsoleColor color = Cmd.GetDaggerColor(entry.Time, si.Leaderboard);
 
 				if (entry.PlayerId == currentPlayerId)
 					Console.BackgroundColor = ConsoleColor.DarkGray;
@@ -39,7 +39,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 
 			Cmd.Write($"{$"Rank",-Cmd.TextWidthLeft}{$"{si.Rank} / {si.TotalPlayers}",Cmd.TextWidthRight}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.RankDiff:+0;-#})", GetImprovementColor(si.RankDiff));
+				Cmd.Write($" ({si.RankDiff:+0;-#})", Cmd.GetImprovementColor(si.RankDiff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}{si.Time,Cmd.TextWidthRight:0.0000}");
@@ -49,75 +49,53 @@ namespace DevilDaggersCustomLeaderboards.Gui
 
 			Cmd.Write($"{$"Kills",-Cmd.TextWidthLeft}{si.Kills,Cmd.TextWidthRight}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.KillsDiff:+0;-#})", GetImprovementColor(si.KillsDiff));
+				Cmd.Write($" ({si.KillsDiff:+0;-#})", Cmd.GetImprovementColor(si.KillsDiff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Gems",-Cmd.TextWidthLeft}{si.Gems,Cmd.TextWidthRight}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.GemsDiff:+0;-#})", GetImprovementColor(si.GemsDiff));
+				Cmd.Write($" ({si.GemsDiff:+0;-#})", Cmd.GetImprovementColor(si.GemsDiff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Shots Hit",-Cmd.TextWidthLeft}{si.ShotsHit,Cmd.TextWidthRight}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.ShotsHitDiff:+0;-#})", GetImprovementColor(si.ShotsHitDiff));
+				Cmd.Write($" ({si.ShotsHitDiff:+0;-#})", Cmd.GetImprovementColor(si.ShotsHitDiff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Shots Fired",-Cmd.TextWidthLeft}{si.ShotsFired,Cmd.TextWidthRight}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.ShotsFiredDiff:+0;-#})", GetImprovementColor(si.ShotsFiredDiff));
+				Cmd.Write($" ({si.ShotsFiredDiff:+0;-#})", Cmd.GetImprovementColor(si.ShotsFiredDiff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Accuracy",-Cmd.TextWidthLeft}{accuracy,Cmd.TextWidthRight:0.00%}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(accuracyDiff < 0 ? "" : "+")}{accuracyDiff:0.00%})", GetImprovementColor(accuracyDiff));
+				Cmd.Write($" ({(accuracyDiff < 0 ? "" : "+")}{accuracyDiff:0.00%})", Cmd.GetImprovementColor(accuracyDiff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Enemies Alive",-Cmd.TextWidthLeft}{si.EnemiesAlive,Cmd.TextWidthRight}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.EnemiesAliveDiff:+0;-#})", GetImprovementColor(si.EnemiesAliveDiff));
+				Cmd.Write($" ({si.EnemiesAliveDiff:+0;-#})", Cmd.GetImprovementColor(si.EnemiesAliveDiff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Homing",-Cmd.TextWidthLeft}{si.Homing,Cmd.TextWidthRight}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.HomingDiff:+0;-#})", GetImprovementColor(si.HomingDiff));
+				Cmd.Write($" ({si.HomingDiff:+0;-#})", Cmd.GetImprovementColor(si.HomingDiff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Level 2",-Cmd.TextWidthLeft}{si.LevelUpTime2,Cmd.TextWidthRight:0.0000}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(si.LevelUpTime2Diff < 0 ? "" : "+")}{si.LevelUpTime2Diff:0.0000})", GetImprovementColor(-si.LevelUpTime2Diff));
+				Cmd.Write($" ({(si.LevelUpTime2Diff < 0 ? "" : "+")}{si.LevelUpTime2Diff:0.0000})", Cmd.GetImprovementColor(-si.LevelUpTime2Diff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Level 3",-Cmd.TextWidthLeft}{si.LevelUpTime3,Cmd.TextWidthRight:0.0000}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(si.LevelUpTime3Diff < 0 ? "" : "+")}{si.LevelUpTime3Diff:0.0000})", GetImprovementColor(-si.LevelUpTime3Diff));
+				Cmd.Write($" ({(si.LevelUpTime3Diff < 0 ? "" : "+")}{si.LevelUpTime3Diff:0.0000})", Cmd.GetImprovementColor(-si.LevelUpTime3Diff));
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Level 4",-Cmd.TextWidthLeft}{si.LevelUpTime4,Cmd.TextWidthRight:0.0000}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(si.LevelUpTime4Diff < 0 ? "" : "+")}{si.LevelUpTime4Diff:0.0000})", GetImprovementColor(-si.LevelUpTime4Diff));
+				Cmd.Write($" ({(si.LevelUpTime4Diff < 0 ? "" : "+")}{si.LevelUpTime4Diff:0.0000})", Cmd.GetImprovementColor(-si.LevelUpTime4Diff));
 			Cmd.WriteLine();
-		}
-
-		private static ConsoleColor GetDaggerColor(float seconds, CustomLeaderboardBase leaderboard)
-		{
-			if (leaderboard.Homing != 0 && seconds > leaderboard.Homing)
-				return ConsoleColor.Magenta;
-			if (seconds > leaderboard.Devil)
-				return ConsoleColor.Red;
-			if (seconds > leaderboard.Golden)
-				return ConsoleColor.Yellow;
-			if (seconds > leaderboard.Silver)
-				return ConsoleColor.Gray;
-			if (seconds > leaderboard.Bronze)
-				return ConsoleColor.DarkRed;
-			return ConsoleColor.DarkGray;
-		}
-
-		private static ConsoleColor GetImprovementColor<T>(T n)
-			where T : IComparable<T>
-		{
-			int comparison = n.CompareTo(default);
-			return comparison == 0 ? ConsoleColor.White : comparison == 1 ? ConsoleColor.Green : ConsoleColor.Red;
 		}
 	}
 }
