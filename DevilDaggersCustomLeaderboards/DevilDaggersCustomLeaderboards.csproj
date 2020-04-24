@@ -54,6 +54,16 @@
     <Compile Include="Gui\ConsoleUtils.cs" />
     <Compile Include="Gui\ScannerGuiExtensions.cs" />
     <Compile Include="Gui\SubmissionInfoGuiExtensions.cs" />
+    <Compile Include="Memory\AddressUtils.cs" />
+    <Compile Include="Memory\Memory.cs" />
+    <Compile Include="Memory\MemoryApi.cs" />
+    <Compile Include="Memory\ProcessAccessType.cs" />
+    <Compile Include="Memory\Scanner.cs" />
+    <Compile Include="Memory\Variables\AbstractVariable.cs" />
+    <Compile Include="Memory\Variables\BoolVariable.cs" />
+    <Compile Include="Memory\Variables\FloatVariable.cs" />
+    <Compile Include="Memory\Variables\IntVariable.cs" />
+    <Compile Include="Memory\Variables\StringVariable.cs" />
     <Compile Include="NetworkHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

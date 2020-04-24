@@ -1,6 +1,6 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
-using DevilDaggersCore.MemoryHandling;
 using DevilDaggersCore.Tools;
+using DevilDaggersCustomLeaderboards.Memory;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

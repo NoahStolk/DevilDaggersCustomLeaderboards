@@ -1,5 +1,5 @@
-﻿using DevilDaggersCore.MemoryHandling;
-using DevilDaggersCore.Spawnsets;
+﻿using DevilDaggersCore.Spawnsets;
+using DevilDaggersCustomLeaderboards.Memory;
 using System;
 using System.IO;
 

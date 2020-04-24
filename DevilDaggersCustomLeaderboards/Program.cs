@@ -1,7 +1,7 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
-using DevilDaggersCore.MemoryHandling;
 using DevilDaggersCore.Tools;
 using DevilDaggersCustomLeaderboards.Gui;
+using DevilDaggersCustomLeaderboards.Memory;
 using log4net;
 using log4net.Config;
 using System;

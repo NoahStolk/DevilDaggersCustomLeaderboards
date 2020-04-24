@@ -1,5 +1,5 @@
 ﻿using DevilDaggersCore.Game;
-using DevilDaggersCore.MemoryHandling;
+using DevilDaggersCustomLeaderboards.Memory;
 using System;
 using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
