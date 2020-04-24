@@ -30,7 +30,10 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine();
 
 			if (scanner.LevelGems == 0 && scanner.Gems != 0)
-				Cmd.WriteLine("WE HAVE A PROBLEM", ConsoleColor.Red);
+			{
+				Cmd.WriteLine("WARNING: Level up times and homing count are not being detected. Restart Devil Daggers to fix this issue.", ConsoleColor.Red);
+				// TODO: Log addresses.
+			}
 
 			Cmd.WriteLine("Hand", GetHand(scanner.LevelGems));
 			int GetHand(int levelGems)
