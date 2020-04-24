@@ -85,9 +85,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			bytesWritten = ptrBytesWritten.ToInt32();
 		}
 
-		public string PointerWrite(IntPtr memoryAddress, byte[] bytesToWrite, int[] Offset, out int bytesWritten)
+		public string PointerWrite(IntPtr memoryAddress, byte[] bytesToWrite, int[] offset, out int bytesWritten)
 		{
-			int iPointerCount = Offset.Length - 1;
+			int iPointerCount = offset.Length - 1;
 			IntPtr ptrBytesWritten;
 			bytesWritten = 0;
 			byte[] buffer = new byte[4]; // DWORD to hold an Address
@@ -96,7 +96,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			if (iPointerCount == 0)
 			{
 				MemoryApi.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
-				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[0]; // Final Address
+				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[0]; // Final Address
 				MemoryApi.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
 
 				bytesWritten = ptrBytesWritten.ToInt32();
@@ -108,7 +108,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				if (i == iPointerCount)
 				{
 					MemoryApi.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
-					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[i]; // Final Address
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i]; // Final Address
 					MemoryApi.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
 
 					bytesWritten = ptrBytesWritten.ToInt32();
@@ -117,12 +117,12 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				else if (i == 0)
 				{
 					MemoryApi.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
-					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[i];
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i];
 				}
 				else
 				{
 					MemoryApi.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
-					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + Offset[i];
+					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i];
 				}
 			}
 
