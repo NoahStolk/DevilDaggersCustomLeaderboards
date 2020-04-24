@@ -116,7 +116,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 		private static ConsoleColor GetImprovementColor<T>(T n)
 			where T : IComparable<T>
 		{
-			int comparison = n.CompareTo(default(T));
+			int comparison = n.CompareTo(default);
 			return comparison == 0 ? ConsoleColor.White : comparison == 1 ? ConsoleColor.Green : ConsoleColor.Red;
 		}
 	}
