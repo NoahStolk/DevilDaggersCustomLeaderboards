@@ -29,7 +29,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Replay", scanner.IsReplay);
 			Cmd.WriteLine();
 
-			if (scanner.LevelGems == 0 && scanner.Gems != 0)
+			if (scanner.LevelGems == 0 && scanner.Gems != 0 && scanner.IsAlive && !scanner.IsReplay)
 			{
 				Cmd.WriteLine("WARNING: Level up times and homing count are not being detected.\nRestart Devil Daggers to fix this issue.", ConsoleColor.Red);
 				// TODO: Log addresses.
