@@ -11,7 +11,7 @@ namespace DevilDaggersCustomLeaderboards
 {
 	internal sealed class NetworkHandler
 	{
-		private const float minimalTime = 2.5f;
+		private const float minimalTime = 1f;
 
 		private static readonly Lazy<NetworkHandler> lazy = new Lazy<NetworkHandler>(() => new NetworkHandler());
 		internal static NetworkHandler Instance => lazy.Value;
