@@ -139,7 +139,8 @@ namespace DevilDaggersCustomLeaderboards
 
 									Cmd.WriteLine();
 
-									uploadResult.SubmissionInfo.WriteStats();
+									if (uploadResult.SubmissionInfo.IsHighscore())
+										uploadResult.SubmissionInfo.WriteHighscoreStats();
 								}
 								Cmd.WriteLine();
 							}
