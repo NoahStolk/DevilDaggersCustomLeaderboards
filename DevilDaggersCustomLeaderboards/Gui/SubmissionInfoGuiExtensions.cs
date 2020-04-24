@@ -1,4 +1,5 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
+using DevilDaggersCore.Game;
 using NetBase.Extensions;
 using System;
 using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
@@ -30,12 +31,18 @@ namespace DevilDaggersCustomLeaderboards.Gui
 
 		internal static void WriteHighscoreStats(this SubmissionInfo si)
 		{
+			int deathType = si.Entries[si.Rank - 1].DeathType;
+
 			double accuracy = si.ShotsFired == 0 ? 0 : si.ShotsHit / (double)si.ShotsFired;
 
 			int shotsHitOld = si.ShotsHit - si.ShotsHitDiff;
 			int shotsFiredOld = si.ShotsFired - si.ShotsFiredDiff;
 			double accuracyOld = shotsFiredOld == 0 ? 0 : shotsHitOld / (double)shotsFiredOld;
 			double accuracyDiff = accuracy - accuracyOld;
+
+			Cmd.Write($"{GameInfo.GetDeathFromDeathType(deathType).Name}", Cmd.GetDeathColor(deathType));
+			Cmd.WriteLine();
+			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Rank",-Cmd.TextWidthLeft}{$"{si.Rank} / {si.TotalPlayers}",Cmd.TextWidthRight}");
 			if (!si.IsNewUserOnThisLeaderboard)

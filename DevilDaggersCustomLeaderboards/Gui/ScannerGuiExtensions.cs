@@ -25,9 +25,11 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Shots Fired", scanner.ShotsFired);
 			Cmd.WriteLine("Accuracy", $"{(scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (float)scanner.ShotsFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
-			Cmd.WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType).Name);
+#if DEBUG
+			Cmd.WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType).Name, Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine("Alive", scanner.IsAlive);
 			Cmd.WriteLine("Replay", scanner.IsReplay);
+#endif
 			Cmd.WriteLine();
 
 			if (scanner.LevelGems == 0 && scanner.Gems != 0 && scanner.IsAlive && !scanner.IsReplay)
@@ -73,6 +75,10 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			float levelUpTime2Diff = scanner.LevelUpTime2 - entry.LevelUpTime2;
 			float levelUpTime3Diff = scanner.LevelUpTime3 - entry.LevelUpTime3;
 			float levelUpTime4Diff = scanner.LevelUpTime4 - entry.LevelUpTime4;
+
+			Cmd.Write($"{GameInfo.GetDeathFromDeathType(scanner.DeathType).Name}", Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.WriteLine();
+			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
 			Cmd.Write($"{(float)scanner.Time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard));

@@ -54,6 +54,29 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			return ConsoleColor.DarkGray;
 		}
 
+		internal static ConsoleColor GetDeathColor(int deathType)
+		{
+			return deathType switch
+			{
+				1 => ConsoleColor.DarkYellow,
+				2 => ConsoleColor.DarkYellow,
+				3 => ConsoleColor.DarkYellow,
+				4 => ConsoleColor.Green,
+				5 => ConsoleColor.DarkYellow,
+				6 => ConsoleColor.DarkYellow,
+				7 => ConsoleColor.DarkYellow,
+				8 => ConsoleColor.DarkYellow,
+				9 => ConsoleColor.Gray,
+				10 => ConsoleColor.DarkGreen,
+				11 => ConsoleColor.Green,
+				12 => ConsoleColor.Green,
+				13 => ConsoleColor.Red,
+				14 => ConsoleColor.Magenta,
+				15 => ConsoleColor.DarkMagenta,
+				_ => ConsoleColor.White
+			};
+		}
+
 		internal static ConsoleColor GetImprovementColor<T>(T n)
 			where T : IComparable<T>
 		{
