@@ -42,7 +42,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				Cmd.Write($" ({si.RankDiff:+0;-#})", Cmd.GetImprovementColor(si.RankDiff));
 			Cmd.WriteLine();
 
-			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}{si.Time,Cmd.TextWidthRight:0.0000}");
+			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
+			Cmd.Write($"{si.Time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(si.Time, si.Leaderboard));
 			if (!si.IsNewUserOnThisLeaderboard)
 				Cmd.Write($" (+{si.TimeDiff:0.0000})", ConsoleColor.Green);
 			Cmd.WriteLine();

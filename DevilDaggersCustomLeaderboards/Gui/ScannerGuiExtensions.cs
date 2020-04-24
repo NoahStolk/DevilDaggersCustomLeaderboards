@@ -57,7 +57,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine();
 		}
 
-		internal static void WriteStats(this Scanner scanner, CustomEntryBase entry)
+		internal static void WriteStats(this Scanner scanner, CustomLeaderboardBase leaderboard, CustomEntryBase entry)
 		{
 			double accuracy = scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (double)scanner.ShotsFired;
 			double accuracyOld = entry.ShotsFired == 0 ? 0 : entry.ShotsHit / (double)entry.ShotsFired;
@@ -74,7 +74,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			float levelUpTime3Diff = scanner.LevelUpTime3 - entry.LevelUpTime3;
 			float levelUpTime4Diff = scanner.LevelUpTime4 - entry.LevelUpTime4;
 
-			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}{(float)scanner.Time,Cmd.TextWidthRight:0.0000}");
+			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
+			Cmd.Write($"{(float)scanner.Time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard));
 			Cmd.WriteLine($" ({timeDiff:0.0000})", ConsoleColor.Red);
 
 			Cmd.Write($"{$"Kills",-Cmd.TextWidthLeft}{scanner.Kills,Cmd.TextWidthRight}");
