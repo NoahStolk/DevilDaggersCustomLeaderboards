@@ -6,6 +6,7 @@ using log4net;
 using log4net.Config;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -141,6 +142,8 @@ namespace DevilDaggersCustomLeaderboards
 
 									if (uploadResult.SubmissionInfo.IsHighscore())
 										uploadResult.SubmissionInfo.WriteHighscoreStats();
+									else
+										scanner.WriteStats(uploadResult.SubmissionInfo.Entries.FirstOrDefault(e => e.PlayerId == scanner.PlayerId));
 								}
 								Cmd.WriteLine();
 							}
