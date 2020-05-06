@@ -166,7 +166,7 @@ namespace DevilDaggersCustomLeaderboards
 						Cmd.WriteLine();
 					}
 				}
-				else if (scanner.Time < scanner.Time.ValuePrevious)
+				else if (scanner.TimeFloat < scanner.TimeFloat.ValuePrevious)
 				{
 					Console.Clear();
 					recording = true;

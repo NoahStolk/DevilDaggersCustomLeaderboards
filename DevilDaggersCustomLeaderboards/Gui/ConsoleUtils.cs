@@ -39,17 +39,17 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
-		internal static ConsoleColor GetDaggerColor(float seconds, CustomLeaderboardBase leaderboard)
+		internal static ConsoleColor GetDaggerColor(int time, CustomLeaderboardBase leaderboard)
 		{
-			if (leaderboard.Homing != 0 && seconds > leaderboard.Homing)
+			if (leaderboard.Homing != 0 && time > leaderboard.Homing)
 				return ConsoleColor.Magenta;
-			if (seconds > leaderboard.Devil)
+			if (time > leaderboard.Devil)
 				return ConsoleColor.Red;
-			if (seconds > leaderboard.Golden)
+			if (time > leaderboard.Golden)
 				return ConsoleColor.Yellow;
-			if (seconds > leaderboard.Silver)
+			if (time > leaderboard.Silver)
 				return ConsoleColor.Gray;
-			if (seconds > leaderboard.Bronze)
+			if (time > leaderboard.Bronze)
 				return ConsoleColor.DarkRed;
 			return ConsoleColor.DarkGray;
 		}

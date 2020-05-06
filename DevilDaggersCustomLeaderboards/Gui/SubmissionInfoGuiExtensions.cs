@@ -24,7 +24,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 					Console.BackgroundColor = ConsoleColor.DarkGray;
 				Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ");
 				Cmd.Write($"{entry.Username.SubstringSafe(0, Cmd.TextWidthLeft)}", color);
-				Cmd.Write($"{entry.Time,Cmd.TextWidthRight:0.0000}\n", color);
+				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", color);
 				Console.BackgroundColor = ConsoleColor.Black;
 			}
 		}
@@ -49,10 +49,12 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				Cmd.Write($" ({si.RankDiff:+0;-#})", Cmd.GetImprovementColor(si.RankDiff));
 			Cmd.WriteLine();
 
+			float time = si.Time / 10000f;
+			float timeDiff = si.TimeDiff / 10000f;
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{si.Time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(si.Time, si.Leaderboard));
+			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(si.Time, si.Leaderboard));
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" (+{si.TimeDiff:0.0000})", ConsoleColor.Green);
+				Cmd.Write($" (+{timeDiff:0.0000})", ConsoleColor.Green);
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Kills",-Cmd.TextWidthLeft}{si.Kills,Cmd.TextWidthRight}");
@@ -90,19 +92,25 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				Cmd.Write($" ({si.HomingDiff:+0;-#})", Cmd.GetImprovementColor(si.HomingDiff));
 			Cmd.WriteLine();
 
-			Cmd.Write($"{$"Level 2",-Cmd.TextWidthLeft}{si.LevelUpTime2,Cmd.TextWidthRight:0.0000}");
+			float level2 = si.LevelUpTime2 / 10000f;
+			float level2Diff = si.LevelUpTime2Diff / 10000f;
+			Cmd.Write($"{$"Level 2",-Cmd.TextWidthLeft}{level2,Cmd.TextWidthRight:0.0000}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(si.LevelUpTime2Diff < 0 ? "" : "+")}{si.LevelUpTime2Diff:0.0000})", Cmd.GetImprovementColor(-si.LevelUpTime2Diff));
+				Cmd.Write($" ({(level2Diff < 0 ? "" : "+")}{level2Diff:0.0000})", Cmd.GetImprovementColor(-level2Diff));
 			Cmd.WriteLine();
 
-			Cmd.Write($"{$"Level 3",-Cmd.TextWidthLeft}{si.LevelUpTime3,Cmd.TextWidthRight:0.0000}");
+			float level3 = si.LevelUpTime3 / 10000f;
+			float level3Diff = si.LevelUpTime3Diff / 10000f;
+			Cmd.Write($"{$"Level 3",-Cmd.TextWidthLeft}{level3,Cmd.TextWidthRight:0.0000}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(si.LevelUpTime3Diff < 0 ? "" : "+")}{si.LevelUpTime3Diff:0.0000})", Cmd.GetImprovementColor(-si.LevelUpTime3Diff));
+				Cmd.Write($" ({(level3Diff < 0 ? "" : "+")}{level3Diff:0.0000})", Cmd.GetImprovementColor(-level3Diff));
 			Cmd.WriteLine();
 
-			Cmd.Write($"{$"Level 4",-Cmd.TextWidthLeft}{si.LevelUpTime4,Cmd.TextWidthRight:0.0000}");
+			float level4 = si.LevelUpTime4 / 10000f;
+			float level4Diff = si.LevelUpTime4Diff / 10000f;
+			Cmd.Write($"{$"Level 4",-Cmd.TextWidthLeft}{level4,Cmd.TextWidthRight:0.0000}");
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(si.LevelUpTime4Diff < 0 ? "" : "+")}{si.LevelUpTime4Diff:0.0000})", Cmd.GetImprovementColor(-si.LevelUpTime4Diff));
+				Cmd.Write($" ({(level4Diff < 0 ? "" : "+")}{level4Diff:0.0000})", Cmd.GetImprovementColor(-level4Diff));
 			Cmd.WriteLine();
 		}
 	}

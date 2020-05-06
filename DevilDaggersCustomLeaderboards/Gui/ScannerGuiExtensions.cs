@@ -18,7 +18,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Username", scanner.Username);
 			Cmd.WriteLine();
 
-			Cmd.WriteLine("Time", scanner.Time.Value.ToString("0.0000"));
+			Cmd.WriteLine("Time", scanner.TimeFloat.Value.ToString("0.0000"));
 			Cmd.WriteLine("Gems", scanner.Gems);
 			Cmd.WriteLine("Kills", scanner.Kills);
 			Cmd.WriteLine("Shots Hit", scanner.ShotsHit);
@@ -53,9 +53,9 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Homing", scanner.Homing);
 			Cmd.WriteLine();
 
-			Cmd.WriteLine("Level 2", scanner.LevelUpTime2.ToString("0.0000"));
-			Cmd.WriteLine("Level 3", scanner.LevelUpTime3.ToString("0.0000"));
-			Cmd.WriteLine("Level 4", scanner.LevelUpTime4.ToString("0.0000"));
+			Cmd.WriteLine("Level 2", (scanner.LevelUpTime2 / 10000f).ToString("0.0000"));
+			Cmd.WriteLine("Level 3", (scanner.LevelUpTime3 / 10000f).ToString("0.0000"));
+			Cmd.WriteLine("Level 4", (scanner.LevelUpTime4 / 10000f).ToString("0.0000"));
 			Cmd.WriteLine();
 		}
 
@@ -64,25 +64,25 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			double accuracy = scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (double)scanner.ShotsFired;
 			double accuracyOld = entry.ShotsFired == 0 ? 0 : entry.ShotsHit / (double)entry.ShotsFired;
 
-			float timeDiff = scanner.Time - entry.Time;
-			float killsDiff = scanner.Kills - entry.Kills;
-			float gemsDiff = scanner.Gems - entry.Gems;
-			float shotsHitDiff = scanner.ShotsHit - entry.ShotsHit;
-			float shotsFiredDiff = scanner.ShotsFired - entry.ShotsFired;
+			int timeDiff = scanner.Time - entry.Time;
+			int killsDiff = scanner.Kills - entry.Kills;
+			int gemsDiff = scanner.Gems - entry.Gems;
+			int shotsHitDiff = scanner.ShotsHit - entry.ShotsHit;
+			int shotsFiredDiff = scanner.ShotsFired - entry.ShotsFired;
 			double accuracyDiff = accuracy - accuracyOld;
-			float enemiesAliveDiff = scanner.EnemiesAlive - entry.EnemiesAlive;
-			float homingDiff = scanner.Homing - entry.Homing;
-			float levelUpTime2Diff = scanner.LevelUpTime2 - entry.LevelUpTime2;
-			float levelUpTime3Diff = scanner.LevelUpTime3 - entry.LevelUpTime3;
-			float levelUpTime4Diff = scanner.LevelUpTime4 - entry.LevelUpTime4;
+			int enemiesAliveDiff = scanner.EnemiesAlive - entry.EnemiesAlive;
+			int homingDiff = scanner.Homing - entry.Homing;
+			int levelUpTime2Diff = scanner.LevelUpTime2 - entry.LevelUpTime2;
+			int levelUpTime3Diff = scanner.LevelUpTime3 - entry.LevelUpTime3;
+			int levelUpTime4Diff = scanner.LevelUpTime4 - entry.LevelUpTime4;
 
 			Cmd.Write($"{GameInfo.GetDeathFromDeathType(scanner.DeathType).Name}", Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{(float)scanner.Time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard));
-			Cmd.WriteLine($" ({timeDiff:0.0000})", ConsoleColor.Red);
+			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard));
+			Cmd.WriteLine($" ({timeDiff / 10000f:0.0000})", ConsoleColor.Red);
 
 			Cmd.Write($"{$"Kills",-Cmd.TextWidthLeft}{scanner.Kills,Cmd.TextWidthRight}");
 			Cmd.WriteLine($" ({killsDiff:+0;-#})", Cmd.GetImprovementColor(killsDiff));
@@ -105,23 +105,23 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.Write($"{$"Homing",-Cmd.TextWidthLeft}{scanner.Homing,Cmd.TextWidthRight}");
 			Cmd.WriteLine($" ({homingDiff:+0;-#})", Cmd.GetImprovementColor(homingDiff));
 
-			Cmd.Write($"{$"Level 2",-Cmd.TextWidthLeft}{(scanner.LevelUpTime2 == 0 ? "N/A" : $"{scanner.LevelUpTime2:0.0000}"),Cmd.TextWidthRight:0.0000}");
+			Cmd.Write($"{$"Level 2",-Cmd.TextWidthLeft}{(scanner.LevelUpTime2 == 0 ? "N/A" : $"{scanner.LevelUpTime2 / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
 			if (scanner.LevelUpTime2 == 0)
 				Cmd.WriteLine();
 			else
-				Cmd.WriteLine($" ({(levelUpTime2Diff < 0 ? "" : "+")}{levelUpTime2Diff:0.0000})", Cmd.GetImprovementColor(-levelUpTime2Diff));
+				Cmd.WriteLine($" ({(levelUpTime2Diff < 0 ? "" : "+")}{levelUpTime2Diff / 10000f:0.0000})", Cmd.GetImprovementColor(-levelUpTime2Diff));
 
-			Cmd.Write($"{$"Level 3",-Cmd.TextWidthLeft}{(scanner.LevelUpTime3 == 0 ? "N/A" : $"{scanner.LevelUpTime3:0.0000}"),Cmd.TextWidthRight:0.0000}");
+			Cmd.Write($"{$"Level 3",-Cmd.TextWidthLeft}{(scanner.LevelUpTime3 == 0 ? "N/A" : $"{scanner.LevelUpTime3 / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
 			if (scanner.LevelUpTime3 == 0)
 				Cmd.WriteLine();
 			else
-				Cmd.WriteLine($" ({(levelUpTime3Diff < 0 ? "" : "+")}{levelUpTime3Diff:0.0000})", Cmd.GetImprovementColor(-levelUpTime3Diff));
+				Cmd.WriteLine($" ({(levelUpTime3Diff < 0 ? "" : "+")}{levelUpTime3Diff / 10000f:0.0000})", Cmd.GetImprovementColor(-levelUpTime3Diff));
 
-			Cmd.Write($"{$"Level 4",-Cmd.TextWidthLeft}{(scanner.LevelUpTime4 == 0 ? "N/A" : $"{scanner.LevelUpTime4:0.0000}"),Cmd.TextWidthRight:0.0000}");
+			Cmd.Write($"{$"Level 4",-Cmd.TextWidthLeft}{(scanner.LevelUpTime4 == 0 ? "N/A" : $"{scanner.LevelUpTime4 / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
 			if (scanner.LevelUpTime4 == 0)
 				Cmd.WriteLine();
 			else
-				Cmd.WriteLine($" ({(levelUpTime4Diff < 0 ? "" : "+")}{levelUpTime4Diff:0.0000})", Cmd.GetImprovementColor(-levelUpTime4Diff));
+				Cmd.WriteLine($" ({(levelUpTime4Diff < 0 ? "" : "+")}{levelUpTime4Diff / 10000f:0.0000})", Cmd.GetImprovementColor(-levelUpTime4Diff));
 		}
 	}
 }

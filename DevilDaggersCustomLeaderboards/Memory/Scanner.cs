@@ -21,7 +21,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public IntVariable PlayerId { get; private set; } = new IntVariable(magicStatic, 0x5C);
 		public StringVariable Username { get; private set; } = new StringVariable(magicStatic, 0x60, 32);
-		public FloatVariable Time { get; private set; } = new FloatVariable(magicStatic, 0x1A0);
+		public FloatVariable TimeFloat { get; private set; } = new FloatVariable(magicStatic, 0x1A0);
 		public IntVariable Gems { get; private set; } = new IntVariable(magicStatic, 0x1C0);
 		public IntVariable Kills { get; private set; } = new IntVariable(magicStatic, 0x1BC);
 		public IntVariable DeathType { get; private set; } = new IntVariable(magicStatic, 0x1C4);
@@ -31,9 +31,10 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public BoolVariable IsAlive { get; private set; } = new BoolVariable(magicStatic, 0x1A4);
 		public BoolVariable IsReplay { get; private set; } = new BoolVariable(magicStatic, 0x35D);
 
-		public float LevelUpTime2 { get; private set; }
-		public float LevelUpTime3 { get; private set; }
-		public float LevelUpTime4 { get; private set; }
+		public int Time => (int)(TimeFloat * 10000);
+		public int LevelUpTime2 { get; private set; }
+		public int LevelUpTime3 { get; private set; }
+		public int LevelUpTime4 { get; private set; }
 
 		public int LevelGems { get; private set; }
 		public int Homing { get; private set; }
@@ -94,7 +95,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				return;
 
 			IsAlive.PreScan();
-			Time.PreScan();
+			TimeFloat.PreScan();
 			Kills.PreScan();
 			Gems.PreScan();
 			ShotsFired.PreScan();
@@ -117,7 +118,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 				// Always calculate the spawnset in menu or lobby.
 				// Otherwise you can first normally load a spawnset to set the hash, exit and load an empty spawnset in the menu/lobby, then during playing the empty spawnset change it back to the same original spawnset and upload a cheated score.
-				if (Time == 0 && Time.ValuePrevious == 0)
+				if (TimeFloat == 0 && TimeFloat.ValuePrevious == 0)
 					SpawnsetHash = CalculateCurrentSurvivalHash();
 
 				// Stop scanning if it is a replay.
@@ -126,7 +127,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					return;
 
 				IsAlive.Scan();
-				Time.Scan();
+				TimeFloat.Scan();
 				Kills.Scan();
 				Gems.Scan();
 				ShotsFired.Scan();
