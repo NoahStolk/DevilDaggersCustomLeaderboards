@@ -83,8 +83,8 @@ namespace DevilDaggersCustomLeaderboards
 					$"v={HttpUtility.HtmlEncode(validation)}"
 				};
 
-				using (WebClient wc = new WebClient())
-					return JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
+				using WebClient wc = new WebClient();
+				return JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
 			}
 			catch (Exception ex)
 			{
@@ -144,11 +144,9 @@ namespace DevilDaggersCustomLeaderboards
 					$"v={HttpUtility.HtmlEncode(validation)}"
 				};
 
-				using (WebClient wc = new WebClient())
-				{
-					UploadResult result = JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
-					Console.WriteLine(result.Message);
-				}
+				using WebClient wc = new WebClient();
+				UploadResult result = JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
+				Console.WriteLine(result.Message);
 			}
 			catch (Exception ex)
 			{
