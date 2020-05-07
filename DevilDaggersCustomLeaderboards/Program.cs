@@ -51,6 +51,7 @@ namespace DevilDaggersCustomLeaderboards
 
 			Console.CursorVisible = false;
 			Console.WindowHeight = 40;
+			Console.WindowWidth = 170;
 
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
