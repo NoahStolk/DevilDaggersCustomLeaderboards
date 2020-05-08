@@ -59,7 +59,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine();
 		}
 
-		internal static void WriteStats(this Scanner scanner, CustomLeaderboardBase leaderboard, CustomEntryBase entry)
+		internal static void WriteStats(this Scanner scanner, CustomLeaderboardBase leaderboard, CustomLeaderboardCategoryBase category, CustomEntryBase entry)
 		{
 			double accuracy = scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (double)scanner.ShotsFired;
 			double accuracyOld = entry.ShotsFired == 0 ? 0 : entry.ShotsHit / (double)entry.ShotsFired;
@@ -81,8 +81,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard));
-			Cmd.WriteLine($" ({timeDiff / 10000f:0.0000})", ConsoleColor.Red);
+			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard, category));
+			Cmd.WriteLine($" ({(timeDiff < 0 ? "" : "+")}{timeDiff / 10000f:0.0000})", ConsoleColor.Red);
 
 			Cmd.Write($"{$"Kills",-Cmd.TextWidthLeft}{scanner.Kills,Cmd.TextWidthRight}");
 			Cmd.WriteLine($" ({killsDiff:+0;-#})", Cmd.GetImprovementColor(killsDiff));

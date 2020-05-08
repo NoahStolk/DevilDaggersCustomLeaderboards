@@ -18,7 +18,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				int spaceCountTotal = si.TotalPlayers.ToString().Length;
 
 				CustomEntryBase entry = si.Entries[i];
-				ConsoleColor color = Cmd.GetDaggerColor(entry.Time, si.Leaderboard);
+				ConsoleColor color = Cmd.GetDaggerColor(entry.Time, si.Leaderboard, si.Category);
 
 				if (entry.PlayerId == currentPlayerId)
 					Console.BackgroundColor = ConsoleColor.DarkGray;
@@ -52,9 +52,9 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			float time = si.Time / 10000f;
 			float timeDiff = si.TimeDiff / 10000f;
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(si.Time, si.Leaderboard));
+			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(si.Time, si.Leaderboard, si.Category));
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" (+{timeDiff:0.0000})", ConsoleColor.Green);
+				Cmd.Write($" ({(timeDiff < 0 ? "" : "+")}{timeDiff:0.0000})", ConsoleColor.Green);
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Kills",-Cmd.TextWidthLeft}{si.Kills,Cmd.TextWidthRight}");

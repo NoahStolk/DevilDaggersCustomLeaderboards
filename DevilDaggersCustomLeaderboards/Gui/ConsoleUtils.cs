@@ -39,19 +39,26 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
-		internal static ConsoleColor GetDaggerColor(int time, CustomLeaderboardBase leaderboard)
+		internal static ConsoleColor GetDaggerColor(int time, CustomLeaderboardBase leaderboard, CustomLeaderboardCategoryBase category)
 		{
-			if (leaderboard.Homing != 0 && time > leaderboard.Homing)
+			if (leaderboard.Homing != 0 && Compare(time, leaderboard.Homing))
 				return ConsoleColor.Magenta;
-			if (time > leaderboard.Devil)
+			if (Compare(time, leaderboard.Devil))
 				return ConsoleColor.Red;
-			if (time > leaderboard.Golden)
+			if (Compare(time, leaderboard.Golden))
 				return ConsoleColor.Yellow;
-			if (time > leaderboard.Silver)
+			if (Compare(time, leaderboard.Silver))
 				return ConsoleColor.Gray;
-			if (time > leaderboard.Bronze)
+			if (Compare(time, leaderboard.Bronze))
 				return ConsoleColor.DarkRed;
 			return ConsoleColor.DarkGray;
+
+			bool Compare(int time, int daggerTime)
+			{
+				if (category.Ascending)
+					return time < daggerTime;
+				return time > daggerTime;
+			}
 		}
 
 		internal static ConsoleColor GetDeathColor(int deathType)
