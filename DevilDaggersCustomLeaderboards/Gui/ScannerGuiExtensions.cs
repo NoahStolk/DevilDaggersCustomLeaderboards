@@ -2,6 +2,7 @@
 using DevilDaggersCore.Game;
 using DevilDaggersCustomLeaderboards.Memory;
 using System;
+using System.Globalization;
 using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards.Gui
@@ -18,7 +19,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Username", scanner.Username);
 			Cmd.WriteLine();
 
-			Cmd.WriteLine("Time", scanner.TimeFloat.Value.ToString("0.0000"));
+			Cmd.WriteLine("Time", scanner.TimeFloat.Value.ToString("0.0000", CultureInfo.InvariantCulture));
 			Cmd.WriteLine("Gems", scanner.Gems);
 			Cmd.WriteLine("Kills", scanner.Kills);
 			Cmd.WriteLine("Shots Hit", scanner.ShotsHit);
@@ -53,9 +54,9 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Homing", scanner.Homing);
 			Cmd.WriteLine();
 
-			Cmd.WriteLine("Level 2", (scanner.LevelUpTime2 / 10000f).ToString("0.0000"));
-			Cmd.WriteLine("Level 3", (scanner.LevelUpTime3 / 10000f).ToString("0.0000"));
-			Cmd.WriteLine("Level 4", (scanner.LevelUpTime4 / 10000f).ToString("0.0000"));
+			Cmd.WriteLine("Level 2", (scanner.LevelUpTime2 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Level 3", (scanner.LevelUpTime3 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Level 4", (scanner.LevelUpTime4 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
 			Cmd.WriteLine();
 		}
 
