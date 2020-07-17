@@ -3,7 +3,6 @@ using DevilDaggersCore.Tools;
 using DevilDaggersCustomLeaderboards.Gui;
 using DevilDaggersCustomLeaderboards.Memory;
 using log4net;
-using log4net.Config;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -47,8 +46,6 @@ namespace DevilDaggersCustomLeaderboards
 
 		internal static void Main()
 		{
-			XmlConfigurator.Configure();
-
 			Console.CursorVisible = false;
 			Console.WindowHeight = 40;
 			Console.WindowWidth = 170;

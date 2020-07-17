@@ -1,6 +1,5 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
 using DevilDaggersCore.Game;
-using NetBase.Extensions;
 using System;
 using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
@@ -23,7 +22,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				if (entry.PlayerId == currentPlayerId)
 					Console.BackgroundColor = ConsoleColor.DarkGray;
 				Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ");
-				Cmd.Write($"{entry.Username.SubstringSafe(0, Cmd.TextWidthLeft)}", color);
+				Cmd.Write($"{entry.Username.Substring(0, Math.Min(entry.Username.Length, Cmd.TextWidthLeft))}", color);
 				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", color);
 				Console.BackgroundColor = ConsoleColor.Black;
 			}

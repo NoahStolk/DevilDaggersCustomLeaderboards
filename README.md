@@ -2,19 +2,16 @@
 DevilDaggersCustomLeaderboards is a console application that records data from custom spawnset runs in Devil Daggers by scanning the memory of the application in real-time, and uploads it to a custom leaderboard hosted on [devildaggers.info](https://devildaggers.info).
 
 ## Framework
-- .NET Framework 4.6.1
+- .NET Core 3.1
 
 ## Language
 - C# 8.0
 
 ## Dependencies
-- [NetBase](https://github.com/NoahStolk/NetBase)
-- [EncryptionUtils](https://github.com/NoahStolk/EncryptionUtils)
 - [DevilDaggersCore](https://github.com/NoahStolk/DevilDaggersCore)
 
 ## System requirements
 - Microsoft Windows
-- .NET Framework 4.6.1
 
 ## Installation
 1. Download the zip file.
