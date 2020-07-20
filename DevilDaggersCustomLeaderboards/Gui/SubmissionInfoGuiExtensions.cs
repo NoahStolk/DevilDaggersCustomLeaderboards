@@ -56,61 +56,40 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				Cmd.Write($" ({(timeDiff < 0 ? "" : "+")}{timeDiff:0.0000})", ConsoleColor.Green);
 			Cmd.WriteLine();
 
-			Cmd.Write($"{$"Kills",-Cmd.TextWidthLeft}{si.Kills,Cmd.TextWidthRight}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.KillsDiff:+0;-#})", Cmd.GetImprovementColor(si.KillsDiff));
-			Cmd.WriteLine();
+			WriteIntField(si.IsNewUserOnThisLeaderboard, "Kills", si.Kills, si.KillsDiff);
+			WriteIntField(si.IsNewUserOnThisLeaderboard, "Gems", si.Gems, si.GemsDiff);
+			WriteIntField(si.IsNewUserOnThisLeaderboard, "Shots hit", si.ShotsHit, si.ShotsHitDiff);
+			WriteIntField(si.IsNewUserOnThisLeaderboard, "Shots fired", si.ShotsFired, si.ShotsFiredDiff);
+			WritePercentageField(si.IsNewUserOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
+			WriteIntField(si.IsNewUserOnThisLeaderboard, "Enemies alive", si.EnemiesAlive, si.EnemiesAliveDiff);
+			WriteIntField(si.IsNewUserOnThisLeaderboard, "Homing", si.Homing, si.HomingDiff);
+			WriteTimeField(si.IsNewUserOnThisLeaderboard, "Level 2", si.LevelUpTime2, si.LevelUpTime2Diff);
+			WriteTimeField(si.IsNewUserOnThisLeaderboard, "Level 3", si.LevelUpTime3, si.LevelUpTime3Diff);
+			WriteTimeField(si.IsNewUserOnThisLeaderboard, "Level 4", si.LevelUpTime4, si.LevelUpTime4Diff);
 
-			Cmd.Write($"{$"Gems",-Cmd.TextWidthLeft}{si.Gems,Cmd.TextWidthRight}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.GemsDiff:+0;-#})", Cmd.GetImprovementColor(si.GemsDiff));
-			Cmd.WriteLine();
+			static void WriteTimeField(bool isNewUser, string fieldName, int value, int valueDiff)
+			{
+				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value / 10000f,Cmd.TextWidthRight:0.0000}");
+				if (!isNewUser)
+					Cmd.Write($" ({(valueDiff < 0 ? "" : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
+				Cmd.WriteLine();
+			}
 
-			Cmd.Write($"{$"Shots Hit",-Cmd.TextWidthLeft}{si.ShotsHit,Cmd.TextWidthRight}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.ShotsHitDiff:+0;-#})", Cmd.GetImprovementColor(si.ShotsHitDiff));
-			Cmd.WriteLine();
+			static void WritePercentageField(bool isNewUser, string fieldName, double value, double valueDiff)
+			{
+				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight:0.00%}");
+				if (!isNewUser)
+					Cmd.Write($" ({(valueDiff < 0 ? "" : "+")}{valueDiff:0.00%})", Cmd.GetImprovementColor(valueDiff));
+				Cmd.WriteLine();
+			}
 
-			Cmd.Write($"{$"Shots Fired",-Cmd.TextWidthLeft}{si.ShotsFired,Cmd.TextWidthRight}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.ShotsFiredDiff:+0;-#})", Cmd.GetImprovementColor(si.ShotsFiredDiff));
-			Cmd.WriteLine();
-
-			Cmd.Write($"{$"Accuracy",-Cmd.TextWidthLeft}{accuracy,Cmd.TextWidthRight:0.00%}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(accuracyDiff < 0 ? "" : "+")}{accuracyDiff:0.00%})", Cmd.GetImprovementColor(accuracyDiff));
-			Cmd.WriteLine();
-
-			Cmd.Write($"{$"Enemies Alive",-Cmd.TextWidthLeft}{si.EnemiesAlive,Cmd.TextWidthRight}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.EnemiesAliveDiff:+0;-#})", Cmd.GetImprovementColor(si.EnemiesAliveDiff));
-			Cmd.WriteLine();
-
-			Cmd.Write($"{$"Homing",-Cmd.TextWidthLeft}{si.Homing,Cmd.TextWidthRight}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({si.HomingDiff:+0;-#})", Cmd.GetImprovementColor(si.HomingDiff));
-			Cmd.WriteLine();
-
-			float level2 = si.LevelUpTime2 / 10000f;
-			float level2Diff = si.LevelUpTime2Diff / 10000f;
-			Cmd.Write($"{$"Level 2",-Cmd.TextWidthLeft}{level2,Cmd.TextWidthRight:0.0000}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(level2Diff < 0 ? "" : "+")}{level2Diff:0.0000})", Cmd.GetImprovementColor(-level2Diff));
-			Cmd.WriteLine();
-
-			float level3 = si.LevelUpTime3 / 10000f;
-			float level3Diff = si.LevelUpTime3Diff / 10000f;
-			Cmd.Write($"{$"Level 3",-Cmd.TextWidthLeft}{level3,Cmd.TextWidthRight:0.0000}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(level3Diff < 0 ? "" : "+")}{level3Diff:0.0000})", Cmd.GetImprovementColor(-level3Diff));
-			Cmd.WriteLine();
-
-			float level4 = si.LevelUpTime4 / 10000f;
-			float level4Diff = si.LevelUpTime4Diff / 10000f;
-			Cmd.Write($"{$"Level 4",-Cmd.TextWidthLeft}{level4,Cmd.TextWidthRight:0.0000}");
-			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(level4Diff < 0 ? "" : "+")}{level4Diff:0.0000})", Cmd.GetImprovementColor(-level4Diff));
-			Cmd.WriteLine();
+			static void WriteIntField(bool isNewUser, string fieldName, int value, int valueDiff)
+			{
+				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight}");
+				if (!isNewUser)
+					Cmd.Write($" ({valueDiff:+0;-#})", Cmd.GetImprovementColor(valueDiff));
+				Cmd.WriteLine();
+			}
 		}
 	}
 }

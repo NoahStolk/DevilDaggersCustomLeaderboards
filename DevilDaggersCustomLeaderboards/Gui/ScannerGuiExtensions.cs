@@ -65,64 +65,46 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			double accuracy = scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (double)scanner.ShotsFired;
 			double accuracyOld = entry.ShotsFired == 0 ? 0 : entry.ShotsHit / (double)entry.ShotsFired;
 
-			int timeDiff = scanner.Time - entry.Time;
-			int killsDiff = scanner.Kills - entry.Kills;
-			int gemsDiff = scanner.Gems - entry.Gems;
-			int shotsHitDiff = scanner.ShotsHit - entry.ShotsHit;
-			int shotsFiredDiff = scanner.ShotsFired - entry.ShotsFired;
-			double accuracyDiff = accuracy - accuracyOld;
-			int enemiesAliveDiff = scanner.EnemiesAlive - entry.EnemiesAlive;
-			int homingDiff = scanner.Homing - entry.Homing;
-			int levelUpTime2Diff = scanner.LevelUpTime2 - entry.LevelUpTime2;
-			int levelUpTime3Diff = scanner.LevelUpTime3 - entry.LevelUpTime3;
-			int levelUpTime4Diff = scanner.LevelUpTime4 - entry.LevelUpTime4;
-
 			Cmd.Write($"{GameInfo.GetDeathFromDeathType(scanner.DeathType).Name}", Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
+			int timeDiff = scanner.Time - entry.Time;
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
 			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard, category));
 			Cmd.WriteLine($" ({(timeDiff < 0 ? "" : "+")}{timeDiff / 10000f:0.0000})", ConsoleColor.Red);
 
-			Cmd.Write($"{$"Kills",-Cmd.TextWidthLeft}{scanner.Kills,Cmd.TextWidthRight}");
-			Cmd.WriteLine($" ({killsDiff:+0;-#})", Cmd.GetImprovementColor(killsDiff));
+			WriteIntField("Kills", scanner.Kills, scanner.Kills - entry.Kills);
+			WriteIntField("Gems", scanner.Gems, scanner.Gems - entry.Gems);
+			WriteIntField("Shots hit", scanner.ShotsHit, scanner.ShotsHit - entry.ShotsHit);
+			WriteIntField("Shots fired", scanner.ShotsFired, scanner.ShotsFired - entry.ShotsFired);
+			WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
+			WriteIntField("Enemies alive", scanner.EnemiesAlive, scanner.EnemiesAlive - entry.EnemiesAlive);
+			WriteIntField("Homing", scanner.Homing, scanner.Homing - entry.Homing);
+			WriteTimeField("Level 2", scanner.LevelUpTime2, scanner.LevelUpTime2 - entry.LevelUpTime2);
+			WriteTimeField("Level 3", scanner.LevelUpTime3, scanner.LevelUpTime3 - entry.LevelUpTime3);
+			WriteTimeField("Level 4", scanner.LevelUpTime4, scanner.LevelUpTime4 - entry.LevelUpTime4);
 
-			Cmd.Write($"{$"Gems",-Cmd.TextWidthLeft}{scanner.Gems,Cmd.TextWidthRight}");
-			Cmd.WriteLine($" ({gemsDiff:+0;-#})", Cmd.GetImprovementColor(gemsDiff));
+			static void WriteIntField(string fieldName, int value, int valueDiff)
+			{
+				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight}");
+				Cmd.WriteLine($" ({valueDiff:+0;-#})", Cmd.GetImprovementColor(valueDiff));
+			}
 
-			Cmd.Write($"{$"Shots Hit",-Cmd.TextWidthLeft}{scanner.ShotsHit,Cmd.TextWidthRight}");
-			Cmd.WriteLine($" ({shotsHitDiff:+0;-#})", Cmd.GetImprovementColor(shotsHitDiff));
+			static void WritePercentageField(string fieldName, double value, double valueDiff)
+			{
+				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight:0.00%}");
+				Cmd.WriteLine($" ({(valueDiff < 0 ? "" : "+")}{valueDiff:0.00%})", Cmd.GetImprovementColor(valueDiff));
+			}
 
-			Cmd.Write($"{$"Shots Fired",-Cmd.TextWidthLeft}{scanner.ShotsFired,Cmd.TextWidthRight}");
-			Cmd.WriteLine($" ({shotsFiredDiff:+0;-#})", Cmd.GetImprovementColor(shotsFiredDiff));
-
-			Cmd.Write($"{$"Accuracy",-Cmd.TextWidthLeft}{accuracy,Cmd.TextWidthRight:0.00%}");
-			Cmd.WriteLine($" ({(accuracyDiff < 0 ? "" : "+")}{accuracyDiff:0.00%})", Cmd.GetImprovementColor(accuracyDiff));
-
-			Cmd.Write($"{$"Enemies Alive",-Cmd.TextWidthLeft}{scanner.EnemiesAlive,Cmd.TextWidthRight}");
-			Cmd.WriteLine($" ({enemiesAliveDiff:+0;-#})", Cmd.GetImprovementColor(enemiesAliveDiff));
-
-			Cmd.Write($"{$"Homing",-Cmd.TextWidthLeft}{scanner.Homing,Cmd.TextWidthRight}");
-			Cmd.WriteLine($" ({homingDiff:+0;-#})", Cmd.GetImprovementColor(homingDiff));
-
-			Cmd.Write($"{$"Level 2",-Cmd.TextWidthLeft}{(scanner.LevelUpTime2 == 0 ? "N/A" : $"{scanner.LevelUpTime2 / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
-			if (scanner.LevelUpTime2 == 0)
-				Cmd.WriteLine();
-			else
-				Cmd.WriteLine($" ({(levelUpTime2Diff < 0 ? "" : "+")}{levelUpTime2Diff / 10000f:0.0000})", Cmd.GetImprovementColor(-levelUpTime2Diff));
-
-			Cmd.Write($"{$"Level 3",-Cmd.TextWidthLeft}{(scanner.LevelUpTime3 == 0 ? "N/A" : $"{scanner.LevelUpTime3 / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
-			if (scanner.LevelUpTime3 == 0)
-				Cmd.WriteLine();
-			else
-				Cmd.WriteLine($" ({(levelUpTime3Diff < 0 ? "" : "+")}{levelUpTime3Diff / 10000f:0.0000})", Cmd.GetImprovementColor(-levelUpTime3Diff));
-
-			Cmd.Write($"{$"Level 4",-Cmd.TextWidthLeft}{(scanner.LevelUpTime4 == 0 ? "N/A" : $"{scanner.LevelUpTime4 / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
-			if (scanner.LevelUpTime4 == 0)
-				Cmd.WriteLine();
-			else
-				Cmd.WriteLine($" ({(levelUpTime4Diff < 0 ? "" : "+")}{levelUpTime4Diff / 10000f:0.0000})", Cmd.GetImprovementColor(-levelUpTime4Diff));
+			static void WriteTimeField(string fieldName, int value, int valueDiff)
+			{
+				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{(value == 0 ? "N/A" : $"{value / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
+				if (value == 0)
+					Cmd.WriteLine();
+				else
+					Cmd.WriteLine($" ({(valueDiff < 0 ? "" : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
+			}
 		}
 	}
 }
