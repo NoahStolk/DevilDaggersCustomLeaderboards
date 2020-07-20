@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace DevilDaggersCustomLeaderboards.Memory.Variables
@@ -10,8 +11,8 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		{
 		}
 
-		public override string ValuePrevious => GetStringFromBytes(BytesPrevious);
-		public override string Value => GetStringFromBytes(Bytes);
+		public override string ValuePrevious => GetStringFromBytes(BytesPrevious.ToArray());
+		public override string Value => GetStringFromBytes(Bytes.ToArray());
 
 		private static string GetStringFromBytes(byte[] bytes)
 		{

@@ -47,7 +47,7 @@ namespace DevilDaggersCustomLeaderboards
 				}
 
 				// This is to prevent people from initially starting an easy spawnset to get e.g. 800 seconds, then change the survival file during the run to a different (harder) spawnset to trick the application into uploading it to the wrong leaderboard.
-				if (Utils.CalculateSpawnsetHash() != scanner.SpawnsetHash)
+				if (HashUtils.CalculateSpawnsetHash() != scanner.SpawnsetHash)
 					return new UploadResult(false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
 
 				string toEncrypt = string.Join(

@@ -22,8 +22,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static Scanner Instance => lazy.Value;
 
-		public Process Process { get; private set; }
-		public Memory Memory { get; private set; } = new Memory();
+		public Process Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
+		public ProcessMemory Memory { get; private set; } = new ProcessMemory();
 
 		public string SpawnsetHash { get; private set; } = string.Empty;
 
@@ -48,9 +48,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public int Homing { get; private set; }
 
 		public void FindWindow()
-		{
-			Process = ProcessUtils.GetDevilDaggersProcess();
-		}
+			=> Process = ProcessUtils.GetDevilDaggersProcess();
 
 		private string CalculateCurrentSurvivalHash()
 		{

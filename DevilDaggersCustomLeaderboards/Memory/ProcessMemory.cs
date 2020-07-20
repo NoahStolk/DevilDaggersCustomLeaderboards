@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace DevilDaggersCustomLeaderboards.Memory
 {
-	public class Memory
+	public class ProcessMemory
 	{
 		private IntPtr hProcess = IntPtr.Zero;
 
@@ -12,21 +12,19 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public void Open()
 		{
 			ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ | ProcessAccessType.PROCESS_VM_WRITE | ProcessAccessType.PROCESS_VM_OPERATION;
-			hProcess = MemoryApi.OpenProcess((uint)access, 1, (uint)ReadProcess.Id);
+			hProcess = NativeMethods.OpenProcess((uint)access, 1, (uint)ReadProcess.Id);
 		}
 
 		public void CloseHandle()
 		{
-			int iRetValue;
-			iRetValue = MemoryApi.CloseHandle(hProcess);
-			if (iRetValue == 0)
-				throw new Exception("CloseHandle failed");
+			if (NativeMethods.CloseHandle(hProcess) == 0)
+				throw new Exception($"{nameof(CloseHandle)} failed.");
 		}
 
 		public byte[] Read(IntPtr memoryAddress, uint bytesToRead, out int bytesRead)
 		{
 			byte[] buffer = new byte[bytesToRead];
-			MemoryApi.ReadProcessMemory(hProcess, memoryAddress, buffer, bytesToRead, out IntPtr ptrBytesRead);
+			NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, bytesToRead, out IntPtr ptrBytesRead);
 			bytesRead = ptrBytesRead.ToInt32();
 			return buffer;
 		}
@@ -41,11 +39,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			if (iPointerCount == 0)
 			{
-				MemoryApi.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
+				NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
 				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[0]; // Final Address
 
 				buffer = new byte[bytesToRead];
-				MemoryApi.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
+				NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
 
 				bytesRead = ptrBytesRead.ToInt32();
 				return buffer;
@@ -55,23 +53,23 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			{
 				if (i == iPointerCount)
 				{
-					MemoryApi.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
+					NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i]; // Final Address
 
 					buffer = new byte[bytesToRead];
-					MemoryApi.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
+					NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
 
 					bytesRead = ptrBytesRead.ToInt32();
 					return buffer;
 				}
 				else if (i == 0)
 				{
-					MemoryApi.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
+					NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[1];
 				}
 				else
 				{
-					MemoryApi.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
+					NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i];
 				}
 			}
@@ -81,7 +79,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public void Write(IntPtr memoryAddress, byte[] bytesToWrite, out int bytesWritten)
 		{
-			MemoryApi.WriteProcessMemory(hProcess, memoryAddress, bytesToWrite, (uint)bytesToWrite.Length, out IntPtr ptrBytesWritten);
+			NativeMethods.WriteProcessMemory(hProcess, memoryAddress, bytesToWrite, (uint)bytesToWrite.Length, out IntPtr ptrBytesWritten);
 			bytesWritten = ptrBytesWritten.ToInt32();
 		}
 
@@ -95,9 +93,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			if (iPointerCount == 0)
 			{
-				MemoryApi.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
+				NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
 				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[0]; // Final Address
-				MemoryApi.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
+				NativeMethods.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
 
 				bytesWritten = ptrBytesWritten.ToInt32();
 				return AddressUtils.ToHex(tempAddress);
@@ -107,21 +105,21 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			{
 				if (i == iPointerCount)
 				{
-					MemoryApi.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
+					NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i]; // Final Address
-					MemoryApi.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
+					NativeMethods.WriteProcessMemory(hProcess, (IntPtr)tempAddress, bytesToWrite, (uint)bytesToWrite.Length, out ptrBytesWritten);
 
 					bytesWritten = ptrBytesWritten.ToInt32();
 					return AddressUtils.ToHex(tempAddress);
 				}
 				else if (i == 0)
 				{
-					MemoryApi.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
+					NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i];
 				}
 				else
 				{
-					MemoryApi.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
+					NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i];
 				}
 			}

@@ -7,7 +7,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
@@ -50,9 +49,9 @@ namespace DevilDaggersCustomLeaderboards
 			{
 			}
 
-			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
-			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
-			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
+			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
+			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
+			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
 
@@ -171,14 +170,5 @@ namespace DevilDaggersCustomLeaderboards
 				}
 			}
 		}
-
-		[DllImport("user32.dll")]
-		internal static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
-
-		[DllImport("user32.dll")]
-		private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-
-		[DllImport("kernel32.dll", ExactSpelling = true)]
-		private static extern IntPtr GetConsoleWindow();
 	}
 }

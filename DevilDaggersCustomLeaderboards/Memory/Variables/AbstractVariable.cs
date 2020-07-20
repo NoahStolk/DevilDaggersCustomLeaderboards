@@ -1,5 +1,6 @@
 ﻿using DevilDaggersCore;
 using System;
+using System.Collections.Immutable;
 using System.Diagnostics;
 
 namespace DevilDaggersCustomLeaderboards.Memory.Variables
@@ -13,13 +14,10 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 			LocalBaseAddress = localBaseAddress;
 			Offset = offset;
 			Size = size;
-
-			BytesPrevious = new byte[Size];
-			Bytes = new byte[Size];
 		}
 
-		protected byte[] BytesPrevious { get; private set; }
-		protected byte[] Bytes { get; private set; }
+		protected ImmutableArray<byte> BytesPrevious { get; private set; }
+		protected ImmutableArray<byte> Bytes { get; private set; }
 		public abstract TVariable ValuePrevious { get; }
 		public abstract TVariable Value { get; }
 
@@ -46,12 +44,12 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		{
 			try
 			{
-				Memory memory = Scanner.Instance.Memory;
+				ProcessMemory memory = Scanner.Instance.Memory;
 
 				byte[] bytes = memory.Read(memory.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
 				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
 
-				Bytes = memory.Read(new IntPtr(ptr) + Offset, Size, out _);
+				Bytes = memory.Read(new IntPtr(ptr) + Offset, Size, out _).ToImmutableArray();
 			}
 			catch (Exception ex)
 			{

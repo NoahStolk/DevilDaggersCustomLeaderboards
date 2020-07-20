@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
@@ -9,7 +10,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		{
 		}
 
-		public override bool ValuePrevious => BitConverter.ToBoolean(BytesPrevious, 0);
-		public override bool Value => BitConverter.ToBoolean(Bytes, 0);
+		public override bool ValuePrevious => BitConverter.ToBoolean(BytesPrevious.ToArray(), 0);
+		public override bool Value => BitConverter.ToBoolean(Bytes.ToArray(), 0);
 	}
 }
