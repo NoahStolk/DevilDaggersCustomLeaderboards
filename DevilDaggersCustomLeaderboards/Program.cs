@@ -49,9 +49,11 @@ namespace DevilDaggersCustomLeaderboards
 			{
 			}
 
+#pragma warning disable CA1806 // Do not ignore method results
 			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
 			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
 			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
+#pragma warning restore CA1806 // Do not ignore method results
 
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
 

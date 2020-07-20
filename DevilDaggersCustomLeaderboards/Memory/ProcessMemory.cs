@@ -20,16 +20,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			hProcess = NativeMethods.OpenProcess((uint)access, 1, (uint)ReadProcess.Id);
 		}
 
-		public void CloseHandle()
-		{
-			if (NativeMethods.CloseHandle(hProcess) == 0)
-				throw new Exception($"{nameof(CloseHandle)} failed.");
-		}
-
 		public byte[] Read(IntPtr memoryAddress, uint bytesToRead, out int bytesRead)
 		{
 			byte[] buffer = new byte[bytesToRead];
-			NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, bytesToRead, out IntPtr ptrBytesRead);
+			if (NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, bytesToRead, out IntPtr ptrBytesRead) == 0)
+				throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 			bytesRead = ptrBytesRead.ToInt32();
 			return buffer;
 		}
@@ -44,11 +39,13 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			if (iPointerCount == 0)
 			{
-				NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
+				if (NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _) == 0)
+					throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 				tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[0]; // Final Address
 
 				buffer = new byte[bytesToRead];
-				NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
+				if (NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead) == 0)
+					throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 
 				bytesRead = ptrBytesRead.ToInt32();
 				return buffer;
@@ -58,23 +55,27 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			{
 				if (i == iPointerCount)
 				{
-					NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
+					if (NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _) == 0)
+						throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i]; // Final Address
 
 					buffer = new byte[bytesToRead];
-					NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead);
+					if (NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, bytesToRead, out ptrBytesRead) == 0)
+						throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 
 					bytesRead = ptrBytesRead.ToInt32();
 					return buffer;
 				}
 				else if (i == 0)
 				{
-					NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _);
+					if (NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, 4, out _) == 0)
+						throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[1];
 				}
 				else
 				{
-					NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _);
+					if (NativeMethods.ReadProcessMemory(hProcess, (IntPtr)tempAddress, buffer, 4, out _) == 0)
+						throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 					tempAddress = AddressUtils.ToDec(AddressUtils.MakeAddress(buffer)) + offset[i];
 				}
 			}
@@ -82,6 +83,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			return buffer;
 		}
 
+#if WRITE
 		public void Write(IntPtr memoryAddress, byte[] bytesToWrite, out int bytesWritten)
 		{
 			NativeMethods.WriteProcessMemory(hProcess, memoryAddress, bytesToWrite, (uint)bytesToWrite.Length, out IntPtr ptrBytesWritten);
@@ -131,5 +133,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			return AddressUtils.ToHex(tempAddress);
 		}
+#endif
 	}
 }
