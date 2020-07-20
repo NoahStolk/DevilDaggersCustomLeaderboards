@@ -7,9 +7,9 @@ using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards.Gui
 {
-	internal static class ScannerGuiExtensions
+	public static class ScannerGuiExtensions
 	{
-		internal static void WriteRecording(this Scanner scanner)
+		public static void WriteRecording(this Scanner scanner)
 		{
 			Cmd.WriteLine($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
 			Cmd.WriteLine("Recording...");
@@ -60,7 +60,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine();
 		}
 
-		internal static void WriteStats(this Scanner scanner, CustomLeaderboardBase leaderboard, CustomLeaderboardCategoryBase category, CustomEntryBase entry)
+		public static void WriteStats(this Scanner scanner, CustomLeaderboardBase leaderboard, CustomLeaderboardCategoryBase category, CustomEntryBase entry)
 		{
 			double accuracy = scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (double)scanner.ShotsFired;
 			double accuracyOld = entry.ShotsFired == 0 ? 0 : entry.ShotsHit / (double)entry.ShotsFired;

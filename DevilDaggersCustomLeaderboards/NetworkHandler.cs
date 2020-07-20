@@ -9,18 +9,18 @@ using System.Web;
 
 namespace DevilDaggersCustomLeaderboards
 {
-	internal sealed class NetworkHandler
+	public sealed class NetworkHandler
 	{
 		private const float minimalTime = 1f;
 
 		private static readonly Lazy<NetworkHandler> lazy = new Lazy<NetworkHandler>(() => new NetworkHandler());
-		internal static NetworkHandler Instance => lazy.Value;
+		public static NetworkHandler Instance => lazy.Value;
 
 		private NetworkHandler()
 		{
 		}
 
-		internal UploadResult Upload()
+		public UploadResult Upload()
 		{
 			try
 			{
@@ -93,7 +93,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		internal void FakeUpload(int id, float seconds)
+		public void FakeUpload(int id, float seconds)
 		{
 			try
 			{

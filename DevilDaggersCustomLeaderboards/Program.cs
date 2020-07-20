@@ -13,10 +13,10 @@ using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards
 {
-	internal static class Program
+	public static class Program
 	{
-		internal static string ApplicationName => "DevilDaggersCustomLeaderboards";
-		internal static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
+		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
+		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
 
 		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
@@ -28,7 +28,7 @@ namespace DevilDaggersCustomLeaderboards
 #pragma warning restore IDE1006
 
 		[DllImport("user32.dll")]
-		internal static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
+		public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
 
 		[DllImport("user32.dll")]
 		private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
@@ -39,12 +39,12 @@ namespace DevilDaggersCustomLeaderboards
 		private static readonly Scanner scanner = Scanner.Instance;
 		private static bool recording = true;
 
-		internal static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-		internal static Assembly Assembly { get; private set; }
-		internal static Version LocalVersion { get; private set; }
+		public static Assembly Assembly { get; private set; }
+		public static Version LocalVersion { get; private set; }
 
-		internal static void Main()
+		public static void Main()
 		{
 			Console.CursorVisible = false;
 			try

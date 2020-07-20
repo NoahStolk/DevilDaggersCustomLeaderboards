@@ -5,11 +5,11 @@ using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards.Gui
 {
-	internal static class SubmissionInfoGuiExtensions
+	public static class SubmissionInfoGuiExtensions
 	{
-		internal static bool IsHighscore(this SubmissionInfo si) => si.Rank != 0;
+		public static bool IsHighscore(this SubmissionInfo si) => si.Rank != 0;
 
-		internal static void WriteLeaderboard(this SubmissionInfo si, int currentPlayerId)
+		public static void WriteLeaderboard(this SubmissionInfo si, int currentPlayerId)
 		{
 			for (int i = 0; i < si.TotalPlayers; i++)
 			{
@@ -28,7 +28,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			}
 		}
 
-		internal static void WriteHighscoreStats(this SubmissionInfo si)
+		public static void WriteHighscoreStats(this SubmissionInfo si)
 		{
 			int deathType = si.Entries[si.Rank - 1].DeathType;
 

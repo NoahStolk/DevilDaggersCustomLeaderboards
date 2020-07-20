@@ -5,9 +5,9 @@ using System.IO;
 
 namespace DevilDaggersCustomLeaderboards
 {
-	internal static class Utils
+	public static class Utils
 	{
-		internal static string CalculateSpawnsetHash()
+		public static string CalculateSpawnsetHash()
 		{
 			try
 			{
