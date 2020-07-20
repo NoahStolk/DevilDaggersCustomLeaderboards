@@ -14,6 +14,9 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 			LocalBaseAddress = localBaseAddress;
 			Offset = offset;
 			Size = size;
+
+			BytesPrevious = new byte[Size].ToImmutableArray();
+			Bytes = new byte[Size].ToImmutableArray();
 		}
 
 		protected ImmutableArray<byte> BytesPrevious { get; private set; }
