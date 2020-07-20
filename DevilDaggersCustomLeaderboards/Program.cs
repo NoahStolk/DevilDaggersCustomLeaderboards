@@ -15,34 +15,28 @@ namespace DevilDaggersCustomLeaderboards
 {
 	public static class Program
 	{
-		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
-		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
-
-		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
-
 #pragma warning disable IDE1006
+#pragma warning disable SA1310 // Field names should not contain underscore
 		private const int MF_BYCOMMAND = 0x00000000;
 		private const int SC_MINIMIZE = 0xF020;
 		private const int SC_MAXIMIZE = 0xF030;
 		private const int SC_SIZE = 0xF000;
 #pragma warning restore IDE1006
+#pragma warning restore SA1310 // Field names should not contain underscore
 
-		[DllImport("user32.dll")]
-		public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
-
-		[DllImport("user32.dll")]
-		private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-
-		[DllImport("kernel32.dll", ExactSpelling = true)]
-		private static extern IntPtr GetConsoleWindow();
+		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
 		private static readonly Scanner scanner = Scanner.Instance;
+
 		private static bool recording = true;
 
-		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType ?? throw new Exception("Could not retrieve logger declaring type."));
 
-		public static Assembly Assembly { get; private set; }
-		public static Version LocalVersion { get; private set; }
+		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
+		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
+
+		public static Assembly Assembly { get; private set; } = Assembly.GetExecutingAssembly();
+		public static Version LocalVersion { get; private set; } = VersionHandler.GetLocalVersion(Assembly);
 
 		public static void Main()
 		{
@@ -59,9 +53,6 @@ namespace DevilDaggersCustomLeaderboards
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
 			DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
-
-			Assembly = Assembly.GetExecutingAssembly();
-			LocalVersion = VersionHandler.GetLocalVersion(Assembly);
 
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
 
@@ -93,7 +84,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 			Console.Clear();
-			for (; ; )
+			while (true)
 			{
 				scanner.FindWindow();
 
@@ -130,8 +121,9 @@ namespace DevilDaggersCustomLeaderboards
 							Console.Clear();
 							Cmd.WriteLine("Uploading...");
 							Cmd.WriteLine();
-							uploadResult = NetworkHandler.Instance.Upload();
+
 							// Thread is being blocked by the upload.
+							uploadResult = NetworkHandler.Upload();
 
 							if (uploadResult.Success)
 							{
@@ -149,6 +141,7 @@ namespace DevilDaggersCustomLeaderboards
 									else
 										scanner.WriteStats(uploadResult.SubmissionInfo.Leaderboard, uploadResult.SubmissionInfo.Category, uploadResult.SubmissionInfo.Entries.FirstOrDefault(e => e.PlayerId == scanner.PlayerId));
 								}
+
 								Cmd.WriteLine();
 							}
 							else
@@ -178,5 +171,14 @@ namespace DevilDaggersCustomLeaderboards
 				}
 			}
 		}
+
+		[DllImport("user32.dll")]
+		internal static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
+
+		[DllImport("user32.dll")]
+		private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+		[DllImport("kernel32.dll", ExactSpelling = true)]
+		private static extern IntPtr GetConsoleWindow();
 	}
 }

@@ -1,9 +1,11 @@
-﻿using System;
+﻿#pragma warning disable CA1707 // Identifiers should not contain underscores
+#pragma warning disable CA1714 // Flags enums should have plural names
+using System;
 
 namespace DevilDaggersCustomLeaderboards.Memory
 {
 	[Flags]
-	public enum ProcessAccessType
+	internal enum ProcessAccessType
 	{
 		PROCESS_TERMINATE = 0x0001,
 		PROCESS_CREATE_THREAD = 0x0002,
@@ -15,6 +17,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		PROCESS_CREATE_PROCESS = 0x0080,
 		PROCESS_SET_QUOTA = 0x0100,
 		PROCESS_SET_INFORMATION = 0x0200,
-		PROCESS_QUERY_INFORMATION = 0x0400
+		PROCESS_QUERY_INFORMATION = 0x0400,
 	}
 }
+
+#pragma warning restore CA1707 // Identifiers should not contain underscores
+#pragma warning restore CA1714 // Flags enums should have plural names

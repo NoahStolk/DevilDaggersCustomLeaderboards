@@ -1,4 +1,4 @@
-﻿//#define POINTER_READ
+﻿// #define POINTER_READ
 using DevilDaggersCore;
 using DevilDaggersCore.Spawnsets;
 using DevilDaggersCore.Utils;
@@ -13,6 +13,14 @@ namespace DevilDaggersCustomLeaderboards.Memory
 	{
 		private const int magicStatic = 0x001F30C0;
 		private const int magicDynamic = 0x001F8084;
+
+		private static readonly Lazy<Scanner> lazy = new Lazy<Scanner>(() => new Scanner());
+
+		private Scanner()
+		{
+		}
+
+		public static Scanner Instance => lazy.Value;
 
 		public Process Process { get; private set; }
 		public Memory Memory { get; private set; } = new Memory();
@@ -39,13 +47,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public int LevelGems { get; private set; }
 		public int Homing { get; private set; }
 
-		private static readonly Lazy<Scanner> lazy = new Lazy<Scanner>(() => new Scanner());
-		public static Scanner Instance => lazy.Value;
-
-		private Scanner()
-		{
-		}
-
 		public void FindWindow()
 		{
 			Process = ProcessUtils.GetDevilDaggersProcess();
@@ -55,7 +56,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		{
 			try
 			{
-				using (FileStream fs = new FileStream(Path.Combine(Path.GetDirectoryName(Process.MainModule.FileName), "dd", "survival"), FileMode.Open, FileAccess.Read))
+				using (FileStream fs = new FileStream(Path.Combine(Path.GetDirectoryName(Process.MainModule.FileName) ?? throw new Exception("Could not retrieve process file name."), "dd", "survival"), FileMode.Open, FileAccess.Read))
 				{
 					if (Spawnset.TryParse(fs, out Spawnset spawnset))
 						return spawnset.GetHashString();

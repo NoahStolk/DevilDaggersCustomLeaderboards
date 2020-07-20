@@ -14,13 +14,14 @@ namespace DevilDaggersCustomLeaderboards
 		private const float minimalTime = 1f;
 
 		private static readonly Lazy<NetworkHandler> lazy = new Lazy<NetworkHandler>(() => new NetworkHandler());
-		public static NetworkHandler Instance => lazy.Value;
 
 		private NetworkHandler()
 		{
 		}
 
-		public UploadResult Upload()
+		public static NetworkHandler Instance => lazy.Value;
+
+		public static UploadResult Upload()
 		{
 			try
 			{
@@ -49,7 +50,8 @@ namespace DevilDaggersCustomLeaderboards
 				if (Utils.CalculateSpawnsetHash() != scanner.SpawnsetHash)
 					return new UploadResult(false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
 
-				string toEncrypt = string.Join(";",
+				string toEncrypt = string.Join(
+					";",
 					scanner.PlayerId,
 					scanner.Username,
 					scanner.Time,
@@ -80,7 +82,7 @@ namespace DevilDaggersCustomLeaderboards
 					$"levelUpTime3={scanner.LevelUpTime3}",
 					$"levelUpTime4={scanner.LevelUpTime4}",
 					$"ddclClientVersion={Program.LocalVersion}",
-					$"v={HttpUtility.HtmlEncode(validation)}"
+					$"v={HttpUtility.HtmlEncode(validation)}",
 				};
 
 				using WebClient wc = new WebClient();
@@ -93,7 +95,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		public void FakeUpload(int id, float seconds)
+		public static void FakeUpload(int id, float seconds)
 		{
 			try
 			{
@@ -110,7 +112,8 @@ namespace DevilDaggersCustomLeaderboards
 				float levelUpTime3 = 1.5f;
 				float levelUpTime4 = 2.5f;
 
-				string toEncrypt = string.Join(";",
+				string toEncrypt = string.Join(
+					";",
 					id,
 					username,
 					seconds,
@@ -141,7 +144,7 @@ namespace DevilDaggersCustomLeaderboards
 					$"levelUpTime3={levelUpTime3}",
 					$"levelUpTime4={levelUpTime4}",
 					$"ddclClientVersion={Program.LocalVersion}",
-					$"v={HttpUtility.HtmlEncode(validation)}"
+					$"v={HttpUtility.HtmlEncode(validation)}",
 				};
 
 				using WebClient wc = new WebClient();

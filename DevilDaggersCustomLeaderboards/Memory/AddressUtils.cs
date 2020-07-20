@@ -23,8 +23,10 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			return sTemp;
 		}
 
-		public static string ToHex(int dec) => dec.ToString("X");
+		public static string ToHex(int dec)
+			=> dec.ToString("X", CultureInfo.InvariantCulture);
 
-		public static int ToDec(string hex) => int.Parse(hex, NumberStyles.HexNumber);
+		public static int ToDec(string hex)
+			=> int.Parse(hex, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 	}
 }

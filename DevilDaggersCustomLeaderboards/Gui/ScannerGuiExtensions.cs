@@ -35,8 +35,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 
 			if (scanner.LevelGems == 0 && scanner.Gems != 0 && scanner.IsAlive && !scanner.IsReplay && scanner.Time != 0)
 			{
-				Cmd.WriteLine("WARNING: Level up times and homing count are not being detected.\nRestart Devil Daggers to fix this issue.", ConsoleColor.Red);
 				// TODO: Log addresses.
+				Cmd.WriteLine("WARNING: Level up times and homing count are not being detected.\nRestart Devil Daggers to fix this issue.", ConsoleColor.Red);
 			}
 
 			Cmd.WriteLine("Hand", GetHand(scanner.LevelGems));
@@ -72,7 +72,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			int timeDiff = scanner.Time - entry.Time;
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
 			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard, category));
-			Cmd.WriteLine($" ({(timeDiff < 0 ? "" : "+")}{timeDiff / 10000f:0.0000})", ConsoleColor.Red);
+			Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ConsoleColor.Red);
 
 			WriteIntField("Kills", scanner.Kills, scanner.Kills - entry.Kills);
 			WriteIntField("Gems", scanner.Gems, scanner.Gems - entry.Gems);
@@ -94,7 +94,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			static void WritePercentageField(string fieldName, double value, double valueDiff)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight:0.00%}");
-				Cmd.WriteLine($" ({(valueDiff < 0 ? "" : "+")}{valueDiff:0.00%})", Cmd.GetImprovementColor(valueDiff));
+				Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.00%})", Cmd.GetImprovementColor(valueDiff));
 			}
 
 			static void WriteTimeField(string fieldName, int value, int valueDiff)
@@ -103,7 +103,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				if (value == 0)
 					Cmd.WriteLine();
 				else
-					Cmd.WriteLine($" ({(valueDiff < 0 ? "" : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
+					Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
 			}
 		}
 	}

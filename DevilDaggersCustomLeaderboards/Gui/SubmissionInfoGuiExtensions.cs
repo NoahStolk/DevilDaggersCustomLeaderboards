@@ -1,6 +1,7 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
 using DevilDaggersCore.Game;
 using System;
+using System.Globalization;
 using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards.Gui
@@ -13,8 +14,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 		{
 			for (int i = 0; i < si.TotalPlayers; i++)
 			{
-				int spaceCountCurrent = (i + 1).ToString().Length;
-				int spaceCountTotal = si.TotalPlayers.ToString().Length;
+				int spaceCountCurrent = (i + 1).ToString(CultureInfo.InvariantCulture).Length;
+				int spaceCountTotal = si.TotalPlayers.ToString(CultureInfo.InvariantCulture).Length;
 
 				CustomEntryBase entry = si.Entries[i];
 				ConsoleColor color = Cmd.GetDaggerColor(entry.Time, si.Leaderboard, si.Category);
@@ -53,7 +54,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
 			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(si.Time, si.Leaderboard, si.Category));
 			if (!si.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(timeDiff < 0 ? "" : "+")}{timeDiff:0.0000})", ConsoleColor.Green);
+				Cmd.Write($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ConsoleColor.Green);
 			Cmd.WriteLine();
 
 			WriteIntField(si.IsNewUserOnThisLeaderboard, "Kills", si.Kills, si.KillsDiff);
@@ -71,7 +72,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value / 10000f,Cmd.TextWidthRight:0.0000}");
 				if (!isNewUser)
-					Cmd.Write($" ({(valueDiff < 0 ? "" : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
+					Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
 				Cmd.WriteLine();
 			}
 
@@ -79,7 +80,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight:0.00%}");
 				if (!isNewUser)
-					Cmd.Write($" ({(valueDiff < 0 ? "" : "+")}{valueDiff:0.00%})", Cmd.GetImprovementColor(valueDiff));
+					Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.00%})", Cmd.GetImprovementColor(valueDiff));
 				Cmd.WriteLine();
 			}
 
