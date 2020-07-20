@@ -95,8 +95,8 @@ namespace DevilDaggersCustomLeaderboards
 					continue;
 				}
 
-				scanner.Memory.ReadProcess = scanner.Process;
-				scanner.Memory.Open();
+				scanner.ProcessMemory.ReadProcess = scanner.Process;
+				scanner.ProcessMemory.Open();
 
 				scanner.PreScan();
 				scanner.Scan();

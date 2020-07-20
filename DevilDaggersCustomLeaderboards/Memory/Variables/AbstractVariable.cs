@@ -44,7 +44,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		{
 			try
 			{
-				ProcessMemory memory = Scanner.Instance.Memory;
+				ProcessMemory memory = Scanner.Instance.ProcessMemory;
 
 				byte[] bytes = memory.Read(memory.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
 				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));

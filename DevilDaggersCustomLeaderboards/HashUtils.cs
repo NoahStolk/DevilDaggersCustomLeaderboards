@@ -7,11 +7,11 @@ namespace DevilDaggersCustomLeaderboards
 {
 	public static class HashUtils
 	{
-		public static string CalculateSpawnsetHash()
+		public static string CalculateCurrentSurvivalHash()
 		{
 			try
 			{
-				using (FileStream fs = new FileStream(Path.Combine(Path.GetDirectoryName(Scanner.Instance.Process.MainModule.FileName) ?? throw new Exception("Could not retrieve process directory name."), "dd", "survival"), FileMode.Open, FileAccess.Read))
+				using (FileStream fs = new FileStream(Path.Combine(Path.GetDirectoryName(Scanner.Instance.Process.MainModule.FileName) ?? throw new Exception("Could not retrieve process file name."), "dd", "survival"), FileMode.Open, FileAccess.Read))
 				{
 					if (Spawnset.TryParse(fs, out Spawnset spawnset))
 						return spawnset.GetHashString();

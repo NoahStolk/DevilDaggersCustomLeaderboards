@@ -7,6 +7,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 	{
 		private IntPtr hProcess = IntPtr.Zero;
 
+		public ProcessMemory(Process readProcess)
+		{
+			ReadProcess = readProcess;
+		}
+
 		public Process ReadProcess { get; set; }
 
 		public void Open()

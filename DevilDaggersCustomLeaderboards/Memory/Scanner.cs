@@ -1,11 +1,9 @@
 ﻿// #define POINTER_READ
 using DevilDaggersCore;
-using DevilDaggersCore.Spawnsets;
 using DevilDaggersCore.Utils;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace DevilDaggersCustomLeaderboards.Memory
 {
@@ -18,12 +16,13 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		private Scanner()
 		{
+			ProcessMemory = new ProcessMemory(Process);
 		}
 
 		public static Scanner Instance => lazy.Value;
 
 		public Process Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
-		public ProcessMemory Memory { get; private set; } = new ProcessMemory();
+		public ProcessMemory ProcessMemory { get; private set; }
 
 		public string SpawnsetHash { get; private set; } = string.Empty;
 
@@ -49,28 +48,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public void FindWindow()
 			=> Process = ProcessUtils.GetDevilDaggersProcess();
-
-		private string CalculateCurrentSurvivalHash()
-		{
-			try
-			{
-				using (FileStream fs = new FileStream(Path.Combine(Path.GetDirectoryName(Process.MainModule.FileName) ?? throw new Exception("Could not retrieve process file name."), "dd", "survival"), FileMode.Open, FileAccess.Read))
-				{
-					if (Spawnset.TryParse(fs, out Spawnset spawnset))
-						return spawnset.GetHashString();
-
-					Logging.Log.Error("Failed to calculate spawnset hash because the survival file could not be parsed.");
-				}
-
-				return string.Empty;
-			}
-			catch (Exception ex)
-			{
-				Logging.Log.Error("Failed to calculate spawnset hash.", ex);
-
-				return string.Empty;
-			}
-		}
 
 		public void RestartScan()
 		{
@@ -118,7 +95,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				// Always calculate the spawnset in menu or lobby.
 				// Otherwise you can first normally load a spawnset to set the hash, exit and load an empty spawnset in the menu/lobby, then during playing the empty spawnset change it back to the same original spawnset and upload a cheated score.
 				if (TimeFloat == 0 && TimeFloat.ValuePrevious == 0)
-					SpawnsetHash = CalculateCurrentSurvivalHash();
+					SpawnsetHash = HashUtils.CalculateCurrentSurvivalHash();
 
 				// Stop scanning if it is a replay.
 				IsReplay.Scan();
@@ -141,18 +118,18 @@ namespace DevilDaggersCustomLeaderboards.Memory
 #if POINTER_READ
 					byte[] bytes = Memory.PointerRead(Process.MainModule.BaseAddress, 4, new[] { magicDynamic, 0x218 }, out _);
 #else
-					byte[] bytes = Memory.Read(Process.MainModule.BaseAddress + magicDynamic, 4, out _);
+					byte[] bytes = ProcessMemory.Read(Process.MainModule.BaseAddress + magicDynamic, 4, out _);
 					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-					bytes = Memory.Read(new IntPtr(ptr), 4, out _);
+					bytes = ProcessMemory.Read(new IntPtr(ptr), 4, out _);
 					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-					bytes = Memory.Read(new IntPtr(ptr) + 0x218, 4, out _);
+					bytes = ProcessMemory.Read(new IntPtr(ptr) + 0x218, 4, out _);
 #endif
 					LevelGems = BitConverter.ToInt32(bytes, 0);
 
 #if POINTER_READ
 					bytes = Memory.PointerRead(Process.MainModule.BaseAddress, 4, new[] { magicDynamic, 0x224 }, out _);
 #else
-					bytes = Memory.Read(new IntPtr(ptr) + 0x224, 4, out _);
+					bytes = ProcessMemory.Read(new IntPtr(ptr) + 0x224, 4, out _);
 #endif
 					Homing = BitConverter.ToInt32(bytes, 0);
 
@@ -170,7 +147,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				}
 
 				if (string.IsNullOrEmpty(SpawnsetHash))
-					SpawnsetHash = CalculateCurrentSurvivalHash();
+					SpawnsetHash = HashUtils.CalculateCurrentSurvivalHash();
 			}
 			catch (Exception ex)
 			{
