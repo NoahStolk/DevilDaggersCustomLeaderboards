@@ -86,7 +86,7 @@ namespace DevilDaggersCustomLeaderboards
 				};
 
 				using WebClient wc = new WebClient();
-				return JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
+				return JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString(UrlUtils.UploadCustomEntry(queryValues)));
 			}
 			catch (Exception ex)
 			{
