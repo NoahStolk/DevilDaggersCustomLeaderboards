@@ -192,6 +192,7 @@ dotnet_diagnostic.CA1062.severity = none
 
 # StyleCopAnalyzers suppressions
 
+# SA1000: The keyword 'new' should be followed by a space.
 # SA1027: Replace tabs with spaces.
 # SA1101: Prefix local calls with this.
 # SA1124: Do not use regions.
@@ -216,6 +217,7 @@ dotnet_diagnostic.CA1062.severity = none
 # SA1633: The file header is missing or not located at the top of the file.
 # SA1642: Constructor summary documentation should begin with standard text.
 
+dotnet_diagnostic.SA1000.severity = none
 dotnet_diagnostic.SA1027.severity = none
 dotnet_diagnostic.SA1101.severity = none
 dotnet_diagnostic.SA1124.severity = none
