@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<Version>0.7.0.0</Version>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<ApplicationIcon>Icon24.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
