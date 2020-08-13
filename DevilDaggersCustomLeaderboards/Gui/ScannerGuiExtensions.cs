@@ -27,7 +27,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Accuracy", $"{(scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (float)scanner.ShotsFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
 #if DEBUG
-			Cmd.WriteLine("Death Type", GameInfo.GetDeathFromDeathType(scanner.DeathType).Name, Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType).Name, Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine("Alive", scanner.IsAlive);
 			Cmd.WriteLine("Replay", scanner.IsReplay);
 #endif

@@ -40,7 +40,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			double accuracyOld = shotsFiredOld == 0 ? 0 : shotsHitOld / (double)shotsFiredOld;
 			double accuracyDiff = accuracy - accuracyOld;
 
-			Cmd.Write($"{GameInfo.GetDeathFromDeathType(deathType).Name}", Cmd.GetDeathColor(deathType));
+			Cmd.Write($"{GameInfo.GetDeathByType(deathType).Name}", Cmd.GetDeathColor(deathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
