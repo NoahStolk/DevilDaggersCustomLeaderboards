@@ -3,8 +3,11 @@ using DevilDaggersCore.Tools;
 using DevilDaggersCustomLeaderboards.Gui;
 using DevilDaggersCustomLeaderboards.Memory;
 using log4net;
+using log4net.Config;
+using log4net.Repository;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -39,6 +42,9 @@ namespace DevilDaggersCustomLeaderboards
 
 		public static void Main()
 		{
+			ILoggerRepository? logRepository = LogManager.GetRepository(Assembly.GetExecutingAssembly());
+			XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+
 			Console.CursorVisible = false;
 			try
 			{
