@@ -65,7 +65,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			double accuracy = scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (double)scanner.ShotsFired;
 			double accuracyOld = entry.ShotsFired == 0 ? 0 : entry.ShotsHit / (double)entry.ShotsFired;
 
-			Cmd.Write($"{GameInfo.GetDeathFromDeathType(scanner.DeathType).Name}", Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.Write($"{GameInfo.GetDeathByType(scanner.DeathType).Name}", Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
