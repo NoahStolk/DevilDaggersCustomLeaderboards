@@ -21,7 +21,7 @@ namespace DevilDaggersCustomLeaderboards
 
 		public static NetworkHandler Instance => lazy.Value;
 
-		public static UploadResult Upload()
+		public static UploadSuccess Upload()
 		{
 			try
 			{
@@ -30,25 +30,25 @@ namespace DevilDaggersCustomLeaderboards
 				if (scanner.PlayerId <= 0)
 				{
 					Program.Log.Warn($"Invalid player ID: {scanner.PlayerId}");
-					return new UploadResult(false, "Invalid player ID.", 3);
+					return new UploadSuccess(false, "Invalid player ID.", 3);
 				}
 
 				if (scanner.IsReplay)
-					return new UploadResult(false, "Run is replay. Unable to validate.", 3);
+					return new UploadSuccess(false, "Run is replay. Unable to validate.", 3);
 
 				// This should fix the broken submissions that occasionally get sent for some reason.
 				if (scanner.Time < minimalTime)
-					return new UploadResult(false, $"Timer is under {minimalTime:0.0000}. Unable to validate.", 1);
+					return new UploadSuccess(false, $"Timer is under {minimalTime:0.0000}. Unable to validate.", 1);
 
 				if (string.IsNullOrEmpty(scanner.SpawnsetHash))
 				{
 					Program.Log.Warn("Spawnset hash has not been calculated.");
-					return new UploadResult(false, "Spawnset hash has not been calculated.");
+					return new UploadSuccess(false, "Spawnset hash has not been calculated.");
 				}
 
 				// This is to prevent people from initially starting an easy spawnset to get e.g. 800 seconds, then change the survival file during the run to a different (harder) spawnset to trick the application into uploading it to the wrong leaderboard.
 				if (HashUtils.CalculateCurrentSurvivalHash() != scanner.SpawnsetHash)
-					return new UploadResult(false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
+					return new UploadSuccess(false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
 
 				string toEncrypt = string.Join(
 					";",
@@ -86,12 +86,12 @@ namespace DevilDaggersCustomLeaderboards
 				};
 
 				using WebClient wc = new WebClient();
-				return JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString(UrlUtils.UploadCustomEntry(queryValues)));
+				return JsonConvert.DeserializeObject<UploadSuccess>(wc.DownloadString(UrlUtils.UploadCustomEntry(queryValues)));
 			}
 			catch (Exception ex)
 			{
 				Program.Log.Error("Error trying to submit score", ex);
-				return new UploadResult(false, $"Error uploading score\n\nDetails:\n\n{ex}");
+				return new UploadSuccess(false, $"Error uploading score\n\nDetails:\n\n{ex}");
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace DevilDaggersCustomLeaderboards
 				};
 
 				using WebClient wc = new WebClient();
-				UploadResult result = JsonConvert.DeserializeObject<UploadResult>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
+				UploadSuccess result = JsonConvert.DeserializeObject<UploadSuccess>(wc.DownloadString($"{UrlUtils.BaseUrl}/CustomLeaderboards/Upload?{string.Join("&", queryValues)}"));
 				Console.WriteLine(result.Message);
 			}
 			catch (Exception ex)

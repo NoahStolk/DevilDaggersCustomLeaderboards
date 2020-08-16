@@ -122,7 +122,7 @@ namespace DevilDaggersCustomLeaderboards
 						recording = false;
 
 						int tries = 0;
-						UploadResult uploadResult;
+						UploadSuccess uploadResult;
 						do
 						{
 							Console.Clear();
