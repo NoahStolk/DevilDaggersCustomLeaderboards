@@ -7,15 +7,18 @@ namespace DevilDaggersCustomLeaderboards.Memory
 	{
 		private IntPtr hProcess = IntPtr.Zero;
 
-		public ProcessMemory(Process readProcess)
+		public ProcessMemory(Process? readProcess)
 		{
 			ReadProcess = readProcess;
 		}
 
-		public Process ReadProcess { get; set; }
+		public Process? ReadProcess { get; set; }
 
 		public void Open()
 		{
+			if (ReadProcess == null)
+				return;
+
 			ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ | ProcessAccessType.PROCESS_VM_WRITE | ProcessAccessType.PROCESS_VM_OPERATION;
 			hProcess = NativeMethods.OpenProcess((uint)access, 1, (uint)ReadProcess.Id);
 		}

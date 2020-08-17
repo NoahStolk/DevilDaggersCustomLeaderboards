@@ -1,22 +1,29 @@
 ﻿using DevilDaggersCore.CustomLeaderboards;
 using DevilDaggersCore.Tools;
+using DevilDaggersCore.Utils;
 using DevilDaggersCustomLeaderboards.Gui;
 using DevilDaggersCustomLeaderboards.Memory;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Web;
 using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards
 {
 	public static class Program
 	{
+		private const float minimalTime = 1f;
+
 #pragma warning disable IDE1006
 #pragma warning disable SA1310 // Field names should not contain underscore
 		private const int MF_BYCOMMAND = 0x00000000;
@@ -92,91 +99,174 @@ namespace DevilDaggersCustomLeaderboards
 
 			Console.Clear();
 			while (true)
+				ExecuteMainLoop();
+		}
+
+		private static void ExecuteMainLoop()
+		{
+			scanner.FindWindow();
+
+			if (scanner.Process == null)
 			{
-				scanner.FindWindow();
+				Cmd.WriteLine($"Devil Daggers not found. Make sure the game is running. Retrying in a second...");
+				Thread.Sleep(1000);
+				Console.Clear();
+				return;
+			}
 
-				if (scanner.Process == null)
+			scanner.ProcessMemory.ReadProcess = scanner.Process;
+			scanner.ProcessMemory.Open();
+
+			scanner.PreScan();
+			scanner.Scan();
+
+			if (!recording)
+			{
+				if (scanner.TimeFloat == scanner.TimeFloat.ValuePrevious)
+					return;
+
+				Console.Clear();
+				recording = true;
+				scanner.RestartScan();
+			}
+
+			scanner.WriteRecording();
+
+			Thread.Sleep(50);
+			Console.SetCursorPosition(0, 0);
+
+			if (!scanner.IsAlive && scanner.IsAlive.ValuePrevious)
+			{
+				recording = false;
+
+				Console.Clear();
+				Cmd.WriteLine("Validating...");
+				Cmd.WriteLine();
+
+				(bool isValid, string message) = ValidateRunLocally();
+
+				if (isValid)
 				{
-					Cmd.WriteLine($"Devil Daggers not found. Make sure the game is running. Retrying in a second...");
-					Thread.Sleep(1000);
 					Console.Clear();
-					continue;
-				}
+					Cmd.WriteLine("Uploading...");
+					Cmd.WriteLine();
 
-				scanner.ProcessMemory.ReadProcess = scanner.Process;
-				scanner.ProcessMemory.Open();
+					// Thread is being blocked by the upload.
+					UploadSuccess? uploadSuccess = Upload();
 
-				scanner.PreScan();
-				scanner.Scan();
-
-				if (recording)
-				{
-					scanner.WriteRecording();
-
-					Thread.Sleep(50);
-					Console.SetCursorPosition(0, 0);
-
-					// If player just died
-					if (!scanner.IsAlive && scanner.IsAlive.ValuePrevious)
+					if (uploadSuccess != null)
 					{
-						recording = false;
+						Cmd.WriteLine("Upload successful", ConsoleColor.Green);
+						Cmd.WriteLine(uploadSuccess.Message);
+						Cmd.WriteLine();
+						uploadSuccess.WriteLeaderboard(scanner.PlayerId, scanner.Username);
 
-						int tries = 0;
-						UploadSuccess uploadResult;
-						do
-						{
-							Console.Clear();
-							Cmd.WriteLine("Uploading...");
-							Cmd.WriteLine();
+						Cmd.WriteLine();
 
-							// Thread is being blocked by the upload.
-							uploadResult = NetworkHandler.Upload();
+						if (uploadSuccess.IsHighscore())
+							uploadSuccess.WriteHighscoreStats();
+						else
+							scanner.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Category, uploadSuccess.Entries.FirstOrDefault(e => e.PlayerId == scanner.PlayerId));
 
-							if (uploadResult.Success)
-							{
-								Cmd.WriteLine("Upload successful", ConsoleColor.Green);
-								Cmd.WriteLine(uploadResult.Message);
-								Cmd.WriteLine();
-								if (uploadResult.SubmissionInfo != null)
-								{
-									uploadResult.SubmissionInfo.WriteLeaderboard(scanner.PlayerId);
-
-									Cmd.WriteLine();
-
-									if (uploadResult.SubmissionInfo.IsHighscore())
-										uploadResult.SubmissionInfo.WriteHighscoreStats();
-									else
-										scanner.WriteStats(uploadResult.SubmissionInfo.Leaderboard, uploadResult.SubmissionInfo.Category, uploadResult.SubmissionInfo.Entries.FirstOrDefault(e => e.PlayerId == scanner.PlayerId));
-								}
-
-								Cmd.WriteLine();
-							}
-							else
-							{
-								Cmd.WriteLine("Upload failed", ConsoleColor.Red);
-								Cmd.WriteLine(uploadResult.Message);
-								tries++;
-								if (uploadResult.TryCount > 1)
-									Cmd.WriteLine($"Retrying (attempt {tries} / {uploadResult.TryCount})");
-								Log.Warn($"Upload failed - {uploadResult.Message}");
-
-								Thread.Sleep(500);
-							}
-						}
-						while (!uploadResult.Success && tries < uploadResult.TryCount);
-
-						Console.SetCursorPosition(0, 0);
-						Cmd.WriteLine("Ready to restart");
 						Cmd.WriteLine();
 					}
+					else
+					{
+						Cmd.WriteLine("Upload failed", ConsoleColor.Red);
+
+						Thread.Sleep(500);
+					}
 				}
-				else if (scanner.TimeFloat < scanner.TimeFloat.ValuePrevious)
+				else
 				{
-					Console.Clear();
-					recording = true;
-					scanner.RestartScan();
+					Cmd.WriteLine("Validation failed", ConsoleColor.Red);
+					Cmd.WriteLine(message);
+					Log.Warn($"Validation failed - {message}");
+
+					Thread.Sleep(500);
 				}
+
+				Console.SetCursorPosition(0, 0);
+				Cmd.WriteLine("Ready to restart");
+				Cmd.WriteLine();
 			}
+		}
+
+		private static UploadSuccess? Upload()
+		{
+			try
+			{
+				string toEncrypt = string.Join(
+					";",
+					scanner.PlayerId,
+					scanner.Username,
+					scanner.Time,
+					scanner.Gems,
+					scanner.Kills,
+					scanner.DeathType,
+					scanner.ShotsHit,
+					scanner.ShotsFired,
+					scanner.EnemiesAlive,
+					scanner.Homing,
+					string.Join(",", new[] { scanner.LevelUpTime2, scanner.LevelUpTime3, scanner.LevelUpTime4 }));
+				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
+
+				List<string> queryValues = new List<string>
+				{
+					$"spawnsetHash={scanner.SpawnsetHash}",
+					$"playerId={scanner.PlayerId}",
+					$"username={scanner.Username}",
+					$"time={scanner.Time}",
+					$"gems={scanner.Gems}",
+					$"kills={scanner.Kills}",
+					$"deathType={scanner.DeathType}",
+					$"shotsHit={scanner.ShotsHit}",
+					$"shotsFired={scanner.ShotsFired}",
+					$"enemiesAlive={scanner.EnemiesAlive}",
+					$"homing={scanner.Homing}",
+					$"levelUpTime2={scanner.LevelUpTime2}",
+					$"levelUpTime3={scanner.LevelUpTime3}",
+					$"levelUpTime4={scanner.LevelUpTime4}",
+					$"ddclClientVersion={LocalVersion}",
+					$"v={HttpUtility.HtmlEncode(validation)}",
+				};
+
+				using WebClient wc = new WebClient();
+				return JsonConvert.DeserializeObject<UploadSuccess>(wc.DownloadString(UrlUtils.UploadCustomEntry(queryValues)));
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Error trying to submit score", ex);
+				return null;
+			}
+		}
+
+		private static (bool isValid, string message) ValidateRunLocally()
+		{
+			if (scanner.PlayerId <= 0)
+			{
+				Log.Warn($"Invalid player ID: {scanner.PlayerId}");
+				return (false, "Invalid player ID.");
+			}
+
+			if (scanner.IsReplay)
+				return (false, "Run is replay. Unable to validate.");
+
+			// This should fix the broken submissions that occasionally get sent for some reason.
+			if (scanner.Time < minimalTime)
+				return (false, $"Timer is under {minimalTime:0.0000}. Unable to validate.");
+
+			if (string.IsNullOrEmpty(scanner.SpawnsetHash))
+			{
+				Log.Warn("Spawnset hash has not been calculated.");
+				return (false, "Spawnset hash has not been calculated.");
+			}
+
+			// This is to prevent people from initially starting an easy spawnset to get e.g. 800 seconds, then change the survival file during the run to a different (harder) spawnset to trick the application into uploading it to the wrong leaderboard.
+			if (HashUtils.CalculateCurrentSurvivalHash() != scanner.SpawnsetHash)
+				return (false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
+
+			return (true, string.Empty);
 		}
 	}
 }

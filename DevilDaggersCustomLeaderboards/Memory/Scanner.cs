@@ -21,7 +21,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static Scanner Instance => lazy.Value;
 
-		public Process Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
+		public Process? Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
 		public ProcessMemory ProcessMemory { get; private set; }
 
 		public string SpawnsetHash { get; private set; } = string.Empty;

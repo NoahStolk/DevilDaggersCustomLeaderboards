@@ -8,9 +8,9 @@ namespace DevilDaggersCustomLeaderboards.Gui
 {
 	public static class SubmissionInfoGuiExtensions
 	{
-		public static bool IsHighscore(this SubmissionInfo si) => si.Rank != 0;
+		public static bool IsHighscore(this UploadSuccess si) => si.Rank != 0;
 
-		public static void WriteLeaderboard(this SubmissionInfo si, int currentPlayerId)
+		public static void WriteLeaderboard(this UploadSuccess si, int currentPlayerId, string currentUsername)
 		{
 			for (int i = 0; i < si.TotalPlayers; i++)
 			{
@@ -23,13 +23,13 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				if (entry.PlayerId == currentPlayerId)
 					Console.BackgroundColor = ConsoleColor.DarkGray;
 				Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ");
-				Cmd.Write($"{entry.Username.Substring(0, Math.Min(entry.Username.Length, Cmd.TextWidthLeft))}", color);
+				Cmd.Write($"{currentUsername.Substring(0, Math.Min(currentUsername.Length, Cmd.TextWidthLeft))}", color);
 				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", color);
 				Console.BackgroundColor = ConsoleColor.Black;
 			}
 		}
 
-		public static void WriteHighscoreStats(this SubmissionInfo si)
+		public static void WriteHighscoreStats(this UploadSuccess si)
 		{
 			int deathType = si.Entries[si.Rank - 1].DeathType;
 
