@@ -2709,6 +2709,10 @@ namespace DevilDaggersCustomLeaderboards.Clients
 		[Newtonsoft.Json.JsonProperty("playerId", Required = Newtonsoft.Json.Required.Always)]
 		public int PlayerId { get; set; } = default!;
 
+		[Newtonsoft.Json.JsonProperty("username", Required = Newtonsoft.Json.Required.Always)]
+		[System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+		public string Username { get; set; } = default!;
+
 		[Newtonsoft.Json.JsonProperty("time", Required = Newtonsoft.Json.Required.Always)]
 		public int Time { get; set; } = default!;
 

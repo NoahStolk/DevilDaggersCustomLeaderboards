@@ -156,7 +156,7 @@ namespace DevilDaggersCustomLeaderboards
 						Cmd.WriteLine("Upload successful", ConsoleColor.Green);
 						Cmd.WriteLine(uploadSuccess.Message);
 						Cmd.WriteLine();
-						uploadSuccess.WriteLeaderboard(scanner.PlayerId, scanner.Username);
+						uploadSuccess.WriteLeaderboard(scanner.PlayerId);
 
 						Cmd.WriteLine();
 

@@ -10,7 +10,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 	{
 		public static bool IsHighscore(this UploadSuccess us) => us.Rank != 0;
 
-		public static void WriteLeaderboard(this UploadSuccess us, int currentPlayerId, string currentUsername)
+		public static void WriteLeaderboard(this UploadSuccess us, int currentPlayerId)
 		{
 			for (int i = 0; i < us.TotalPlayers; i++)
 			{
@@ -23,7 +23,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				if (entry.PlayerId == currentPlayerId)
 					Console.BackgroundColor = ConsoleColor.DarkGray;
 				Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ");
-				Cmd.Write($"{currentUsername.Substring(0, Math.Min(currentUsername.Length, Cmd.TextWidthLeft))}", color);
+				Cmd.Write($"{entry.Username.Substring(0, Math.Min(entry.Username.Length, Cmd.TextWidthLeft))}", color);
 				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", color);
 				Console.BackgroundColor = ConsoleColor.Black;
 			}
