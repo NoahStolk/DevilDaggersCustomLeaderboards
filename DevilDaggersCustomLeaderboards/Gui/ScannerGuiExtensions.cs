@@ -27,7 +27,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Accuracy", $"{(scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (float)scanner.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
 #if DEBUG
-			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType).Name, Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type", Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine("Alive", scanner.IsAlive);
 			Cmd.WriteLine("Replay", scanner.IsReplay);
 #endif
@@ -65,7 +65,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			double accuracy = scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (double)scanner.DaggersFired;
 			double accuracyOld = entry.DaggersFired == 0 ? 0 : entry.DaggersHit / (double)entry.DaggersFired;
 
-			Cmd.Write($"{GameInfo.GetDeathByType(scanner.DeathType).Name}", Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.Write($"{GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type"}", Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
