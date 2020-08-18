@@ -1,20 +1,17 @@
-﻿using DevilDaggersCore.CustomLeaderboards;
-using DevilDaggersCore.Tools;
-using DevilDaggersCore.Utils;
+﻿using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Gui;
 using DevilDaggersCustomLeaderboards.Memory;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
@@ -45,9 +42,9 @@ namespace DevilDaggersCustomLeaderboards
 		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
 
 		public static Assembly Assembly { get; private set; } = Assembly.GetExecutingAssembly();
-		public static Version LocalVersion { get; private set; } = VersionHandler.GetLocalVersion(Assembly);
+		public static Version LocalVersion { get; private set; } = Version.Parse(FileVersionInfo.GetVersionInfo(Assembly.Location).FileVersion);
 
-		public static void Main()
+		public static async Task Main()
 		{
 			ILoggerRepository? logRepository = LogManager.GetRepository(Assembly.GetExecutingAssembly());
 			XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
@@ -75,17 +72,17 @@ namespace DevilDaggersCustomLeaderboards
 
 			Cmd.WriteLine("Checking for updates...");
 
-			VersionHandler.Instance.GetOnlineVersion(ApplicationName, LocalVersion);
-			VersionResult versionResult = VersionHandler.Instance.VersionResult;
+			await NetworkHandler.Instance.GetOnlineTool();
+
 			Console.Clear();
-			if (versionResult.IsUpToDate.HasValue)
+			if (NetworkHandler.Instance.Tool != null)
 			{
-				if (LocalVersion < versionResult.Tool.VersionNumberRequired)
+				if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumberRequired))
 				{
 					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ConsoleColor.Red);
 					Console.ReadKey();
 				}
-				else if (LocalVersion < versionResult.Tool.VersionNumber)
+				else if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumber))
 				{
 					Cmd.WriteLine($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ConsoleColor.Yellow);
 					Console.ReadKey();
@@ -99,10 +96,10 @@ namespace DevilDaggersCustomLeaderboards
 
 			Console.Clear();
 			while (true)
-				ExecuteMainLoop();
+				await ExecuteMainLoop();
 		}
 
-		private static void ExecuteMainLoop()
+		private static async Task ExecuteMainLoop()
 		{
 			scanner.FindWindow();
 
@@ -152,7 +149,7 @@ namespace DevilDaggersCustomLeaderboards
 					Cmd.WriteLine();
 
 					// Thread is being blocked by the upload.
-					UploadSuccess? uploadSuccess = Upload();
+					UploadSuccess? uploadSuccess = await Upload();
 
 					if (uploadSuccess != null)
 					{
@@ -192,47 +189,34 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		private static UploadSuccess? Upload()
+		private static async Task<UploadSuccess?> Upload()
 		{
 			try
 			{
-				string toEncrypt = string.Join(
-					";",
-					scanner.PlayerId,
-					scanner.Username,
-					scanner.Time,
-					scanner.Gems,
-					scanner.Kills,
-					scanner.DeathType,
-					scanner.ShotsHit,
-					scanner.ShotsFired,
-					scanner.EnemiesAlive,
-					scanner.Homing,
-					string.Join(",", new[] { scanner.LevelUpTime2, scanner.LevelUpTime3, scanner.LevelUpTime4 }));
+				string toEncrypt = string.Join(";", scanner.PlayerId, scanner.Username, scanner.Time, scanner.Gems, scanner.Kills, scanner.DeathType, scanner.DaggersHit, scanner.DaggersFired, scanner.EnemiesAlive, scanner.Homing, string.Join(",", new[] { scanner.LevelUpTime2, scanner.LevelUpTime3, scanner.LevelUpTime4 }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
-				List<string> queryValues = new List<string>
+				UploadRequest uploadRequest = new UploadRequest
 				{
-					$"spawnsetHash={scanner.SpawnsetHash}",
-					$"playerId={scanner.PlayerId}",
-					$"username={scanner.Username}",
-					$"time={scanner.Time}",
-					$"gems={scanner.Gems}",
-					$"kills={scanner.Kills}",
-					$"deathType={scanner.DeathType}",
-					$"shotsHit={scanner.ShotsHit}",
-					$"shotsFired={scanner.ShotsFired}",
-					$"enemiesAlive={scanner.EnemiesAlive}",
-					$"homing={scanner.Homing}",
-					$"levelUpTime2={scanner.LevelUpTime2}",
-					$"levelUpTime3={scanner.LevelUpTime3}",
-					$"levelUpTime4={scanner.LevelUpTime4}",
-					$"ddclClientVersion={LocalVersion}",
-					$"v={HttpUtility.HtmlEncode(validation)}",
+					DaggersFired = scanner.DaggersFired,
+					DaggersHit = scanner.DaggersHit,
+					DdclClientVersion = LocalVersion.ToString(),
+					DeathType = scanner.DeathType,
+					EnemiesAlive = scanner.EnemiesAlive,
+					Gems = scanner.Gems,
+					Homing = scanner.Homing,
+					Kills = scanner.Kills,
+					LevelUpTime2 = scanner.LevelUpTime2,
+					LevelUpTime3 = scanner.LevelUpTime3,
+					LevelUpTime4 = scanner.LevelUpTime4,
+					PlayerId = scanner.PlayerId,
+					SpawnsetHash = scanner.SpawnsetHash,
+					Time = scanner.Time,
+					Username = scanner.Username,
+					Validation = HttpUtility.HtmlEncode(validation),
 				};
 
-				using WebClient wc = new WebClient();
-				return JsonConvert.DeserializeObject<UploadSuccess>(wc.DownloadString(UrlUtils.UploadCustomEntry(queryValues)));
+				return await NetworkHandler.Instance.ApiClient.CustomLeaderboards_UploadScoreAsync(uploadRequest);
 			}
 			catch (Exception ex)
 			{

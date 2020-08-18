@@ -1,4 +1,4 @@
-﻿using DevilDaggersCore.CustomLeaderboards;
+﻿using DevilDaggersCustomLeaderboards.Clients;
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Gui
@@ -39,7 +39,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Console.ForegroundColor = ConsoleColor.White;
 		}
 
-		public static ConsoleColor GetDaggerColor(int time, CustomLeaderboardBase leaderboard, CustomLeaderboardCategoryBase category)
+		public static ConsoleColor GetDaggerColor(int time, CustomLeaderboard leaderboard, CustomLeaderboardCategory category)
 		{
 			if (leaderboard.Homing != 0 && Compare(time, leaderboard.Homing))
 				return ConsoleColor.Magenta;

@@ -1,5 +1,4 @@
-﻿using DevilDaggersCore;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 
@@ -56,7 +55,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 			}
 			catch (Exception ex)
 			{
-				Logging.Log.Error($"Error while scanning {typeof(TVariable)} variable.", ex);
+				Program.Log.Error($"Error while scanning {typeof(TVariable)} variable.", ex);
 			}
 		}
 

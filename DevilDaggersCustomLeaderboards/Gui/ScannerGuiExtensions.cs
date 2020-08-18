@@ -1,5 +1,5 @@
-﻿using DevilDaggersCore.CustomLeaderboards;
-using DevilDaggersCore.Game;
+﻿using DevilDaggersCore.Game;
+using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory;
 using System;
 using System.Globalization;
@@ -22,9 +22,9 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Time", scanner.TimeFloat.Value.ToString("0.0000", CultureInfo.InvariantCulture));
 			Cmd.WriteLine("Gems", scanner.Gems);
 			Cmd.WriteLine("Kills", scanner.Kills);
-			Cmd.WriteLine("Shots Hit", scanner.ShotsHit);
-			Cmd.WriteLine("Shots Fired", scanner.ShotsFired);
-			Cmd.WriteLine("Accuracy", $"{(scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (float)scanner.ShotsFired * 100):0.00}%");
+			Cmd.WriteLine("Shots Hit", scanner.DaggersHit);
+			Cmd.WriteLine("Shots Fired", scanner.DaggersFired);
+			Cmd.WriteLine("Accuracy", $"{(scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (float)scanner.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
 #if DEBUG
 			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType).Name, Cmd.GetDeathColor(scanner.DeathType));
@@ -60,10 +60,10 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine();
 		}
 
-		public static void WriteStats(this Scanner scanner, CustomLeaderboardBase leaderboard, CustomLeaderboardCategoryBase category, CustomEntryBase entry)
+		public static void WriteStats(this Scanner scanner, CustomLeaderboard leaderboard, CustomLeaderboardCategory category, CustomEntry entry)
 		{
-			double accuracy = scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (double)scanner.ShotsFired;
-			double accuracyOld = entry.ShotsFired == 0 ? 0 : entry.ShotsHit / (double)entry.ShotsFired;
+			double accuracy = scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (double)scanner.DaggersFired;
+			double accuracyOld = entry.DaggersFired == 0 ? 0 : entry.DaggersHit / (double)entry.DaggersFired;
 
 			Cmd.Write($"{GameInfo.GetDeathByType(scanner.DeathType).Name}", Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine();
@@ -76,8 +76,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 
 			WriteIntField("Kills", scanner.Kills, scanner.Kills - entry.Kills);
 			WriteIntField("Gems", scanner.Gems, scanner.Gems - entry.Gems);
-			WriteIntField("Shots hit", scanner.ShotsHit, scanner.ShotsHit - entry.ShotsHit);
-			WriteIntField("Shots fired", scanner.ShotsFired, scanner.ShotsFired - entry.ShotsFired);
+			WriteIntField("Shots hit", scanner.DaggersHit, scanner.DaggersHit - entry.DaggersHit);
+			WriteIntField("Shots fired", scanner.DaggersFired, scanner.DaggersFired - entry.DaggersFired);
 			WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
 			WriteIntField("Enemies alive", scanner.EnemiesAlive, scanner.EnemiesAlive - entry.EnemiesAlive);
 			WriteIntField("Homing", scanner.Homing, scanner.Homing - entry.Homing);
