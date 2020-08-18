@@ -193,7 +193,7 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			try
 			{
-				string toEncrypt = string.Join(";", scanner.PlayerId, scanner.Username, scanner.Time, scanner.Gems, scanner.Kills, scanner.DeathType, scanner.DaggersHit, scanner.DaggersFired, scanner.EnemiesAlive, scanner.Homing, string.Join(",", new[] { scanner.LevelUpTime2, scanner.LevelUpTime3, scanner.LevelUpTime4 }));
+				string toEncrypt = string.Join(";", scanner.PlayerId, scanner.Time, scanner.Gems, scanner.Kills, scanner.DeathType, scanner.DaggersHit, scanner.DaggersFired, scanner.EnemiesAlive, scanner.Homing, string.Join(",", new[] { scanner.LevelUpTime2, scanner.LevelUpTime3, scanner.LevelUpTime4 }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 				UploadRequest uploadRequest = new UploadRequest
