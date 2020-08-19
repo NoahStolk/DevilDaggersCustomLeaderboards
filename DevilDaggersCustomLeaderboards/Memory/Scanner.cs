@@ -112,14 +112,15 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					// Enemy count might increase on death, so only scan while player is alive.
 					EnemiesAlive.Scan();
 
-					byte[] pointerBytes = ProcessMemory.Read(Process.MainModule.BaseAddress + magicDynamic, 4, out _);
-					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(pointerBytes));
-					pointerBytes = ProcessMemory.Read(new IntPtr(ptr), 4, out _);
-					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(pointerBytes));
-					pointerBytes = ProcessMemory.Read(new IntPtr(ptr) + 0x218, 4, out _);
+					byte[] pointerBytes = ProcessMemory.Read(Process.MainModule.BaseAddress + magicDynamic, sizeof(int), out _);
+					IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
+					pointerBytes = ProcessMemory.Read(ptr, 4, out _);
+					ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
+
+					pointerBytes = ProcessMemory.Read(ptr + 0x218, 4, out _);
 					LevelGems = BitConverter.ToInt32(pointerBytes, 0);
 
-					pointerBytes = ProcessMemory.Read(new IntPtr(ptr) + 0x224, 4, out _);
+					pointerBytes = ProcessMemory.Read(ptr + 0x224, 4, out _);
 					Homing = BitConverter.ToInt32(pointerBytes, 0);
 
 					if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)
