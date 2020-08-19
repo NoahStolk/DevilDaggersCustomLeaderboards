@@ -149,7 +149,7 @@ namespace DevilDaggersCustomLeaderboards
 					Cmd.WriteLine();
 
 					// Thread is being blocked by the upload.
-					UploadSuccess? uploadSuccess = await Upload();
+					UploadSuccess? uploadSuccess = await UploadRun();
 
 					if (uploadSuccess != null)
 					{
@@ -187,7 +187,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		private static async Task<UploadSuccess?> Upload()
+		private static async Task<UploadSuccess?> UploadRun()
 		{
 			try
 			{

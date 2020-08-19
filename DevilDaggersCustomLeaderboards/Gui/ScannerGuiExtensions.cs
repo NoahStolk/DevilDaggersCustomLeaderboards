@@ -11,7 +11,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 	{
 		public static void WriteRecording(this Scanner scanner)
 		{
-			Cmd.WriteLine($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
+			Cmd.WriteLine($"Scanning process '{scanner.Process?.ProcessName ?? "No process"}' ({scanner.Process?.MainWindowTitle ?? "No title"})");
 			Cmd.WriteLine("Recording...");
 			Cmd.WriteLine();
 

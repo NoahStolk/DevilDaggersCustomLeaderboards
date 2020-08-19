@@ -84,6 +84,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public void Scan()
 		{
+			if (Process == null)
+				return;
+
 			try
 			{
 				// Always scan these values.
@@ -120,15 +123,18 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					pointerBytes = ProcessMemory.Read(ptr + 0x218, 4, out _);
 					LevelGems = BitConverter.ToInt32(pointerBytes, 0);
 
-					pointerBytes = ProcessMemory.Read(ptr + 0x224, 4, out _);
-					Homing = BitConverter.ToInt32(pointerBytes, 0);
+					if (LevelGems != 0)
+					{
+						pointerBytes = ProcessMemory.Read(ptr + 0x224, 4, out _);
+						Homing = BitConverter.ToInt32(pointerBytes, 0);
 
-					if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)
-						LevelUpTime2 = Time;
-					if (LevelUpTime3 == 0 && LevelGems == 70)
-						LevelUpTime3 = Time;
-					if (LevelUpTime4 == 0 && LevelGems == 71)
-						LevelUpTime4 = Time;
+						if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)
+							LevelUpTime2 = Time;
+						if (LevelUpTime3 == 0 && LevelGems == 70)
+							LevelUpTime3 = Time;
+						if (LevelUpTime4 == 0 && LevelGems == 71)
+							LevelUpTime4 = Time;
+					}
 				}
 				else
 				{
