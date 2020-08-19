@@ -1,5 +1,4 @@
-﻿// #define POINTER_READ
-using DevilDaggersCore.Utils;
+﻿using DevilDaggersCore.Utils;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using System;
 using System.Diagnostics;
@@ -113,24 +112,15 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					// Enemy count might increase on death, so only scan while player is alive.
 					EnemiesAlive.Scan();
 
-					// TODO: Clean up.
-#if POINTER_READ
-					byte[] bytes = Memory.PointerRead(Process.MainModule.BaseAddress, 4, new[] { magicDynamic, 0x218 }, out _);
-#else
-					byte[] bytes = ProcessMemory.Read(Process.MainModule.BaseAddress + magicDynamic, 4, out _);
-					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-					bytes = ProcessMemory.Read(new IntPtr(ptr), 4, out _);
-					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-					bytes = ProcessMemory.Read(new IntPtr(ptr) + 0x218, 4, out _);
-#endif
-					LevelGems = BitConverter.ToInt32(bytes, 0);
+					byte[] pointerBytes = ProcessMemory.Read(Process.MainModule.BaseAddress + magicDynamic, 4, out _);
+					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(pointerBytes));
+					pointerBytes = ProcessMemory.Read(new IntPtr(ptr), 4, out _);
+					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(pointerBytes));
+					pointerBytes = ProcessMemory.Read(new IntPtr(ptr) + 0x218, 4, out _);
+					LevelGems = BitConverter.ToInt32(pointerBytes, 0);
 
-#if POINTER_READ
-					bytes = Memory.PointerRead(Process.MainModule.BaseAddress, 4, new[] { magicDynamic, 0x224 }, out _);
-#else
-					bytes = ProcessMemory.Read(new IntPtr(ptr) + 0x224, 4, out _);
-#endif
-					Homing = BitConverter.ToInt32(bytes, 0);
+					pointerBytes = ProcessMemory.Read(new IntPtr(ptr) + 0x224, 4, out _);
+					Homing = BitConverter.ToInt32(pointerBytes, 0);
 
 					if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)
 						LevelUpTime2 = Time;

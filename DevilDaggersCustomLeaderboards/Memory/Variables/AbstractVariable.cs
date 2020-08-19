@@ -48,8 +48,8 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 			{
 				ProcessMemory memory = Scanner.Instance.ProcessMemory;
 
-				byte[] bytes = memory.Read(memory.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
-				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
+				byte[] pointerBytes = memory.Read(memory.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
+				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(pointerBytes));
 
 				Bytes = memory.Read(new IntPtr(ptr) + Offset, Size, out _).ToImmutableArray();
 			}
