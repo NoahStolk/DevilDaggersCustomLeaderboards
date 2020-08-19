@@ -59,8 +59,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 
 			WriteIntField(us.IsNewUserOnThisLeaderboard, "Kills", us.Kills, us.KillsDiff);
 			WriteIntField(us.IsNewUserOnThisLeaderboard, "Gems", us.Gems, us.GemsDiff);
-			WriteIntField(us.IsNewUserOnThisLeaderboard, "Shots hit", us.DaggersHit, us.DaggersHitDiff);
-			WriteIntField(us.IsNewUserOnThisLeaderboard, "Shots fired", us.DaggersFired, us.DaggersFiredDiff);
+			WriteIntField(us.IsNewUserOnThisLeaderboard, "Daggers hit", us.DaggersHit, us.DaggersHitDiff);
+			WriteIntField(us.IsNewUserOnThisLeaderboard, "Daggers fired", us.DaggersFired, us.DaggersFiredDiff);
 			WritePercentageField(us.IsNewUserOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
 			WriteIntField(us.IsNewUserOnThisLeaderboard, "Enemies alive", us.EnemiesAlive, us.EnemiesAliveDiff);
 			WriteIntField(us.IsNewUserOnThisLeaderboard, "Homing", us.Homing, us.HomingDiff);

@@ -22,8 +22,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Time", scanner.TimeFloat.Value.ToString("0.0000", CultureInfo.InvariantCulture));
 			Cmd.WriteLine("Gems", scanner.Gems);
 			Cmd.WriteLine("Kills", scanner.Kills);
-			Cmd.WriteLine("Shots Hit", scanner.DaggersHit);
-			Cmd.WriteLine("Shots Fired", scanner.DaggersFired);
+			Cmd.WriteLine("Daggers Hit", scanner.DaggersHit);
+			Cmd.WriteLine("Daggers Fired", scanner.DaggersFired);
 			Cmd.WriteLine("Accuracy", $"{(scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (float)scanner.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
 #if DEBUG
@@ -73,8 +73,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 
 			WriteIntField("Kills", scanner.Kills, scanner.Kills - entry.Kills);
 			WriteIntField("Gems", scanner.Gems, scanner.Gems - entry.Gems);
-			WriteIntField("Shots hit", scanner.DaggersHit, scanner.DaggersHit - entry.DaggersHit);
-			WriteIntField("Shots fired", scanner.DaggersFired, scanner.DaggersFired - entry.DaggersFired);
+			WriteIntField("Daggers hit", scanner.DaggersHit, scanner.DaggersHit - entry.DaggersHit);
+			WriteIntField("Daggers fired", scanner.DaggersFired, scanner.DaggersFired - entry.DaggersFired);
 			WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
 			WriteIntField("Enemies alive", scanner.EnemiesAlive, scanner.EnemiesAlive - entry.EnemiesAlive);
 			WriteIntField("Homing", scanner.Homing, scanner.Homing - entry.Homing);
