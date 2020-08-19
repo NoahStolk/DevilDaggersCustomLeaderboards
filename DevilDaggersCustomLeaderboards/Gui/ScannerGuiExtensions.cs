@@ -97,7 +97,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			static void WriteTimeField(string fieldName, int value, int valueDiff)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{(value == 0 ? "N/A" : $"{value / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
-				if (value == 0)
+				if (value == 0 || valueDiff == value)
 					Cmd.WriteLine();
 				else
 					Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));

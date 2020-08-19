@@ -6,9 +6,10 @@ using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards.Gui
 {
-	public static class SubmissionInfoGuiExtensions
+	public static class UploadSuccessGuiExtensions
 	{
-		public static bool IsHighscore(this UploadSuccess us) => us.Rank != 0;
+		public static bool IsHighscore(this UploadSuccess us)
+			=> us.Rank != 0;
 
 		public static void WriteLeaderboard(this UploadSuccess us, int currentPlayerId)
 		{
@@ -64,14 +65,15 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			WritePercentageField(us.IsNewUserOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
 			WriteIntField(us.IsNewUserOnThisLeaderboard, "Enemies alive", us.EnemiesAlive, us.EnemiesAliveDiff);
 			WriteIntField(us.IsNewUserOnThisLeaderboard, "Homing", us.Homing, us.HomingDiff);
-			WriteTimeField(us.IsNewUserOnThisLeaderboard, "Level 2", us.LevelUpTime2, us.LevelUpTime2Diff);
-			WriteTimeField(us.IsNewUserOnThisLeaderboard, "Level 3", us.LevelUpTime3, us.LevelUpTime3Diff);
-			WriteTimeField(us.IsNewUserOnThisLeaderboard, "Level 4", us.LevelUpTime4, us.LevelUpTime4Diff);
 
-			static void WriteTimeField(bool isNewUser, string fieldName, int value, int valueDiff)
+			WriteTimeField(us.IsNewUserOnThisLeaderboard || us.LevelUpTime2 == us.LevelUpTime2Diff, "Level 2", us.LevelUpTime2, us.LevelUpTime2Diff);
+			WriteTimeField(us.IsNewUserOnThisLeaderboard || us.LevelUpTime3 == us.LevelUpTime3Diff, "Level 3", us.LevelUpTime3, us.LevelUpTime3Diff);
+			WriteTimeField(us.IsNewUserOnThisLeaderboard || us.LevelUpTime4 == us.LevelUpTime4Diff, "Level 4", us.LevelUpTime4, us.LevelUpTime4Diff);
+
+			static void WriteTimeField(bool writeDifference, string fieldName, int value, int valueDiff)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value / 10000f,Cmd.TextWidthRight:0.0000}");
-				if (!isNewUser)
+				if (writeDifference)
 					Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
 				Cmd.WriteLine();
 			}
