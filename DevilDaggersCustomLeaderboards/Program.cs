@@ -169,8 +169,6 @@ namespace DevilDaggersCustomLeaderboards
 					}
 					else
 					{
-						Cmd.WriteLine("Upload failed", ConsoleColor.Red);
-
 						Thread.Sleep(500);
 					}
 				}
@@ -218,8 +216,14 @@ namespace DevilDaggersCustomLeaderboards
 
 				return await NetworkHandler.Instance.ApiClient.CustomLeaderboards_UploadScoreAsync(uploadRequest);
 			}
+			catch (DevilDaggersInfoApiException<ProblemDetails> ex)
+			{
+				Cmd.WriteLine("Upload failed", ex.Result?.Title ?? "Empty response", ConsoleColor.Red);
+				return null;
+			}
 			catch (Exception ex)
 			{
+				Cmd.WriteLine("Upload failed", ConsoleColor.Red);
 				Log.Error("Error trying to submit score", ex);
 				return null;
 			}
