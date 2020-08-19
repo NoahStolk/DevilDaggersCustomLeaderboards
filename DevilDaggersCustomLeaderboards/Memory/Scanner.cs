@@ -1,6 +1,4 @@
-﻿// #define POINTER_READ
-using DevilDaggersCore;
-using DevilDaggersCore.Utils;
+﻿using DevilDaggersCore.Utils;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using System;
 using System.Diagnostics;
@@ -21,7 +19,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static Scanner Instance => lazy.Value;
 
-		public Process Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
+		public Process? Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
 		public ProcessMemory ProcessMemory { get; private set; }
 
 		public string SpawnsetHash { get; private set; } = string.Empty;
@@ -32,8 +30,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public IntVariable Gems { get; private set; } = new IntVariable(magicStatic, 0x1C0);
 		public IntVariable Kills { get; private set; } = new IntVariable(magicStatic, 0x1BC);
 		public IntVariable DeathType { get; private set; } = new IntVariable(magicStatic, 0x1C4);
-		public IntVariable ShotsFired { get; private set; } = new IntVariable(magicStatic, 0x1B4);
-		public IntVariable ShotsHit { get; private set; } = new IntVariable(magicStatic, 0x1B8);
+		public IntVariable DaggersFired { get; private set; } = new IntVariable(magicStatic, 0x1B4);
+		public IntVariable DaggersHit { get; private set; } = new IntVariable(magicStatic, 0x1B8);
 		public IntVariable EnemiesAlive { get; private set; } = new IntVariable(magicStatic, 0x1FC);
 		public BoolVariable IsAlive { get; private set; } = new BoolVariable(magicStatic, 0x1A4);
 		public BoolVariable IsReplay { get; private set; } = new BoolVariable(magicStatic, 0x35D);
@@ -74,8 +72,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			TimeFloat.PreScan();
 			Kills.PreScan();
 			Gems.PreScan();
-			ShotsFired.PreScan();
-			ShotsHit.PreScan();
+			DaggersFired.PreScan();
+			DaggersHit.PreScan();
 
 			if (IsAlive)
 				EnemiesAlive.PreScan();
@@ -86,6 +84,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public void Scan()
 		{
+			if (Process == null)
+				return;
+
 			try
 			{
 				// Always scan these values.
@@ -106,39 +107,34 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				TimeFloat.Scan();
 				Kills.Scan();
 				Gems.Scan();
-				ShotsFired.Scan();
-				ShotsHit.Scan();
+				DaggersFired.Scan();
+				DaggersHit.Scan();
 
 				if (IsAlive)
 				{
 					// Enemy count might increase on death, so only scan while player is alive.
 					EnemiesAlive.Scan();
 
-					// TODO: Clean up.
-#if POINTER_READ
-					byte[] bytes = Memory.PointerRead(Process.MainModule.BaseAddress, 4, new[] { magicDynamic, 0x218 }, out _);
-#else
-					byte[] bytes = ProcessMemory.Read(Process.MainModule.BaseAddress + magicDynamic, 4, out _);
-					int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-					bytes = ProcessMemory.Read(new IntPtr(ptr), 4, out _);
-					ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
-					bytes = ProcessMemory.Read(new IntPtr(ptr) + 0x218, 4, out _);
-#endif
-					LevelGems = BitConverter.ToInt32(bytes, 0);
+					byte[] pointerBytes = ProcessMemory.Read(Process.MainModule.BaseAddress + magicDynamic, sizeof(int), out _);
+					IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
+					pointerBytes = ProcessMemory.Read(ptr, 4, out _);
+					ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
 
-#if POINTER_READ
-					bytes = Memory.PointerRead(Process.MainModule.BaseAddress, 4, new[] { magicDynamic, 0x224 }, out _);
-#else
-					bytes = ProcessMemory.Read(new IntPtr(ptr) + 0x224, 4, out _);
-#endif
-					Homing = BitConverter.ToInt32(bytes, 0);
+					pointerBytes = ProcessMemory.Read(ptr + 0x218, 4, out _);
+					LevelGems = BitConverter.ToInt32(pointerBytes, 0);
 
-					if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)
-						LevelUpTime2 = Time;
-					if (LevelUpTime3 == 0 && LevelGems == 70)
-						LevelUpTime3 = Time;
-					if (LevelUpTime4 == 0 && LevelGems == 71)
-						LevelUpTime4 = Time;
+					if (LevelGems != 0)
+					{
+						pointerBytes = ProcessMemory.Read(ptr + 0x224, 4, out _);
+						Homing = BitConverter.ToInt32(pointerBytes, 0);
+
+						if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)
+							LevelUpTime2 = Time;
+						if (LevelUpTime3 == 0 && LevelGems == 70)
+							LevelUpTime3 = Time;
+						if (LevelUpTime4 == 0 && LevelGems == 71)
+							LevelUpTime4 = Time;
+					}
 				}
 				else
 				{
@@ -151,7 +147,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			}
 			catch (Exception ex)
 			{
-				Logging.Log.Error("Scan failed", ex);
+				Program.Log.Error("Scan failed", ex);
 			}
 		}
 	}

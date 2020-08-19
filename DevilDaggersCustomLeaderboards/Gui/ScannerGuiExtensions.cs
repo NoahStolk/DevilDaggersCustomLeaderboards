@@ -1,5 +1,5 @@
-﻿using DevilDaggersCore.CustomLeaderboards;
-using DevilDaggersCore.Game;
+﻿using DevilDaggersCore.Game;
+using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory;
 using System;
 using System.Globalization;
@@ -11,7 +11,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 	{
 		public static void WriteRecording(this Scanner scanner)
 		{
-			Cmd.WriteLine($"Scanning process '{scanner.Process.ProcessName}' ({scanner.Process.MainWindowTitle})");
+			Cmd.WriteLine($"Scanning process '{scanner.Process?.ProcessName ?? "No process"}' ({scanner.Process?.MainWindowTitle ?? "No title"})");
 			Cmd.WriteLine("Recording...");
 			Cmd.WriteLine();
 
@@ -22,22 +22,19 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine("Time", scanner.TimeFloat.Value.ToString("0.0000", CultureInfo.InvariantCulture));
 			Cmd.WriteLine("Gems", scanner.Gems);
 			Cmd.WriteLine("Kills", scanner.Kills);
-			Cmd.WriteLine("Shots Hit", scanner.ShotsHit);
-			Cmd.WriteLine("Shots Fired", scanner.ShotsFired);
-			Cmd.WriteLine("Accuracy", $"{(scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (float)scanner.ShotsFired * 100):0.00}%");
+			Cmd.WriteLine("Daggers Hit", scanner.DaggersHit);
+			Cmd.WriteLine("Daggers Fired", scanner.DaggersFired);
+			Cmd.WriteLine("Accuracy", $"{(scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (float)scanner.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
 #if DEBUG
-			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType).Name, Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type", Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine("Alive", scanner.IsAlive);
 			Cmd.WriteLine("Replay", scanner.IsReplay);
 #endif
 			Cmd.WriteLine();
 
 			if (scanner.LevelGems == 0 && scanner.Gems != 0 && scanner.IsAlive && !scanner.IsReplay && scanner.Time != 0)
-			{
-				// TODO: Log addresses.
 				Cmd.WriteLine("WARNING: Level up times and homing count are not being detected.\nRestart Devil Daggers to fix this issue.", ConsoleColor.Red);
-			}
 
 			Cmd.WriteLine("Hand", GetHand(scanner.LevelGems));
 			static int GetHand(int levelGems)
@@ -60,12 +57,12 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			Cmd.WriteLine();
 		}
 
-		public static void WriteStats(this Scanner scanner, CustomLeaderboardBase leaderboard, CustomLeaderboardCategoryBase category, CustomEntryBase entry)
+		public static void WriteStats(this Scanner scanner, CustomLeaderboard leaderboard, CustomLeaderboardCategory category, CustomEntry entry)
 		{
-			double accuracy = scanner.ShotsFired == 0 ? 0 : scanner.ShotsHit / (double)scanner.ShotsFired;
-			double accuracyOld = entry.ShotsFired == 0 ? 0 : entry.ShotsHit / (double)entry.ShotsFired;
+			double accuracy = scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (double)scanner.DaggersFired;
+			double accuracyOld = entry.DaggersFired == 0 ? 0 : entry.DaggersHit / (double)entry.DaggersFired;
 
-			Cmd.Write($"{GameInfo.GetDeathByType(scanner.DeathType).Name}", Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.Write($"{GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type"}", Cmd.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
@@ -76,8 +73,8 @@ namespace DevilDaggersCustomLeaderboards.Gui
 
 			WriteIntField("Kills", scanner.Kills, scanner.Kills - entry.Kills);
 			WriteIntField("Gems", scanner.Gems, scanner.Gems - entry.Gems);
-			WriteIntField("Shots hit", scanner.ShotsHit, scanner.ShotsHit - entry.ShotsHit);
-			WriteIntField("Shots fired", scanner.ShotsFired, scanner.ShotsFired - entry.ShotsFired);
+			WriteIntField("Daggers hit", scanner.DaggersHit, scanner.DaggersHit - entry.DaggersHit);
+			WriteIntField("Daggers fired", scanner.DaggersFired, scanner.DaggersFired - entry.DaggersFired);
 			WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
 			WriteIntField("Enemies alive", scanner.EnemiesAlive, scanner.EnemiesAlive - entry.EnemiesAlive);
 			WriteIntField("Homing", scanner.Homing, scanner.Homing - entry.Homing);
@@ -100,7 +97,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 			static void WriteTimeField(string fieldName, int value, int valueDiff)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{(value == 0 ? "N/A" : $"{value / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
-				if (value == 0)
+				if (value == 0 || valueDiff == value)
 					Cmd.WriteLine();
 				else
 					Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));

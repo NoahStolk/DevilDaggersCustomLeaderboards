@@ -1,5 +1,4 @@
-﻿using DevilDaggersCore;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 
@@ -49,14 +48,14 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 			{
 				ProcessMemory memory = Scanner.Instance.ProcessMemory;
 
-				byte[] bytes = memory.Read(memory.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
-				int ptr = AddressUtils.ToDec(AddressUtils.MakeAddress(bytes));
+				byte[] pointerBytes = memory.Read(memory.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
+				IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
 
-				Bytes = memory.Read(new IntPtr(ptr) + Offset, Size, out _).ToImmutableArray();
+				Bytes = memory.Read(ptr + Offset, Size, out _).ToImmutableArray();
 			}
 			catch (Exception ex)
 			{
-				Logging.Log.Error($"Error while scanning {typeof(TVariable)} variable.", ex);
+				Program.Log.Error($"Error while scanning {typeof(TVariable)} variable.", ex);
 			}
 		}
 
