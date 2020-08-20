@@ -12,7 +12,7 @@ DevilDaggersCustomLeaderboards is a console application that records data from c
 
 ## System requirements
 - Microsoft Windows
-- [.NET Core 3.1 Runtime](https://dotnet.microsoft.com/download/dotnet-core/thank-you/runtime-3.1.6-windows-x64-installer)
+- [.NET Core 3.1 Runtime](https://dotnet.microsoft.com/download/dotnet-core/thank-you/runtime-3.1.7-windows-x64-installer)
 - The Steam version Devil Daggers
 
 ## Installation
