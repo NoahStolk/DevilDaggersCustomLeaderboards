@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace DevilDaggersCustomLeaderboards
+namespace DevilDaggersCustomLeaderboards.Network
 {
 	public sealed class NetworkHandler
 	{

@@ -3,7 +3,7 @@ using DevilDaggersCustomLeaderboards.Memory;
 using System;
 using System.IO;
 
-namespace DevilDaggersCustomLeaderboards
+namespace DevilDaggersCustomLeaderboards.Utils
 {
 	public static class HashUtils
 	{

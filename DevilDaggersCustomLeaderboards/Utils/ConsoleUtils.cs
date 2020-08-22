@@ -1,11 +1,11 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
 using System;
 
-namespace DevilDaggersCustomLeaderboards.Gui
+namespace DevilDaggersCustomLeaderboards.Utils
 {
 	/// <summary>
-	/// Special Write methods are used to output to the console, as clearing the console after every update makes everything flicker which is ugly.
-	/// So instead of clearing the console using Console.Clear(), we just reset the cursor to the top-left, and then overwrite everything from the previous update using the special Write methods.
+	/// Special methods are used to output to the console, as clearing the console after every update makes everything flicker which is ugly.
+	/// So instead of clearing the console using <see cref="Console.Clear"/>, we just reset the cursor to the top-left, and then overwrite everything from the previous update using these methods.
 	/// </summary>
 	public static class ConsoleUtils
 	{
@@ -21,9 +21,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 		}
 
 		public static void WriteLine()
-		{
-			Console.WriteLine(new string(' ', TextWidthFull));
-		}
+			=> Console.WriteLine(new string(' ', TextWidthFull));
 
 		public static void WriteLine(object text, ConsoleColor color = ConsoleColor.White)
 		{
@@ -80,7 +78,7 @@ namespace DevilDaggersCustomLeaderboards.Gui
 				13 => ConsoleColor.Red,
 				14 => ConsoleColor.Magenta,
 				15 => ConsoleColor.DarkMagenta,
-				_ => ConsoleColor.White
+				_ => ConsoleColor.White,
 			};
 		}
 

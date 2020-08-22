@@ -1,6 +1,9 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
+using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Gui;
 using DevilDaggersCustomLeaderboards.Memory;
+using DevilDaggersCustomLeaderboards.Network;
+using DevilDaggersCustomLeaderboards.Utils;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
@@ -13,7 +16,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Cmd = DevilDaggersCustomLeaderboards.Gui.ConsoleUtils;
+using Cmd = DevilDaggersCustomLeaderboards.Utils.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards
 {
