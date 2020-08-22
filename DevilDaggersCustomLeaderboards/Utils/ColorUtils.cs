@@ -9,10 +9,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const ConsoleColor BackgroundHighlight = ConsoleColor.DarkBlue;
 
 		public const ConsoleColor Error = ConsoleColor.Red;
+		public const ConsoleColor Warning = ConsoleColor.Yellow;
 		public const ConsoleColor Success = ConsoleColor.Green;
-
-		public const ConsoleColor VersionUnsupported = ConsoleColor.Red;
-		public const ConsoleColor VersionOutdated = ConsoleColor.Yellow;
 
 		public const ConsoleColor Better = ConsoleColor.Green;
 		public const ConsoleColor Neutral = ConsoleColor.White;

@@ -81,12 +81,12 @@ namespace DevilDaggersCustomLeaderboards
 			{
 				if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumberRequired))
 				{
-					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ColorUtils.VersionUnsupported);
+					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ColorUtils.Error);
 					Console.ReadKey();
 				}
 				else if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumber))
 				{
-					Cmd.WriteLine($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ColorUtils.VersionOutdated);
+					Cmd.WriteLine($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ColorUtils.Warning);
 					Console.ReadKey();
 				}
 			}
