@@ -81,18 +81,18 @@ namespace DevilDaggersCustomLeaderboards
 			{
 				if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumberRequired))
 				{
-					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ConsoleColor.Red);
+					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ColorUtils.VersionUnsupported);
 					Console.ReadKey();
 				}
 				else if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumber))
 				{
-					Cmd.WriteLine($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ConsoleColor.Yellow);
+					Cmd.WriteLine($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ColorUtils.VersionOutdated);
 					Console.ReadKey();
 				}
 			}
 			else
 			{
-				Cmd.WriteLine("Failed to check for updates.\n(Press any key to continue.)", ConsoleColor.Red);
+				Cmd.WriteLine("Failed to check for updates.\n(Press any key to continue.)", ColorUtils.Error);
 				Console.ReadKey();
 			}
 
@@ -154,7 +154,7 @@ namespace DevilDaggersCustomLeaderboards
 
 					if (uploadSuccess != null)
 					{
-						Cmd.WriteLine("Upload successful", ConsoleColor.Green);
+						Cmd.WriteLine("Upload successful", ColorUtils.Success);
 						Cmd.WriteLine(uploadSuccess.Message);
 						Cmd.WriteLine();
 						uploadSuccess.WriteLeaderboard(scanner.PlayerId);
@@ -175,7 +175,7 @@ namespace DevilDaggersCustomLeaderboards
 				}
 				else
 				{
-					Cmd.WriteLine("Validation failed", ConsoleColor.Red);
+					Cmd.WriteLine("Validation failed", ColorUtils.Error);
 					Cmd.WriteLine(message);
 					Log.Warn($"Validation failed - {message}");
 
@@ -219,12 +219,12 @@ namespace DevilDaggersCustomLeaderboards
 			}
 			catch (DevilDaggersInfoApiException<ProblemDetails> ex)
 			{
-				Cmd.WriteLine("Upload failed", ex.Result?.Title ?? "Empty response", ConsoleColor.Red);
+				Cmd.WriteLine("Upload failed", ex.Result?.Title ?? "Empty response", ColorUtils.Error);
 				return null;
 			}
 			catch (Exception ex)
 			{
-				Cmd.WriteLine("Upload failed", ConsoleColor.Red);
+				Cmd.WriteLine("Upload failed", ex.Message, ColorUtils.Error);
 				Log.Error("Error trying to submit score", ex);
 				return null;
 			}

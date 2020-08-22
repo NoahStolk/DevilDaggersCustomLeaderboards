@@ -1,6 +1,7 @@
 ﻿using DevilDaggersCore.Game;
 using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory;
+using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Globalization;
 using Cmd = DevilDaggersCustomLeaderboards.Utils.ConsoleUtils;
@@ -27,14 +28,11 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			Cmd.WriteLine("Accuracy", $"{(scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (float)scanner.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
 #if DEBUG
-			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type", Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type", ColorUtils.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine("Alive", scanner.IsAlive);
 			Cmd.WriteLine("Replay", scanner.IsReplay);
 #endif
 			Cmd.WriteLine();
-
-			if (scanner.LevelGems == 0 && scanner.Gems != 0 && scanner.IsAlive && !scanner.IsReplay && scanner.Time != 0)
-				Cmd.WriteLine("WARNING: Level up times and homing count are not being detected.\nRestart Devil Daggers to fix this issue.", ConsoleColor.Red);
 
 			Cmd.WriteLine("Hand", GetHand(scanner.LevelGems));
 			static int GetHand(int levelGems)
@@ -62,14 +60,14 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			double accuracy = scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (double)scanner.DaggersFired;
 			double accuracyOld = entry.DaggersFired == 0 ? 0 : entry.DaggersHit / (double)entry.DaggersFired;
 
-			Cmd.Write($"{GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type"}", Cmd.GetDeathColor(scanner.DeathType));
+			Cmd.Write($"{GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type"}", ColorUtils.GetDeathColor(scanner.DeathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
 			int timeDiff = scanner.Time - entry.Time;
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(scanner.Time, leaderboard, category));
-			Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ConsoleColor.Red);
+			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(scanner.Time, leaderboard, category));
+			Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
 
 			WriteIntField("Kills", scanner.Kills, scanner.Kills - entry.Kills);
 			WriteIntField("Gems", scanner.Gems, scanner.Gems - entry.Gems);
@@ -85,13 +83,13 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			static void WriteIntField(string fieldName, int value, int valueDiff)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight}");
-				Cmd.WriteLine($" ({valueDiff:+0;-#})", Cmd.GetImprovementColor(valueDiff));
+				Cmd.WriteLine($" ({valueDiff:+0;-#})", ColorUtils.GetImprovementColor(valueDiff));
 			}
 
 			static void WritePercentageField(string fieldName, double value, double valueDiff)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight:0.00%}");
-				Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.00%})", Cmd.GetImprovementColor(valueDiff));
+				Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.00%})", ColorUtils.GetImprovementColor(valueDiff));
 			}
 
 			static void WriteTimeField(string fieldName, int value, int valueDiff)
@@ -100,7 +98,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 				if (value == 0 || valueDiff == value)
 					Cmd.WriteLine();
 				else
-					Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
+					Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", ColorUtils.GetImprovementColor(-valueDiff));
 			}
 		}
 
@@ -115,14 +113,14 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 				int spaceCountTotal = us.TotalPlayers.ToString(CultureInfo.InvariantCulture).Length;
 
 				CustomEntry entry = us.Entries[i];
-				ConsoleColor color = Cmd.GetDaggerColor(entry.Time, us.Leaderboard, us.Category);
+				ConsoleColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard, us.Category);
 
 				if (entry.PlayerId == currentPlayerId)
-					Console.BackgroundColor = ConsoleColor.DarkGray;
+					Console.BackgroundColor = ColorUtils.BackgroundHighlight;
 				Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ");
-				Cmd.Write($"{entry.Username.Substring(0, Math.Min(entry.Username.Length, Cmd.TextWidthLeft))}", color);
-				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", color);
-				Console.BackgroundColor = ConsoleColor.Black;
+				Cmd.Write($"{entry.Username.Substring(0, Math.Min(entry.Username.Length, Cmd.TextWidthLeft))}", daggerColor);
+				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", daggerColor);
+				Console.BackgroundColor = ColorUtils.BackgroundDefault;
 			}
 		}
 
@@ -137,21 +135,21 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			double accuracyOld = shotsFiredOld == 0 ? 0 : shotsHitOld / (double)shotsFiredOld;
 			double accuracyDiff = accuracy - accuracyOld;
 
-			Cmd.Write($"{GameInfo.GetDeathByType(deathType)?.Name ?? "Invalid death type"}", Cmd.GetDeathColor(deathType));
+			Cmd.Write($"{GameInfo.GetDeathByType(deathType)?.Name ?? "Invalid death type"}", ColorUtils.GetDeathColor(deathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
 			Cmd.Write($"{$"Rank",-Cmd.TextWidthLeft}{$"{us.Rank} / {us.TotalPlayers}",Cmd.TextWidthRight}");
 			if (!us.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({us.RankDiff:+0;-#})", Cmd.GetImprovementColor(us.RankDiff));
+				Cmd.Write($" ({us.RankDiff:+0;-#})", ColorUtils.GetImprovementColor(us.RankDiff));
 			Cmd.WriteLine();
 
 			float time = us.Time / 10000f;
 			float timeDiff = us.TimeDiff / 10000f;
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", Cmd.GetDaggerColor(us.Time, us.Leaderboard, us.Category));
+			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(us.Time, us.Leaderboard, us.Category));
 			if (!us.IsNewUserOnThisLeaderboard)
-				Cmd.Write($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ConsoleColor.Green);
+				Cmd.Write($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ColorUtils.Better);
 			Cmd.WriteLine();
 
 			WriteIntField(us.IsNewUserOnThisLeaderboard, "Kills", us.Kills, us.KillsDiff);
@@ -170,7 +168,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value / 10000f,Cmd.TextWidthRight:0.0000}");
 				if (writeDifference)
-					Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", Cmd.GetImprovementColor(-valueDiff));
+					Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", ColorUtils.GetImprovementColor(-valueDiff));
 				Cmd.WriteLine();
 			}
 
@@ -178,7 +176,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight:0.00%}");
 				if (!isNewUser)
-					Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.00%})", Cmd.GetImprovementColor(valueDiff));
+					Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.00%})", ColorUtils.GetImprovementColor(valueDiff));
 				Cmd.WriteLine();
 			}
 
@@ -186,7 +184,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight}");
 				if (!isNewUser)
-					Cmd.Write($" ({valueDiff:+0;-#})", Cmd.GetImprovementColor(valueDiff));
+					Cmd.Write($" ({valueDiff:+0;-#})", ColorUtils.GetImprovementColor(valueDiff));
 				Cmd.WriteLine();
 			}
 		}
