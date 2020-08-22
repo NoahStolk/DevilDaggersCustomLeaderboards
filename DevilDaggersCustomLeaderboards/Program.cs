@@ -1,6 +1,5 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Extensions;
-using DevilDaggersCustomLeaderboards.Gui;
 using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Network;
 using DevilDaggersCustomLeaderboards.Utils;
@@ -114,8 +113,7 @@ namespace DevilDaggersCustomLeaderboards
 				return;
 			}
 
-			scanner.ProcessMemory.ReadProcess = scanner.Process;
-			scanner.ProcessMemory.Open();
+			scanner.Open();
 
 			scanner.PreScan();
 			scanner.Scan();

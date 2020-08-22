@@ -46,12 +46,13 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		{
 			try
 			{
-				ProcessMemory memory = Scanner.Instance.ProcessMemory;
+				if (Scanner.Instance.Process == null)
+					return;
 
-				byte[] pointerBytes = memory.Read(memory.ReadProcess.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
+				byte[] pointerBytes = Scanner.Instance.Read(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
 				IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
 
-				Bytes = memory.Read(ptr + Offset, Size, out _).ToImmutableArray();
+				Bytes = Scanner.Instance.Read(ptr + Offset, Size, out _).ToImmutableArray();
 			}
 			catch (Exception ex)
 			{

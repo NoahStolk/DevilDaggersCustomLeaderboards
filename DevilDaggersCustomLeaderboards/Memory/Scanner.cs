@@ -13,15 +13,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		private static readonly Lazy<Scanner> lazy = new Lazy<Scanner>(() => new Scanner());
 
-		private Scanner()
-		{
-			ProcessMemory = new ProcessMemory(Process);
-		}
+		private IntPtr hProcess = IntPtr.Zero;
 
 		public static Scanner Instance => lazy.Value;
 
 		public Process? Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
-		public ProcessMemory ProcessMemory { get; private set; }
 
 		public string SpawnsetHash { get; private set; } = string.Empty;
 
@@ -55,6 +51,24 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			LevelUpTime2 = 0;
 			LevelUpTime3 = 0;
 			LevelUpTime4 = 0;
+		}
+
+		public void Open()
+		{
+			if (Process == null)
+				return;
+
+			ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ | ProcessAccessType.PROCESS_VM_WRITE | ProcessAccessType.PROCESS_VM_OPERATION;
+			hProcess = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
+		}
+
+		public byte[] Read(IntPtr memoryAddress, uint bytesToRead, out int bytesRead)
+		{
+			byte[] buffer = new byte[bytesToRead];
+			if (NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, bytesToRead, out IntPtr ptrBytesRead) == 0)
+				throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
+			bytesRead = ptrBytesRead.ToInt32();
+			return buffer;
 		}
 
 		/// <summary>
@@ -116,17 +130,17 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					// Enemy count might increase on death, so only scan while player is alive.
 					EnemiesAlive.Scan();
 
-					byte[] pointerBytes = ProcessMemory.Read(Process.MainModule.BaseAddress + magicDynamic, sizeof(int), out _);
+					byte[] pointerBytes = Read(Process.MainModule.BaseAddress + magicDynamic, sizeof(int), out _);
 					IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
-					pointerBytes = ProcessMemory.Read(ptr, 4, out _);
+					pointerBytes = Read(ptr, 4, out _);
 					ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
 
-					pointerBytes = ProcessMemory.Read(ptr + 0x218, 4, out _);
+					pointerBytes = Read(ptr + 0x218, 4, out _);
 					LevelGems = BitConverter.ToInt32(pointerBytes, 0);
 
 					if (LevelGems != 0)
 					{
-						pointerBytes = ProcessMemory.Read(ptr + 0x224, 4, out _);
+						pointerBytes = Read(ptr + 0x224, 4, out _);
 						Homing = BitConverter.ToInt32(pointerBytes, 0);
 
 						if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)
