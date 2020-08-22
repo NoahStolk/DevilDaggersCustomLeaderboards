@@ -11,9 +11,13 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		private const int magicStatic = 0x001F30C0;
 		private const int magicDynamic = 0x001F8084;
 
+		private IntPtr hProcess = IntPtr.Zero;
+
 		private static readonly Lazy<Scanner> lazy = new Lazy<Scanner>(() => new Scanner());
 
-		private IntPtr hProcess = IntPtr.Zero;
+		private Scanner()
+		{
+		}
 
 		public static Scanner Instance => lazy.Value;
 
@@ -48,6 +52,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		{
 			SpawnsetHash = string.Empty;
 
+			// TODO: Reset homing too? Dying with homing, restarting, then dying with 0 gems collected might result in homing not being reset from the previous run?
 			LevelUpTime2 = 0;
 			LevelUpTime3 = 0;
 			LevelUpTime4 = 0;
