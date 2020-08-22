@@ -5,6 +5,25 @@ namespace DevilDaggersCustomLeaderboards.Utils
 {
 	public static class ColorUtils
 	{
+		/*
+		 * 0 = Black (backgroundDefault)
+		 * 1 = White (defaultText, neutral, fallen)
+		 * 2 = Red (error, leviathan, devil, worse)
+		 * 3 = Green (success, better)
+		 * 4 = Yellow (warning, golden)
+		 * 5 =
+		 * 6 =
+		 * 7 =
+		 * 8 =
+		 * 9 =
+		 * 10 =
+		 * 11 =
+		 * 12 =
+		 * 13 =
+		 * 14 =
+		 * 15 =
+		 */
+
 		public const ConsoleColor BackgroundDefault = ConsoleColor.Black;
 		public const ConsoleColor BackgroundHighlight = ConsoleColor.DarkBlue;
 
