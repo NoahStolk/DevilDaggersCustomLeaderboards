@@ -1,5 +1,8 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
+using DevilDaggersCustomLeaderboards.Enumerators;
+using DevilDaggersCustomLeaderboards.Native;
 using System;
+using System.Runtime.InteropServices;
 
 namespace DevilDaggersCustomLeaderboards.Utils
 {
@@ -24,42 +27,94 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		 * 15 =
 		 */
 
-		public const ConsoleColor BackgroundDefault = ConsoleColor.Black;
-		public const ConsoleColor BackgroundHighlight = ConsoleColor.DarkBlue;
+		public const CustomColor ForegroundDefault = CustomColor.Gray;
+		public const CustomColor BackgroundDefault = CustomColor.Black;
 
-		public const ConsoleColor Error = ConsoleColor.Red;
-		public const ConsoleColor Warning = ConsoleColor.Yellow;
-		public const ConsoleColor Success = ConsoleColor.Green;
+		public const CustomColor Error = CustomColor.Red;
+		public const CustomColor Warning = CustomColor.Yellow;
+		public const CustomColor Success = CustomColor.Green;
 
-		public const ConsoleColor Better = ConsoleColor.Green;
-		public const ConsoleColor Neutral = ConsoleColor.White;
-		public const ConsoleColor Worse = ConsoleColor.Red;
+		public const CustomColor Better = CustomColor.Green;
+		public const CustomColor Neutral = CustomColor.White;
+		public const CustomColor Worse = CustomColor.Red;
 
-		public const ConsoleColor Fallen = ConsoleColor.White;
-		public const ConsoleColor Swarmed = ConsoleColor.DarkYellow;
-		public const ConsoleColor Impaled = ConsoleColor.DarkYellow;
-		public const ConsoleColor Gored = ConsoleColor.DarkYellow;
-		public const ConsoleColor Infested = ConsoleColor.Green;
-		public const ConsoleColor Opened = ConsoleColor.DarkYellow;
-		public const ConsoleColor Purged = ConsoleColor.DarkYellow;
-		public const ConsoleColor Desecrated = ConsoleColor.DarkYellow;
-		public const ConsoleColor Sacrificed = ConsoleColor.DarkYellow;
-		public const ConsoleColor Eviscerated = ConsoleColor.Gray;
-		public const ConsoleColor Annihilated = ConsoleColor.DarkGreen;
-		public const ConsoleColor Intoxicated = ConsoleColor.Green;
-		public const ConsoleColor Envenomated = ConsoleColor.Green;
-		public const ConsoleColor Incarnated = ConsoleColor.Red;
-		public const ConsoleColor Discarnated = ConsoleColor.Magenta;
-		public const ConsoleColor Barbed = ConsoleColor.DarkMagenta;
+		public const CustomColor Fallen = CustomColor.White;
+		public const CustomColor Swarmed = CustomColor.DarkYellow;
+		public const CustomColor Impaled = CustomColor.DarkYellow;
+		public const CustomColor Gored = CustomColor.DarkYellow;
+		public const CustomColor Infested = CustomColor.Green;
+		public const CustomColor Opened = CustomColor.DarkYellow;
+		public const CustomColor Purged = CustomColor.DarkYellow;
+		public const CustomColor Desecrated = CustomColor.DarkYellow;
+		public const CustomColor Sacrificed = CustomColor.DarkYellow;
+		public const CustomColor Eviscerated = CustomColor.Gray;
+		public const CustomColor Annihilated = CustomColor.DarkGreen;
+		public const CustomColor Intoxicated = CustomColor.Green;
+		public const CustomColor Envenomated = CustomColor.Green;
+		public const CustomColor Incarnated = CustomColor.Red;
+		public const CustomColor Discarnated = CustomColor.Magenta;
+		public const CustomColor Barbed = CustomColor.DarkMagenta;
 
-		public const ConsoleColor Homing = ConsoleColor.Magenta;
-		public const ConsoleColor Devil = ConsoleColor.Red;
-		public const ConsoleColor Golden = ConsoleColor.Yellow;
-		public const ConsoleColor Silver = ConsoleColor.Gray;
-		public const ConsoleColor Bronze = ConsoleColor.DarkRed;
-		public const ConsoleColor Default = ConsoleColor.DarkGray;
+		public const CustomColor Homing = CustomColor.Magenta;
+		public const CustomColor Devil = CustomColor.Red;
+		public const CustomColor Golden = CustomColor.Yellow;
+		public const CustomColor Silver = CustomColor.Gray;
+		public const CustomColor Bronze = CustomColor.DarkRed;
+		public const CustomColor Default = CustomColor.DarkGray;
 
-		public static ConsoleColor GetDeathColor(int deathType) => deathType switch
+		public static CustomColor GetDaggerHighlightColor(CustomColor daggerColor) => daggerColor switch
+		{
+			Homing => BackgroundDefault,
+			Devil => ForegroundDefault,
+			Golden => BackgroundDefault,
+			Silver => BackgroundDefault,
+			Bronze => ForegroundDefault,
+			Default => ForegroundDefault,
+			_ => BackgroundDefault,
+		};
+
+		public static int ModifyConsoleColor(byte colorIndex, byte r, byte g, byte b)
+		{
+			ConsoleScreenBufferInfoEx csbe = default;
+			csbe._cbSize = Marshal.SizeOf(csbe);
+			IntPtr hConsoleOutput = NativeMethods.GetStdHandle(StdHandle.OutputHandle);
+			if (hConsoleOutput == new IntPtr(-1))
+				return Marshal.GetLastWin32Error();
+
+			bool brc = NativeMethods.GetConsoleScreenBufferInfoEx(hConsoleOutput, ref csbe);
+			if (!brc)
+				return Marshal.GetLastWin32Error();
+
+			switch (colorIndex)
+			{
+				case 0: csbe._black = new ColorReference(r, g, b); break;
+				case 1: csbe._darkBlue = new ColorReference(r, g, b); break;
+				case 2: csbe._darkGreen = new ColorReference(r, g, b); break;
+				case 3: csbe._darkCyan = new ColorReference(r, g, b); break;
+				case 4: csbe._darkRed = new ColorReference(r, g, b); break;
+				case 5: csbe._darkMagenta = new ColorReference(r, g, b); break;
+				case 6: csbe._darkYellow = new ColorReference(r, g, b); break;
+				case 7: csbe._gray = new ColorReference(r, g, b); break;
+				case 8: csbe._darkGray = new ColorReference(r, g, b); break;
+				case 9: csbe._blue = new ColorReference(r, g, b); break;
+				case 10: csbe._green = new ColorReference(r, g, b); break;
+				case 11: csbe._cyan = new ColorReference(r, g, b); break;
+				case 12: csbe._red = new ColorReference(r, g, b); break;
+				case 13: csbe._magenta = new ColorReference(r, g, b); break;
+				case 14: csbe._yellow = new ColorReference(r, g, b); break;
+				case 15: csbe._white = new ColorReference(r, g, b); break;
+			}
+
+			++csbe._srWindow._bottom;
+			++csbe._srWindow._right;
+			brc = NativeMethods.SetConsoleScreenBufferInfoEx(hConsoleOutput, ref csbe);
+			if (!brc)
+				return Marshal.GetLastWin32Error();
+
+			return 0;
+		}
+
+		public static CustomColor GetDeathColor(int deathType) => deathType switch
 		{
 			1 => Swarmed,
 			2 => Impaled,
@@ -79,7 +134,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			_ => Fallen,
 		};
 
-		public static ConsoleColor GetDaggerColor(int time, CustomLeaderboard leaderboard, CustomLeaderboardCategory category)
+		public static CustomColor GetDaggerColor(int time, CustomLeaderboard leaderboard, CustomLeaderboardCategory category)
 		{
 			if (leaderboard.Homing != 0 && Compare(time, leaderboard.Homing))
 				return Homing;
@@ -101,7 +156,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			}
 		}
 
-		public static ConsoleColor GetImprovementColor<T>(T n)
+		public static CustomColor GetImprovementColor<T>(T n)
 			where T : IComparable<T>
 		{
 			int comparison = n.CompareTo(default);

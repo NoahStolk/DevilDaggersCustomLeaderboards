@@ -1,5 +1,6 @@
 ﻿using DevilDaggersCore.Game;
 using DevilDaggersCustomLeaderboards.Clients;
+using DevilDaggersCustomLeaderboards.Enumerators;
 using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
@@ -113,14 +114,15 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 				int spaceCountTotal = us.TotalPlayers.ToString(CultureInfo.InvariantCulture).Length;
 
 				CustomEntry entry = us.Entries[i];
-				ConsoleColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard, us.Category);
+				CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard, us.Category);
 
-				if (entry.PlayerId == currentPlayerId)
-					Console.BackgroundColor = ColorUtils.BackgroundHighlight;
-				Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ");
-				Cmd.Write($"{entry.Username.Substring(0, Math.Min(entry.Username.Length, Cmd.TextWidthLeft))}", daggerColor);
-				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", daggerColor);
-				Console.BackgroundColor = ColorUtils.BackgroundDefault;
+				bool isCurrentPlayer = entry.PlayerId == currentPlayerId;
+				CustomColor foregroundColor = isCurrentPlayer ? ColorUtils.GetDaggerHighlightColor(daggerColor) : daggerColor;
+				CustomColor backgroundColor = isCurrentPlayer ? daggerColor : ColorUtils.BackgroundDefault;
+
+				Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ", foregroundColor, backgroundColor);
+				Cmd.Write($"{entry.Username.Substring(0, Math.Min(entry.Username.Length, Cmd.TextWidthLeft))}", foregroundColor, backgroundColor);
+				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", foregroundColor, backgroundColor);
 			}
 		}
 

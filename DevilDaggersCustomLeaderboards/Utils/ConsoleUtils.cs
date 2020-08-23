@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevilDaggersCustomLeaderboards.Enumerators;
+using System;
 
 namespace DevilDaggersCustomLeaderboards.Utils
 {
@@ -12,28 +13,28 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const int TextWidthLeft = 20;
 		public const int TextWidthRight = 25;
 
-		public static void Write(object text, ConsoleColor color = ConsoleColor.White)
+		public static void Write(object text, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
 		{
-			Console.ForegroundColor = color;
+			Console.ForegroundColor = (ConsoleColor)foregroundColor;
+			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.Write($"{text,-TextWidthLeft}");
-			Console.ForegroundColor = ConsoleColor.White;
 		}
 
 		public static void WriteLine()
 			=> Console.WriteLine(new string(' ', TextWidthFull));
 
-		public static void WriteLine(object text, ConsoleColor color = ConsoleColor.White)
+		public static void WriteLine(object text, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
 		{
-			Console.ForegroundColor = color;
+			Console.ForegroundColor = (ConsoleColor)foregroundColor;
+			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.WriteLine($"{text,-TextWidthLeft}");
-			Console.ForegroundColor = ConsoleColor.White;
 		}
 
-		public static void WriteLine(object textLeft, object textRight, ConsoleColor color = ConsoleColor.White)
+		public static void WriteLine(object textLeft, object textRight, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
 		{
-			Console.ForegroundColor = color;
+			Console.ForegroundColor = (ConsoleColor)foregroundColor;
+			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.WriteLine($"{textLeft,-TextWidthLeft}{textRight,TextWidthRight}{new string(' ', TextWidthFull)}");
-			Console.ForegroundColor = ConsoleColor.White;
 		}
 	}
 }

@@ -2,7 +2,7 @@
 #pragma warning disable CA1714 // Flags enums should have plural names
 using System;
 
-namespace DevilDaggersCustomLeaderboards.Memory
+namespace DevilDaggersCustomLeaderboards.Native
 {
 	[Flags]
 	internal enum ProcessAccessType
