@@ -8,25 +8,6 @@ namespace DevilDaggersCustomLeaderboards.Utils
 {
 	public static class ColorUtils
 	{
-		/*
-		 * 0 = Black (backgroundDefault)
-		 * 1 = White (defaultText, neutral, fallen)
-		 * 2 = Red (error, leviathan, devil, worse)
-		 * 3 = Green (success, better)
-		 * 4 = Yellow (warning, golden)
-		 * 5 =
-		 * 6 =
-		 * 7 =
-		 * 8 =
-		 * 9 =
-		 * 10 =
-		 * 11 =
-		 * 12 =
-		 * 13 =
-		 * 14 =
-		 * 15 =
-		 */
-
 		public const CustomColor ForegroundDefault = CustomColor.Gray;
 		public const CustomColor BackgroundDefault = CustomColor.Black;
 
@@ -35,25 +16,25 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const CustomColor Success = CustomColor.Green;
 
 		public const CustomColor Better = CustomColor.Green;
-		public const CustomColor Neutral = CustomColor.White;
+		public const CustomColor Neutral = CustomColor.Gray;
 		public const CustomColor Worse = CustomColor.Red;
 
-		public const CustomColor Fallen = CustomColor.White;
-		public const CustomColor Swarmed = CustomColor.DarkYellow;
-		public const CustomColor Impaled = CustomColor.DarkYellow;
-		public const CustomColor Gored = CustomColor.DarkYellow;
+		public const CustomColor Fallen = CustomColor.Gray;
+		public const CustomColor Swarmed = CustomColor.Skull;
+		public const CustomColor Impaled = CustomColor.Skull;
+		public const CustomColor Gored = CustomColor.Skull;
 		public const CustomColor Infested = CustomColor.Green;
-		public const CustomColor Opened = CustomColor.DarkYellow;
-		public const CustomColor Purged = CustomColor.DarkYellow;
-		public const CustomColor Desecrated = CustomColor.DarkYellow;
-		public const CustomColor Sacrificed = CustomColor.DarkYellow;
+		public const CustomColor Opened = CustomColor.Skull;
+		public const CustomColor Purged = CustomColor.Squid;
+		public const CustomColor Desecrated = CustomColor.Squid;
+		public const CustomColor Sacrificed = CustomColor.Squid;
 		public const CustomColor Eviscerated = CustomColor.Gray;
-		public const CustomColor Annihilated = CustomColor.DarkGreen;
+		public const CustomColor Annihilated = CustomColor.Gigapede;
 		public const CustomColor Intoxicated = CustomColor.Green;
 		public const CustomColor Envenomated = CustomColor.Green;
 		public const CustomColor Incarnated = CustomColor.Red;
 		public const CustomColor Discarnated = CustomColor.Magenta;
-		public const CustomColor Barbed = CustomColor.DarkRed;
+		public const CustomColor Barbed = CustomColor.Thorn;
 
 		public const CustomColor Homing = CustomColor.Magenta;
 		public const CustomColor Devil = CustomColor.Red;
