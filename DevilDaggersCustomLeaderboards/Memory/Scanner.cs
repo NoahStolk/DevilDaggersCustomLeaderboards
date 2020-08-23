@@ -1,8 +1,10 @@
 ﻿using DevilDaggersCore.Utils;
+using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DevilDaggersCustomLeaderboards.Memory
@@ -46,6 +48,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public int LevelGems { get; private set; }
 		public int Homing { get; private set; }
 
+		public List<GameState> GameStates { get; } = new List<GameState>();
+
 		public void FindWindow()
 			=> Process = ProcessUtils.GetDevilDaggersProcess();
 
@@ -57,6 +61,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			LevelUpTime2 = 0;
 			LevelUpTime3 = 0;
 			LevelUpTime4 = 0;
+
+			GameStates.Clear();
 		}
 
 		public void Open()
@@ -155,6 +161,19 @@ namespace DevilDaggersCustomLeaderboards.Memory
 							LevelUpTime3 = Time;
 						if (LevelUpTime4 == 0 && LevelGems == 71)
 							LevelUpTime4 = Time;
+					}
+
+					if (TimeFloat >= GameStates.Count && TimeFloat > 0)
+					{
+						GameStates.Add(new GameState
+						{
+							DaggersFired = DaggersFired,
+							DaggersHit = DaggersHit,
+							EnemiesAlive = EnemiesAlive,
+							Gems = Gems,
+							Homing = Homing,
+							Kills = Kills,
+						});
 					}
 				}
 				else

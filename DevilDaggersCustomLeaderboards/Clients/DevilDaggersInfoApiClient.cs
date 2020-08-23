@@ -1935,6 +1935,34 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Validation { get; set; }= default!;
     
+        [Newtonsoft.Json.JsonProperty("gameStates", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.List<GameState> GameStates { get; set; } = new System.Collections.Generic.List<GameState>();
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.24.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class GameState 
+    {
+        [Newtonsoft.Json.JsonProperty("kills", Required = Newtonsoft.Json.Required.Always)]
+        public int Kills { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("gems", Required = Newtonsoft.Json.Required.Always)]
+        public int Gems { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("homing", Required = Newtonsoft.Json.Required.Always)]
+        public int Homing { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("enemiesAlive", Required = Newtonsoft.Json.Required.Always)]
+        public int EnemiesAlive { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("daggersHit", Required = Newtonsoft.Json.Required.Always)]
+        public int DaggersHit { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("daggersFired", Required = Newtonsoft.Json.Required.Always)]
+        public int DaggersFired { get; set; }= default!;
+    
     
     }
     
@@ -2103,7 +2131,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.24.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Leaderboard 
     {
-        /// <summary>Represents the UTC date and time when the leaderboard was fetched.</summary>
         [Newtonsoft.Json.JsonProperty("dateTime", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset DateTime { get; set; }= default!;
@@ -2196,12 +2223,10 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string DisplayName { get; set; }= default!;
     
-        /// <summary>Indicates the current version of the tool on the website.</summary>
         [Newtonsoft.Json.JsonProperty("versionNumber", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string VersionNumber { get; set; }= default!;
     
-        /// <summary>Indicates the oldest version of the tool which is still fully compatible with the website.</summary>
         [Newtonsoft.Json.JsonProperty("versionNumberRequired", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string VersionNumberRequired { get; set; }= default!;
