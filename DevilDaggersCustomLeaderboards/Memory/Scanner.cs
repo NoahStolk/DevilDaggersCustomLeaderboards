@@ -53,7 +53,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		{
 			SpawnsetHash = string.Empty;
 
-			// TODO: Reset homing too? Dying with homing, restarting, then dying with 0 gems collected might result in homing not being reset from the previous run?
+			Homing = 0;
 			LevelUpTime2 = 0;
 			LevelUpTime3 = 0;
 			LevelUpTime4 = 0;
