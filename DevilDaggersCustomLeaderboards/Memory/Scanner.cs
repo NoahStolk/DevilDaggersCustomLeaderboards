@@ -9,34 +9,34 @@ namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public sealed class Scanner
 	{
-		private const int magicStatic = 0x001F30C0;
-		private const int magicDynamic = 0x001F8084;
+		private const int _magicStatic = 0x001F30C0;
+		private const int _magicDynamic = 0x001F8084;
 
-		private IntPtr hProcess = IntPtr.Zero;
+		private IntPtr _hProcess = IntPtr.Zero;
 
-		private static readonly Lazy<Scanner> lazy = new Lazy<Scanner>(() => new Scanner());
+		private static readonly Lazy<Scanner> _lazy = new Lazy<Scanner>(() => new Scanner());
 
 		private Scanner()
 		{
 		}
 
-		public static Scanner Instance => lazy.Value;
+		public static Scanner Instance => _lazy.Value;
 
 		public Process? Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
 
 		public string SpawnsetHash { get; private set; } = string.Empty;
 
-		public IntVariable PlayerId { get; private set; } = new IntVariable(magicStatic, 0x5C);
-		public StringVariable Username { get; private set; } = new StringVariable(magicStatic, 0x60, 32);
-		public FloatVariable TimeFloat { get; private set; } = new FloatVariable(magicStatic, 0x1A0);
-		public IntVariable Gems { get; private set; } = new IntVariable(magicStatic, 0x1C0);
-		public IntVariable Kills { get; private set; } = new IntVariable(magicStatic, 0x1BC);
-		public IntVariable DeathType { get; private set; } = new IntVariable(magicStatic, 0x1C4);
-		public IntVariable DaggersFired { get; private set; } = new IntVariable(magicStatic, 0x1B4);
-		public IntVariable DaggersHit { get; private set; } = new IntVariable(magicStatic, 0x1B8);
-		public IntVariable EnemiesAlive { get; private set; } = new IntVariable(magicStatic, 0x1FC);
-		public BoolVariable IsAlive { get; private set; } = new BoolVariable(magicStatic, 0x1A4);
-		public BoolVariable IsReplay { get; private set; } = new BoolVariable(magicStatic, 0x35D);
+		public IntVariable PlayerId { get; private set; } = new IntVariable(_magicStatic, 0x5C);
+		public StringVariable Username { get; private set; } = new StringVariable(_magicStatic, 0x60, 32);
+		public FloatVariable TimeFloat { get; private set; } = new FloatVariable(_magicStatic, 0x1A0);
+		public IntVariable Gems { get; private set; } = new IntVariable(_magicStatic, 0x1C0);
+		public IntVariable Kills { get; private set; } = new IntVariable(_magicStatic, 0x1BC);
+		public IntVariable DeathType { get; private set; } = new IntVariable(_magicStatic, 0x1C4);
+		public IntVariable DaggersFired { get; private set; } = new IntVariable(_magicStatic, 0x1B4);
+		public IntVariable DaggersHit { get; private set; } = new IntVariable(_magicStatic, 0x1B8);
+		public IntVariable EnemiesAlive { get; private set; } = new IntVariable(_magicStatic, 0x1FC);
+		public BoolVariable IsAlive { get; private set; } = new BoolVariable(_magicStatic, 0x1A4);
+		public BoolVariable IsReplay { get; private set; } = new BoolVariable(_magicStatic, 0x35D);
 
 		public int Time => (int)(TimeFloat * 10000);
 		public int LevelUpTime2 { get; private set; }
@@ -65,13 +65,13 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				return;
 
 			ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ | ProcessAccessType.PROCESS_VM_WRITE | ProcessAccessType.PROCESS_VM_OPERATION;
-			hProcess = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
+			_hProcess = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
 		}
 
 		public byte[] Read(IntPtr memoryAddress, uint bytesToRead, out int bytesRead)
 		{
 			byte[] buffer = new byte[bytesToRead];
-			if (NativeMethods.ReadProcessMemory(hProcess, memoryAddress, buffer, bytesToRead, out IntPtr ptrBytesRead) == 0)
+			if (NativeMethods.ReadProcessMemory(_hProcess, memoryAddress, buffer, bytesToRead, out IntPtr ptrBytesRead) == 0)
 				throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 			bytesRead = ptrBytesRead.ToInt32();
 			return buffer;
@@ -136,7 +136,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					// Enemy count might increase on death, so only scan while player is alive.
 					EnemiesAlive.Scan();
 
-					byte[] pointerBytes = Read(Process.MainModule.BaseAddress + magicDynamic, sizeof(int), out _);
+					byte[] pointerBytes = Read(Process.MainModule.BaseAddress + _magicDynamic, sizeof(int), out _);
 					IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
 					pointerBytes = Read(ptr, 4, out _);
 					ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
