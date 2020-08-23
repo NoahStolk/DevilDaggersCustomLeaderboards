@@ -5,7 +5,7 @@
 		Black = 0,
 		DarkBlue = 1,
 		DarkGreen = 2,
-		DarkCyan = 3,
+		Bronze = 3,
 		DarkRed = 4,
 		DarkMagenta = 5,
 		DarkYellow = 6,

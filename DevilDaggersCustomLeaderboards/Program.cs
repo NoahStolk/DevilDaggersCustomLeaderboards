@@ -102,7 +102,10 @@ namespace DevilDaggersCustomLeaderboards
 			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 #pragma warning restore CA1806 // Do not ignore method results
 
-			// ColorUtils.ModifyConsoleColor(7, 255, 0, 255);
+			ColorUtils.ModifyConsoleColor(2, 0x47, 0x8B, 0x41);
+			ColorUtils.ModifyConsoleColor(3, 0xCD, 0x7F, 0x32);
+			ColorUtils.ModifyConsoleColor(4, 0x77, 0x1D, 0x00);
+			ColorUtils.ModifyConsoleColor(7, 0xDD, 0xDD, 0xDD);
 
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
 		}

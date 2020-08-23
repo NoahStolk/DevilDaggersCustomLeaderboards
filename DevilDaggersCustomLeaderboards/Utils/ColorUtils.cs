@@ -53,13 +53,13 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const CustomColor Envenomated = CustomColor.Green;
 		public const CustomColor Incarnated = CustomColor.Red;
 		public const CustomColor Discarnated = CustomColor.Magenta;
-		public const CustomColor Barbed = CustomColor.DarkMagenta;
+		public const CustomColor Barbed = CustomColor.DarkRed;
 
 		public const CustomColor Homing = CustomColor.Magenta;
 		public const CustomColor Devil = CustomColor.Red;
 		public const CustomColor Golden = CustomColor.Yellow;
 		public const CustomColor Silver = CustomColor.Gray;
-		public const CustomColor Bronze = CustomColor.DarkRed;
+		public const CustomColor Bronze = CustomColor.Bronze;
 		public const CustomColor Default = CustomColor.DarkGray;
 
 		public static CustomColor GetDaggerHighlightColor(CustomColor daggerColor) => daggerColor switch
