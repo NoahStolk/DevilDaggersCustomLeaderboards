@@ -225,6 +225,7 @@ namespace DevilDaggersCustomLeaderboards
 					Time = _scanner.Time,
 					Username = _scanner.Username,
 					Validation = HttpUtility.HtmlEncode(validation),
+					GameStates = _scanner.GameStates,
 				};
 
 				return await NetworkHandler.Instance.ApiClient.CustomLeaderboards_UploadScoreAsync(uploadRequest);
