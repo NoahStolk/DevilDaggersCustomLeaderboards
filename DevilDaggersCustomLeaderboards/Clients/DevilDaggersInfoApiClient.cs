@@ -1935,9 +1935,8 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Validation { get; set; }= default!;
     
-        [Newtonsoft.Json.JsonProperty("gameStates", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public System.Collections.Generic.List<GameState> GameStates { get; set; } = new System.Collections.Generic.List<GameState>();
+        [Newtonsoft.Json.JsonProperty("gameStates", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.List<GameState>? GameStates { get; set; }= default!;
     
     
     }
@@ -2131,6 +2130,7 @@ namespace DevilDaggersCustomLeaderboards.Clients
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.24.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Leaderboard 
     {
+        /// <summary>Represents the UTC date and time when the leaderboard was fetched.</summary>
         [Newtonsoft.Json.JsonProperty("dateTime", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset DateTime { get; set; }= default!;
@@ -2223,10 +2223,12 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string DisplayName { get; set; }= default!;
     
+        /// <summary>Indicates the current version of the tool on the website.</summary>
         [Newtonsoft.Json.JsonProperty("versionNumber", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string VersionNumber { get; set; }= default!;
     
+        /// <summary>Indicates the oldest version of the tool which is still fully compatible with the website.</summary>
         [Newtonsoft.Json.JsonProperty("versionNumberRequired", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string VersionNumberRequired { get; set; }= default!;
