@@ -124,6 +124,8 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 				Cmd.Write($"{entry.Username.Substring(0, Math.Min(entry.Username.Length, Cmd.TextWidthLeft))}", foregroundColor, backgroundColor);
 				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", foregroundColor, backgroundColor);
 			}
+
+			Console.BackgroundColor = (ConsoleColor)ColorUtils.BackgroundDefault;
 		}
 
 		public static void WriteHighscoreStats(this UploadSuccess us)
