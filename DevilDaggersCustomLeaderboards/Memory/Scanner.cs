@@ -55,8 +55,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public void RestartScan()
 		{
-			SpawnsetHash = string.Empty;
-
 			Homing = 0;
 			LevelUpTime2 = 0;
 			LevelUpTime3 = 0;
@@ -120,10 +118,15 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				PlayerId.Scan();
 				Username.Scan();
 
-				// Always calculate the spawnset in menu or lobby.
+				// Only calculate the spawnset in lobby, because the game does this as well.
 				// Otherwise you can first normally load a spawnset to set the hash, exit and load an empty spawnset in the menu/lobby, then during playing the empty spawnset change it back to the same original spawnset and upload a cheated score.
-				if (TimeFloat == 0 && TimeFloat.ValuePrevious == 0)
+				if (TimeFloat == 0 && TimeFloat.ValuePrevious == 0 && EnemiesAlive == 0)
+				{
+#if DEBUG
+					Console.WriteLine("RELOADING HASH");
+#endif
 					SpawnsetHash = HashUtils.CalculateCurrentSurvivalHash();
+				}
 
 				// Stop scanning if it is a replay.
 				IsReplay.Scan();
@@ -183,7 +186,12 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				}
 
 				if (string.IsNullOrEmpty(SpawnsetHash))
+				{
+#if DEBUG
+					Console.WriteLine("RELOADING HASH");
+#endif
 					SpawnsetHash = HashUtils.CalculateCurrentSurvivalHash();
+				}
 			}
 			catch (Exception ex)
 			{
