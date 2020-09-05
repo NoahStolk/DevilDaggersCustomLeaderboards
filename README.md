@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/NoahStolk/DevilDaggersCustomLeaderboards.svg?branch=master)](https://travis-ci.org/NoahStolk/DevilDaggersCustomLeaderboards)
+[![Scc Count Badge](https://sloc.xyz/github/NoahStolk/DevilDaggersCustomLeaderboards/)](https://github.com/NoahStolk/DevilDaggersCustomLeaderboards/)
 
 # DevilDaggersCustomLeaderboards ([Download](https://devildaggers.info/api/tools/DevilDaggersCustomLeaderboards/file))
 DevilDaggersCustomLeaderboards is a console application that records data from custom spawnset runs in Devil Daggers by scanning the memory of the application in real-time, and uploads it to a custom leaderboard hosted on [devildaggers.info](https://devildaggers.info).
