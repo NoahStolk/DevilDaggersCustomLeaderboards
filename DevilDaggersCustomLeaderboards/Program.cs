@@ -110,7 +110,11 @@ namespace DevilDaggersCustomLeaderboards
 			ColorUtils.ModifyConsoleColor(7, 0xDD, 0xDD, 0xDD);
 			ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
 
+#if DEBUG
+			Console.Title = $"{ApplicationDisplayName} {LocalVersion} DEBUG";
+#else
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
+#endif
 		}
 
 		private static async Task ExecuteMainLoop()
