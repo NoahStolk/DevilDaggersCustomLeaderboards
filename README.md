@@ -10,9 +10,6 @@ DevilDaggersCustomLeaderboards is a console application that records data from c
 ## Language
 - C# 8.0
 
-## Dependencies
-- [DevilDaggersCore](https://github.com/NoahStolk/DevilDaggersCore)
-
 ## System requirements
 - Microsoft Windows
 - [.NET Core 3.1 Runtime](https://dotnet.microsoft.com/download/dotnet-core/thank-you/runtime-3.1.7-windows-x64-installer)
