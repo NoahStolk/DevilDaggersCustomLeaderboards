@@ -94,6 +94,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 			catch
 			{
+				// Do nothing if resizing the console failed. It usually means a very large custom font caused the window to be too large which throws an exception.
 			}
 
 #pragma warning disable CA1806 // Do not ignore method results
