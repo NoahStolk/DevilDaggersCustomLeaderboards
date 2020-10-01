@@ -56,7 +56,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			Cmd.WriteLine();
 		}
 
-		public static void WriteStats(this Scanner scanner, CustomLeaderboard leaderboard, CustomLeaderboardCategory category, CustomEntry entry)
+		public static void WriteStats(this Scanner scanner, CustomLeaderboard leaderboard, CustomEntry entry)
 		{
 			double accuracy = scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (double)scanner.DaggersFired;
 			double accuracyOld = entry.DaggersFired == 0 ? 0 : entry.DaggersHit / (double)entry.DaggersFired;
@@ -67,7 +67,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 
 			int timeDiff = scanner.Time - entry.Time;
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(scanner.Time, leaderboard, category));
+			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(scanner.Time, leaderboard));
 			Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
 
 			WriteIntField("Kills", scanner.Kills, scanner.Kills - entry.Kills);
@@ -114,7 +114,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 				int spaceCountTotal = us.TotalPlayers.ToString(CultureInfo.InvariantCulture).Length;
 
 				CustomEntry entry = us.Entries[i];
-				CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard, us.Category);
+				CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard);
 
 				bool isCurrentPlayer = entry.PlayerId == currentPlayerId;
 				CustomColor foregroundColor = isCurrentPlayer ? ColorUtils.GetDaggerHighlightColor(daggerColor) : daggerColor;
@@ -151,7 +151,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			float time = us.Time / 10000f;
 			float timeDiff = us.TimeDiff / 10000f;
 			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(us.Time, us.Leaderboard, us.Category));
+			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(us.Time, us.Leaderboard));
 			if (!us.IsNewUserOnThisLeaderboard)
 				Cmd.Write($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ColorUtils.Better);
 			Cmd.WriteLine();

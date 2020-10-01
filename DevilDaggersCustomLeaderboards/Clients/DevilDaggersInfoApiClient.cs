@@ -1852,6 +1852,9 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public CustomLeaderboardCategory Category { get; set; }= default!;
     
+        [Newtonsoft.Json.JsonProperty("isAscending", Required = Newtonsoft.Json.Required.Always)]
+        public bool IsAscending { get; set; }= default!;
+    
     
     }
     

@@ -112,7 +112,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			_ => Fallen,
 		};
 
-		public static CustomColor GetDaggerColor(int time, CustomLeaderboard leaderboard, CustomLeaderboardCategory category)
+		public static CustomColor GetDaggerColor(int time, CustomLeaderboard leaderboard)
 		{
 			if (leaderboard.Homing != 0 && Compare(time, leaderboard.Homing))
 				return Homing;
@@ -128,7 +128,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 			bool Compare(int time, int daggerTime)
 			{
-				if (category.Ascending)
+				if (leaderboard.IsAscending)
 					return time < daggerTime;
 				return time > daggerTime;
 			}

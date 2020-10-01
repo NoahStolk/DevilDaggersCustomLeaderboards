@@ -181,7 +181,7 @@ namespace DevilDaggersCustomLeaderboards
 						if (uploadSuccess.IsHighscore())
 							uploadSuccess.WriteHighscoreStats();
 						else
-							_scanner.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Category, uploadSuccess.Entries.FirstOrDefault(e => e.PlayerId == _scanner.PlayerId));
+							_scanner.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.FirstOrDefault(e => e.PlayerId == _scanner.PlayerId));
 
 						Cmd.WriteLine();
 					}
