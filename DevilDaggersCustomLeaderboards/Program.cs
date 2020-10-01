@@ -64,18 +64,18 @@ namespace DevilDaggersCustomLeaderboards
 			{
 				if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumberRequired))
 				{
-					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName}. Please update the program.\n(Press any key to continue.)", ColorUtils.Error);
+					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName} ({LocalVersion}).\n\nYou must use version {NetworkHandler.Instance.Tool.VersionNumberRequired} or higher.\n\nPlease update the program.\n\n(Press any key to continue.)", ColorUtils.Error);
 					Console.ReadKey();
 				}
 				else if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumber))
 				{
-					Cmd.WriteLine($"An update for {ApplicationDisplayName} is available.\n(Press any key to continue.)", ColorUtils.Warning);
+					Cmd.WriteLine($"{ApplicationDisplayName} version {NetworkHandler.Instance.Tool.VersionNumber} is available.\n\n(Press any key to continue.)", ColorUtils.Warning);
 					Console.ReadKey();
 				}
 			}
 			else
 			{
-				Cmd.WriteLine("Failed to check for updates.\n(Press any key to continue.)", ColorUtils.Error);
+				Cmd.WriteLine("Failed to check for updates.\n\n(Press any key to continue.)", ColorUtils.Error);
 				Console.ReadKey();
 			}
 
