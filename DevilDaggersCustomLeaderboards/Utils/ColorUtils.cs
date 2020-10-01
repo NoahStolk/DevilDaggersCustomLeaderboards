@@ -129,8 +129,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			bool Compare(int time, int daggerTime)
 			{
 				if (leaderboard.IsAscending)
-					return time < daggerTime;
-				return time > daggerTime;
+					return time <= daggerTime;
+				return time >= daggerTime;
 			}
 		}
 
