@@ -6,9 +6,9 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
 	public abstract class AbstractVariable<TVariable>
 	{
-		private const uint pointerSize = 4; // For 32-bit applications
+		private const uint _pointerSize = 4; // For 32-bit applications
 
-		public AbstractVariable(int localBaseAddress, int offset, uint size)
+		protected AbstractVariable(int localBaseAddress, int offset, uint size)
 		{
 			LocalBaseAddress = localBaseAddress;
 			Offset = offset;
@@ -49,7 +49,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 				if (Scanner.Instance.Process == null)
 					return;
 
-				byte[] pointerBytes = Scanner.Instance.Read(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress, pointerSize, out _);
+				byte[] pointerBytes = Scanner.Instance.Read(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress, _pointerSize, out _);
 				IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
 
 				Bytes = Scanner.Instance.Read(ptr + Offset, Size, out _).ToImmutableArray();
