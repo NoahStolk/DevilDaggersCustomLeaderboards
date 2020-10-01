@@ -145,7 +145,20 @@ namespace DevilDaggersCustomLeaderboards
 				_scanner.RestartScan();
 			}
 
-			_scanner.WriteRecording();
+			if (_scanner.IsInLobby())
+			{
+				Console.Clear();
+				Cmd.WriteLine("Currently in lobby...");
+			}
+			else if (_scanner.IsInMenu())
+			{
+				Console.Clear();
+				Cmd.WriteLine("Currently in menu...");
+			}
+			else
+			{
+				_scanner.WriteRecording();
+			}
 
 			Thread.Sleep(50);
 			Console.SetCursorPosition(0, 0);

@@ -120,7 +120,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 				// Only calculate the spawnset in lobby, because the game does this as well.
 				// Otherwise you can first normally load a spawnset to set the hash, exit and load an empty spawnset in the menu/lobby, then during playing the empty spawnset change it back to the same original spawnset and upload a cheated score.
-				if (TimeFloat == 0 && TimeFloat.ValuePrevious == 0 && EnemiesAlive == 0)
+				if (IsInLobby())
 				{
 #if DEBUG
 					Console.WriteLine("RELOADING HASH");
@@ -198,5 +198,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				Program.Log.Error("Scan failed", ex);
 			}
 		}
+
+		public bool IsInLobby()
+			=> TimeFloat == 0 && TimeFloat.ValuePrevious == 0 && EnemiesAlive == 0;
+
+		public bool IsInMenu()
+			=> TimeFloat == 0 && TimeFloat.ValuePrevious == 0 && EnemiesAlive > 0;
 	}
 }
