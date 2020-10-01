@@ -216,7 +216,7 @@ namespace DevilDaggersCustomLeaderboards
 				{
 					DaggersFired = _scanner.DaggersFired,
 					DaggersHit = _scanner.DaggersHit,
-					DdclClientVersion = LocalVersion.ToString(),
+					ClientVersion = LocalVersion.ToString(),
 					DeathType = _scanner.DeathType,
 					EnemiesAlive = _scanner.EnemiesAlive,
 					Gems = _scanner.Gems,
@@ -231,6 +231,12 @@ namespace DevilDaggersCustomLeaderboards
 					Username = _scanner.Username,
 					Validation = HttpUtility.HtmlEncode(validation),
 					GameStates = _scanner.GameStates,
+#if DEBUG
+					BuildMode = BuildMode.Debug,
+#else
+					BuildMode = BuildMode.Release,
+#endif
+					OperatingSystem = Clients.OperatingSystem.Windows,
 				};
 
 				return await NetworkHandler.Instance.ApiClient.CustomLeaderboards_UploadScoreAsync(uploadRequest);

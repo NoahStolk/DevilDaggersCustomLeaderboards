@@ -2097,9 +2097,19 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("levelUpTime4", Required = Newtonsoft.Json.Required.Always)]
         public int LevelUpTime4 { get; set; }= default!;
     
-        [Newtonsoft.Json.JsonProperty("ddclClientVersion", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("clientVersion", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string DdclClientVersion { get; set; }= default!;
+        public string ClientVersion { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("operatingSystem", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public OperatingSystem OperatingSystem { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("buildMode", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public BuildMode BuildMode { get; set; }= default!;
     
         [Newtonsoft.Json.JsonProperty("validation", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -2108,6 +2118,34 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("gameStates", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.List<GameState>? GameStates { get; set; }= default!;
     
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.2.1.0 (Newtonsoft.Json v12.0.0.0)")]
+    public enum OperatingSystem
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"None")]
+        None = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Windows")]
+        Windows = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Linux")]
+        Linux = 2,
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.2.1.0 (Newtonsoft.Json v12.0.0.0)")]
+    public enum BuildMode
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"None")]
+        None = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Debug")]
+        Debug = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Release")]
+        Release = 2,
     
     }
     
