@@ -158,9 +158,8 @@ namespace DevilDaggersCustomLeaderboards
 				Cmd.WriteLine("Validating...");
 				Cmd.WriteLine();
 
-				(bool isValid, string message) = ValidateRunLocally();
-
-				if (isValid)
+				string? errorMessage = ValidateRunLocally();
+				if (errorMessage == null)
 				{
 					Console.Clear();
 					Cmd.WriteLine("Uploading...");
@@ -193,8 +192,8 @@ namespace DevilDaggersCustomLeaderboards
 				else
 				{
 					Cmd.WriteLine("Validation failed", ColorUtils.Error);
-					Cmd.WriteLine(message);
-					Log.Warn($"Validation failed - {message}");
+					Cmd.WriteLine(errorMessage);
+					Log.Warn($"Validation failed - {errorMessage}");
 
 					Thread.Sleep(500);
 				}
@@ -254,32 +253,32 @@ namespace DevilDaggersCustomLeaderboards
 			}
 		}
 
-		private static (bool isValid, string message) ValidateRunLocally()
+		private static string? ValidateRunLocally()
 		{
 			if (_scanner.PlayerId <= 0)
 			{
 				Log.Warn($"Invalid player ID: {_scanner.PlayerId}");
-				return (false, "Invalid player ID.");
+				return "Invalid player ID.";
 			}
 
 			if (_scanner.IsReplay)
-				return (false, "Run is replay. Unable to validate.");
+				return "Run is replay. Unable to validate.";
 
 			// This should fix the broken submissions that occasionally get sent for some reason.
 			if (_scanner.Time < _minimalTime)
-				return (false, $"Timer is under {_minimalTime:0.0000}. Unable to validate.");
+				return $"Timer is under {_minimalTime:0.0000}. Unable to validate.";
 
 			if (string.IsNullOrEmpty(_scanner.SpawnsetHash))
 			{
 				Log.Warn("Spawnset hash has not been calculated.");
-				return (false, "Spawnset hash has not been calculated.");
+				return "Spawnset hash has not been calculated.";
 			}
 
 			// This is to prevent people from initially starting an easy spawnset to get e.g. 800 seconds, then change the survival file during the run to a different (harder) spawnset to trick the application into uploading it to the wrong leaderboard.
 			if (HashUtils.CalculateCurrentSurvivalHash() != _scanner.SpawnsetHash)
-				return (false, "Cheats suspected. Spawnset hash has been changed since the run was started.");
+				return "Cheats suspected. Spawnset hash has been changed since the run was started.";
 
-			return (true, string.Empty);
+			return null;
 		}
 	}
 }
