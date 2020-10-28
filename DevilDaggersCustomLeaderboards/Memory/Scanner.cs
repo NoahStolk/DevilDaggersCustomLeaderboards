@@ -14,8 +14,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		private const int _magicStatic = 0x001F30C0;
 		private const int _magicDynamic = 0x001F8084;
 
-		private IntPtr _hProcess = IntPtr.Zero;
-
 		private static readonly Lazy<Scanner> _lazy = new Lazy<Scanner>(() => new Scanner());
 
 		private Scanner()
@@ -26,10 +24,12 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public Process? Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
 
+		public IntPtr ProcessAddress { get; private set; } = IntPtr.Zero;
+
 		public string SpawnsetHash { get; private set; } = string.Empty;
 
 		public IntVariable PlayerId { get; private set; } = new IntVariable(_magicStatic, 0x5C);
-		public StringVariable Username { get; private set; } = new StringVariable(_magicStatic, 0x60, 32); // TODO: Use 16? Strings longer than 16 characters are stored differently (which isn't yet supported).
+		public StringVariable Username { get; private set; } = new StringVariable(_magicStatic, 32, 0x60); // TODO: Use 16? Strings longer than 16 characters are stored differently (which isn't yet supported).
 		public FloatVariable TimeFloat { get; private set; } = new FloatVariable(_magicStatic, 0x1A0);
 		public IntVariable Gems { get; private set; } = new IntVariable(_magicStatic, 0x1C0);
 		public IntVariable Kills { get; private set; } = new IntVariable(_magicStatic, 0x1BC);
@@ -40,13 +40,13 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public BoolVariable IsAlive { get; private set; } = new BoolVariable(_magicStatic, 0x1A4);
 		public BoolVariable IsReplay { get; private set; } = new BoolVariable(_magicStatic, 0x35D);
 
+		public IntVariable LevelGems { get; private set; } = new IntVariable(_magicDynamic, 0, 0x218);
+		public IntVariable Homing { get; private set; } = new IntVariable(_magicDynamic, 0, 0x224);
+
 		public int Time => (int)(TimeFloat * 10000);
 		public int LevelUpTime2 { get; private set; }
 		public int LevelUpTime3 { get; private set; }
 		public int LevelUpTime4 { get; private set; }
-
-		public int LevelGems { get; private set; }
-		public int Homing { get; private set; }
 
 		public List<GameState> GameStates { get; } = new List<GameState>();
 
@@ -55,7 +55,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public void RestartScan()
 		{
-			Homing = 0;
+			Homing.HardReset();
 			LevelUpTime2 = 0;
 			LevelUpTime3 = 0;
 			LevelUpTime4 = 0;
@@ -69,15 +69,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				return;
 
 			ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ | ProcessAccessType.PROCESS_VM_WRITE | ProcessAccessType.PROCESS_VM_OPERATION;
-			_hProcess = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
-		}
-
-		public byte[] Read(IntPtr memoryAddress, uint bytesToRead)
-		{
-			byte[] buffer = new byte[bytesToRead];
-			if (NativeMethods.ReadProcessMemory(_hProcess, memoryAddress, buffer, bytesToRead, out _) == 0)
-				throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
-			return buffer;
+			ProcessAddress = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
 		}
 
 		/// <summary>
@@ -104,6 +96,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			if (!IsAlive)
 				DeathType.PreScan();
+
+			LevelGems.PreScan();
+			Homing.PreScan();
 		}
 
 		public void Scan()
@@ -143,19 +138,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				{
 					// Enemy count might increase on death, so only scan while player is alive.
 					EnemiesAlive.Scan();
-
-					byte[] pointerBytes = Read(Process.MainModule.BaseAddress + _magicDynamic, sizeof(int));
-					IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
-					pointerBytes = Read(ptr, 4);
-					ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
-
-					pointerBytes = Read(ptr + 0x218, 4);
-					LevelGems = BitConverter.ToInt32(pointerBytes, 0);
+					LevelGems.Scan();
 
 					if (LevelGems != 0)
 					{
-						pointerBytes = Read(ptr + 0x224, 4);
-						Homing = BitConverter.ToInt32(pointerBytes, 0);
+						Homing.Scan();
 
 						if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)
 							LevelUpTime2 = Time;
