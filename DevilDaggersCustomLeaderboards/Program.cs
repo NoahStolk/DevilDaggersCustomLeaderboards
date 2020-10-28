@@ -97,19 +97,22 @@ namespace DevilDaggersCustomLeaderboards
 				// Do nothing if resizing the console failed. It usually means a very large custom font caused the window to be too large which throws an exception.
 			}
 
+			if (OperatingSystemUtils.IsWindows())
+			{
 #pragma warning disable CA1806 // Do not ignore method results
-			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
-			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
-			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
+				NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
+				NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
+				NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 #pragma warning restore CA1806 // Do not ignore method results
 
-			ColorUtils.ModifyConsoleColor(2, 0x47, 0x8B, 0x41);
-			ColorUtils.ModifyConsoleColor(3, 0xCD, 0x7F, 0x32);
-			ColorUtils.ModifyConsoleColor(4, 0x77, 0x1D, 0x00);
-			ColorUtils.ModifyConsoleColor(5, 0xAF, 0x6B, 0x00);
-			ColorUtils.ModifyConsoleColor(6, 0x97, 0x6E, 0x2E);
-			ColorUtils.ModifyConsoleColor(7, 0xDD, 0xDD, 0xDD);
-			ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
+				ColorUtils.ModifyConsoleColor(2, 0x47, 0x8B, 0x41);
+				ColorUtils.ModifyConsoleColor(3, 0xCD, 0x7F, 0x32);
+				ColorUtils.ModifyConsoleColor(4, 0x77, 0x1D, 0x00);
+				ColorUtils.ModifyConsoleColor(5, 0xAF, 0x6B, 0x00);
+				ColorUtils.ModifyConsoleColor(6, 0x97, 0x6E, 0x2E);
+				ColorUtils.ModifyConsoleColor(7, 0xDD, 0xDD, 0xDD);
+				ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
+			}
 
 #if DEBUG
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion} DEBUG";
