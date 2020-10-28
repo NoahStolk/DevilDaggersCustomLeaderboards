@@ -40,13 +40,17 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		}
 
 		/// <summary>
+		/// <para>
 		/// Gets the bytes for this <see cref="AbstractVariable{T}"/>.
-		///
+		/// </para>
+		/// <para>
 		/// <see cref="ProcessModule.BaseAddress"/> is where the process has its memory start point.
 		/// <see cref="LocalBaseAddress"/> bytes ahead of the process base address brings us to 4 bytes (for a 32-bit application), which contain a memory address.
-		///
+		/// </para>
+		/// <para>
 		/// Use that memory address and add the next offset from <see cref="_offsets"/> to it to get to the bytes that contain the actual value.
 		/// Note that in the second read the process's base address is not needed.
+		/// </para>
 		/// </summary>
 		public void Scan()
 		{

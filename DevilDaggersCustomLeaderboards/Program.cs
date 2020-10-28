@@ -11,7 +11,6 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,14 +23,12 @@ namespace DevilDaggersCustomLeaderboards
 	{
 		private const float _minimalTime = 1f;
 
-#pragma warning disable IDE1006
-#pragma warning disable SA1310 // Field names should not contain underscore
+#pragma warning disable IDE1006, SA1310 // Field names should not contain underscore
 		private const int MF_BYCOMMAND = 0x00000000;
 		private const int SC_MINIMIZE = 0xF020;
 		private const int SC_MAXIMIZE = 0xF030;
 		private const int SC_SIZE = 0xF000;
-#pragma warning restore IDE1006
-#pragma warning restore SA1310 // Field names should not contain underscore
+#pragma warning restore IDE1006, SA1310 // Field names should not contain underscore
 
 		private static readonly Scanner _scanner = Scanner.Instance;
 
@@ -127,7 +124,7 @@ namespace DevilDaggersCustomLeaderboards
 
 			if (_scanner.Process == null)
 			{
-				Cmd.WriteLine($"Devil Daggers not found. Make sure the game is running. Retrying in a second...");
+				Cmd.WriteLine("Devil Daggers not found. Make sure the game is running. Retrying in a second...");
 				Thread.Sleep(1000);
 				Console.Clear();
 				return;
@@ -196,7 +193,7 @@ namespace DevilDaggersCustomLeaderboards
 						if (uploadSuccess.IsHighscore())
 							uploadSuccess.WriteHighscoreStats();
 						else
-							_scanner.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.FirstOrDefault(e => e.PlayerId == _scanner.PlayerId));
+							_scanner.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == _scanner.PlayerId));
 
 						Cmd.WriteLine();
 					}
