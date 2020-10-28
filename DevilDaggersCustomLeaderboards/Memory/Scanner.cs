@@ -28,20 +28,20 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public string SpawnsetHash { get; private set; } = string.Empty;
 
-		public IntVariable PlayerId { get; private set; } = new IntVariable(_magicStatic, 0x5C);
-		public StringVariable Username { get; private set; } = new StringVariable(_magicStatic, 32, 0x60); // TODO: Use 16? Strings longer than 16 characters are stored differently (which isn't yet supported).
-		public FloatVariable TimeFloat { get; private set; } = new FloatVariable(_magicStatic, 0x1A0);
-		public IntVariable Gems { get; private set; } = new IntVariable(_magicStatic, 0x1C0);
-		public IntVariable Kills { get; private set; } = new IntVariable(_magicStatic, 0x1BC);
-		public IntVariable DeathType { get; private set; } = new IntVariable(_magicStatic, 0x1C4);
-		public IntVariable DaggersFired { get; private set; } = new IntVariable(_magicStatic, 0x1B4);
-		public IntVariable DaggersHit { get; private set; } = new IntVariable(_magicStatic, 0x1B8);
-		public IntVariable EnemiesAlive { get; private set; } = new IntVariable(_magicStatic, 0x1FC);
-		public BoolVariable IsAlive { get; private set; } = new BoolVariable(_magicStatic, 0x1A4);
-		public BoolVariable IsReplay { get; private set; } = new BoolVariable(_magicStatic, 0x35D);
+		public IntVariable PlayerId { get; } = new IntVariable(_magicStatic, 0x5C);
+		public StringVariable Username { get; } = new StringVariable(_magicStatic, 32, 0x60); // TODO: Use 16? Strings longer than 16 characters are stored differently (which isn't yet supported).
+		public FloatVariable TimeFloat { get; } = new FloatVariable(_magicStatic, 0x1A0);
+		public IntVariable Gems { get; } = new IntVariable(_magicStatic, 0x1C0);
+		public IntVariable Kills { get; } = new IntVariable(_magicStatic, 0x1BC);
+		public IntVariable DeathType { get; } = new IntVariable(_magicStatic, 0x1C4);
+		public IntVariable DaggersFired { get; } = new IntVariable(_magicStatic, 0x1B4);
+		public IntVariable DaggersHit { get; } = new IntVariable(_magicStatic, 0x1B8);
+		public IntVariable EnemiesAlive { get; } = new IntVariable(_magicStatic, 0x1FC);
+		public BoolVariable IsAlive { get; } = new BoolVariable(_magicStatic, 0x1A4);
+		public BoolVariable IsReplay { get; } = new BoolVariable(_magicStatic, 0x35D);
 
-		public IntVariable LevelGems { get; private set; } = new IntVariable(_magicDynamic, 0, 0x218);
-		public IntVariable Homing { get; private set; } = new IntVariable(_magicDynamic, 0, 0x224);
+		public IntVariable LevelGems { get; } = new IntVariable(_magicDynamic, 0, 0x218);
+		public IntVariable Homing { get; } = new IntVariable(_magicDynamic, 0, 0x224);
 
 		public int Time => (int)(TimeFloat * 10000);
 		public int LevelUpTime2 { get; private set; }
@@ -68,7 +68,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			if (Process == null)
 				return;
 
-			ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ | ProcessAccessType.PROCESS_VM_WRITE | ProcessAccessType.PROCESS_VM_OPERATION;
+			const ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ | ProcessAccessType.PROCESS_VM_WRITE | ProcessAccessType.PROCESS_VM_OPERATION;
 			ProcessAddress = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
 		}
 

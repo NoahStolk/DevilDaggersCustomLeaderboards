@@ -56,8 +56,14 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			Cmd.WriteLine();
 		}
 
-		public static void WriteStats(this Scanner scanner, CustomLeaderboard leaderboard, CustomEntry entry)
+		public static void WriteStats(this Scanner scanner, CustomLeaderboard leaderboard, CustomEntry? entry)
 		{
+			if (entry == null)
+			{
+				Cmd.WriteLine("Current player not found on the leaderboard.");
+				return;
+			}
+
 			double accuracy = scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (double)scanner.DaggersFired;
 			double accuracyOld = entry.DaggersFired == 0 ? 0 : entry.DaggersHit / (double)entry.DaggersFired;
 
@@ -66,7 +72,7 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			Cmd.WriteLine();
 
 			int timeDiff = scanner.Time - entry.Time;
-			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
+			Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
 			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(scanner.Time, leaderboard));
 			Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
 
@@ -143,14 +149,14 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
-			Cmd.Write($"{$"Rank",-Cmd.TextWidthLeft}{$"{us.Rank} / {us.TotalPlayers}",Cmd.TextWidthRight}");
+			Cmd.Write($"{"Rank",-Cmd.TextWidthLeft}{$"{us.Rank} / {us.TotalPlayers}",Cmd.TextWidthRight}");
 			if (!us.IsNewUserOnThisLeaderboard)
 				Cmd.Write($" ({us.RankDiff:+0;-#})", ColorUtils.GetImprovementColor(us.RankDiff));
 			Cmd.WriteLine();
 
 			float time = us.Time / 10000f;
 			float timeDiff = us.TimeDiff / 10000f;
-			Cmd.Write($"{$"Time",-Cmd.TextWidthLeft}");
+			Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
 			Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(us.Time, us.Leaderboard));
 			if (!us.IsNewUserOnThisLeaderboard)
 				Cmd.Write($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ColorUtils.Better);
