@@ -251,7 +251,7 @@ namespace DevilDaggersCustomLeaderboards
 #else
 					BuildMode = BuildMode.Release,
 #endif
-					OperatingSystem = Clients.OperatingSystem.Windows,
+					OperatingSystem = OperatingSystemUtils.GetOperatingSystem(),
 				};
 
 				return await NetworkHandler.Instance.ApiClient.CustomLeaderboards_UploadScoreAsync(uploadRequest);
