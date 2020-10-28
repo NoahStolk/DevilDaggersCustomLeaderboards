@@ -29,7 +29,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public string SpawnsetHash { get; private set; } = string.Empty;
 
 		public IntVariable PlayerId { get; private set; } = new IntVariable(_magicStatic, 0x5C);
-		public StringVariable Username { get; private set; } = new StringVariable(_magicStatic, 0x60, 32);
+		public StringVariable Username { get; private set; } = new StringVariable(_magicStatic, 0x60, 32); // TODO: Use 16? Strings longer than 16 characters are stored differently (which isn't yet supported).
 		public FloatVariable TimeFloat { get; private set; } = new FloatVariable(_magicStatic, 0x1A0);
 		public IntVariable Gems { get; private set; } = new IntVariable(_magicStatic, 0x1C0);
 		public IntVariable Kills { get; private set; } = new IntVariable(_magicStatic, 0x1BC);
