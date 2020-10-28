@@ -55,19 +55,10 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 				if (Scanner.Instance.Process == null)
 					return;
 
-				// TODO: Rewrite to something nicer and recursive.
-				if (_offsets.Length == 1)
-				{
-					IntPtr ptr = ReadPointer(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress);
-					Bytes = Read(ptr + _offsets[0], Size).ToImmutableArray();
-				}
-				else if (_offsets.Length == 2)
-				{
-					IntPtr ptr = ReadPointer(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress);
-					ptr = ReadPointer(ptr + _offsets[0]);
-
-					Bytes = Read(ptr + _offsets[1], Size).ToImmutableArray();
-				}
+				IntPtr ptr = ReadPointer(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress);
+				for (int i = 0; i < _offsets.Length - 1; i++)
+					ptr = ReadPointer(ptr + _offsets[i]);
+				Bytes = Read(ptr + _offsets[^1], Size).ToImmutableArray();
 			}
 			catch (Exception ex)
 			{
