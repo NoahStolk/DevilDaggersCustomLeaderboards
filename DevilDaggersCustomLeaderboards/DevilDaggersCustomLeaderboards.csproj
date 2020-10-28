@@ -6,6 +6,7 @@
     <Version>0.10.4.0</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ApplicationIcon>Icon24.ico</ApplicationIcon>
+    <RuntimeIdentifiers>win10-x64;linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevilDaggersCore" Version="1.0.2" />
