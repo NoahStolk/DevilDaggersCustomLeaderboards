@@ -72,12 +72,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			_hProcess = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
 		}
 
-		public byte[] Read(IntPtr memoryAddress, uint bytesToRead, out int bytesRead)
+		public byte[] Read(IntPtr memoryAddress, uint bytesToRead)
 		{
 			byte[] buffer = new byte[bytesToRead];
-			if (NativeMethods.ReadProcessMemory(_hProcess, memoryAddress, buffer, bytesToRead, out IntPtr ptrBytesRead) == 0)
+			if (NativeMethods.ReadProcessMemory(_hProcess, memoryAddress, buffer, bytesToRead, out _) == 0)
 				throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
-			bytesRead = ptrBytesRead.ToInt32();
 			return buffer;
 		}
 
@@ -145,17 +144,17 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					// Enemy count might increase on death, so only scan while player is alive.
 					EnemiesAlive.Scan();
 
-					byte[] pointerBytes = Read(Process.MainModule.BaseAddress + _magicDynamic, sizeof(int), out _);
+					byte[] pointerBytes = Read(Process.MainModule.BaseAddress + _magicDynamic, sizeof(int));
 					IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
-					pointerBytes = Read(ptr, 4, out _);
+					pointerBytes = Read(ptr, 4);
 					ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
 
-					pointerBytes = Read(ptr + 0x218, 4, out _);
+					pointerBytes = Read(ptr + 0x218, 4);
 					LevelGems = BitConverter.ToInt32(pointerBytes, 0);
 
 					if (LevelGems != 0)
 					{
-						pointerBytes = Read(ptr + 0x224, 4, out _);
+						pointerBytes = Read(ptr + 0x224, 4);
 						Homing = BitConverter.ToInt32(pointerBytes, 0);
 
 						if (LevelUpTime2 == 0 && LevelGems >= 10 && LevelGems < 70)

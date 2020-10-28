@@ -49,10 +49,10 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 				if (Scanner.Instance.Process == null)
 					return;
 
-				byte[] pointerBytes = Scanner.Instance.Read(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress, _pointerSize, out _);
+				byte[] pointerBytes = Scanner.Instance.Read(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress, _pointerSize);
 				IntPtr ptr = new IntPtr(BitConverter.ToInt32(pointerBytes));
 
-				Bytes = Scanner.Instance.Read(ptr + Offset, Size, out _).ToImmutableArray();
+				Bytes = Scanner.Instance.Read(ptr + Offset, Size).ToImmutableArray();
 			}
 			catch (Exception ex)
 			{
