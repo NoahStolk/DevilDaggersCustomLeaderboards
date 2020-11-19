@@ -34,13 +34,13 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static bool _isRecording = true;
 
-		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType ?? throw new Exception("Could not retrieve logger declaring type."));
+		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType ?? throw new("Could not retrieve logger declaring type."));
 
 		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
 		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
 
 		public static Assembly Assembly { get; } = Assembly.GetExecutingAssembly();
-		public static Version LocalVersion { get; } = Version.Parse(FileVersionInfo.GetVersionInfo(Assembly.Location).FileVersion);
+		public static Version LocalVersion { get; } = Version.Parse(FileVersionInfo.GetVersionInfo(Assembly.Location).FileVersion ?? throw new("Could not get file version from current assembly."));
 
 		public static async Task Main()
 		{

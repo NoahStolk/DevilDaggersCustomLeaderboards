@@ -1,11 +1,12 @@
 ﻿#pragma warning disable CA1707 // Identifiers should not contain underscores
-#pragma warning disable CA1714 // Flags enums should have plural names
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Native
 {
 	[Flags]
+#pragma warning disable RCS1135 // Declare enum member with zero value (when enum has FlagsAttribute).
 	internal enum ProcessAccessType
+#pragma warning restore RCS1135 // Declare enum member with zero value (when enum has FlagsAttribute).
 	{
 		PROCESS_TERMINATE = 0x0001,
 		PROCESS_CREATE_THREAD = 0x0002,
@@ -22,4 +23,3 @@ namespace DevilDaggersCustomLeaderboards.Native
 }
 
 #pragma warning restore CA1707 // Identifiers should not contain underscores
-#pragma warning restore CA1714 // Flags enums should have plural names

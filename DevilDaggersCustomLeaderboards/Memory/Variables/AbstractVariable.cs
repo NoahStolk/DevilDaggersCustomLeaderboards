@@ -56,7 +56,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		{
 			try
 			{
-				if (Scanner.Instance.Process == null)
+				if (Scanner.Instance.Process?.MainModule == null)
 					return;
 
 				IntPtr ptr = ReadPointer(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress);
@@ -77,7 +77,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		{
 			byte[] buffer = new byte[size];
 			if (NativeMethods.ReadProcessMemory(Scanner.Instance.ProcessAddress, memoryAddress, buffer, size, out _) == 0)
-				throw new Exception($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
+				throw new($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 			return buffer;
 		}
 
