@@ -29,7 +29,7 @@ DevilDaggersCustomLeaderboards is a console application that records data from c
 ## License
 MIT License
 
-Copyright (c) 2019-2020 Noah Stolk
+Copyright (c) 2019-2021 Noah Stolk
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
