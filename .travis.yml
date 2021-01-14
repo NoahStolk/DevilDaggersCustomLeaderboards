@@ -1,7 +1,7 @@
 language: csharp
 solution: DevilDaggersCustomLeaderboards.sln
 mono: none
-dotnet: 3.1.401
+dotnet: 5.0.100
 script:
   - dotnet restore
   - dotnet test
