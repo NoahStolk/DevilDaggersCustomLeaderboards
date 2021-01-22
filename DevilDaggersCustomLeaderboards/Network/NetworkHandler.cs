@@ -1,6 +1,5 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -35,7 +34,7 @@ namespace DevilDaggersCustomLeaderboards.Network
 		{
 			try
 			{
-				Tool = (await ApiClient.Tools_GetToolsAsync(Program.ApplicationName)).First();
+				Tool = (await ApiClient.Tools_GetToolsAsync(Program.ApplicationName))[0];
 			}
 			catch (Exception ex)
 			{
