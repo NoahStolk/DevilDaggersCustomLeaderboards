@@ -84,18 +84,21 @@ namespace DevilDaggersCustomLeaderboards
 		private static void InitializeConsole()
 		{
 			Console.CursorVisible = false;
-			try
-			{
-				Console.WindowHeight = 40;
-				Console.WindowWidth = 170;
-			}
-			catch
-			{
-				// Do nothing if resizing the console failed. It usually means a very large custom font caused the window to be too large which throws an exception.
-			}
 
 			if (OperatingSystemUtils.IsWindows())
 			{
+				try
+				{
+#pragma warning disable CA1416 // Validate platform compatibility
+					Console.WindowHeight = 40;
+					Console.WindowWidth = 170;
+#pragma warning restore CA1416 // Validate platform compatibility
+				}
+				catch
+				{
+					// Do nothing if resizing the console failed. It usually means a very large custom font caused the window to be too large which throws an exception.
+				}
+
 #pragma warning disable CA1806 // Do not ignore method results
 				NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
 				NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
