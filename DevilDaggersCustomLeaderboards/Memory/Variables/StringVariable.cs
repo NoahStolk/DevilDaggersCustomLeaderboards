@@ -6,8 +6,8 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
 	public class StringVariable : AbstractVariable<string>
 	{
-		public StringVariable(int localBaseAddress, uint maxSize, params int[] offsets)
-			: base(localBaseAddress, maxSize, offsets)
+		public StringVariable(long localBaseAddress, uint maxSize)
+			: base(localBaseAddress, maxSize)
 		{
 		}
 
@@ -16,8 +16,20 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 
 		private static string GetStringFromBytes(byte[] bytes)
 		{
-			string str = Encoding.UTF8.GetString(bytes);
-			return str.Substring(0, str.IndexOf('\0', StringComparison.InvariantCulture));
+			int length = 0;
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				if (bytes[i] == 0x00)
+				{
+					length = i;
+					break;
+				}
+			}
+
+			byte[] newBytes = new byte[length];
+			Buffer.BlockCopy(bytes, 0, newBytes, 0, length);
+
+			return Encoding.UTF8.GetString(newBytes);
 		}
 	}
 }

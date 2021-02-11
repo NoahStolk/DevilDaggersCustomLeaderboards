@@ -16,26 +16,33 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			Cmd.WriteLine($"Scanning process '{scanner.Process?.ProcessName ?? "No process"}' ({scanner.Process?.MainWindowTitle ?? "No title"})");
 			Cmd.WriteLine("Recording...");
 			Cmd.WriteLine();
-
 			Cmd.WriteLine("Player ID", scanner.PlayerId);
 			Cmd.WriteLine("Username", scanner.Username);
-			Cmd.WriteLine();
-
-			Cmd.WriteLine("Time", scanner.TimeFloat.Value.ToString("0.0000", CultureInfo.InvariantCulture));
-			Cmd.WriteLine("Gems", scanner.Gems);
+			Cmd.WriteLine("Time", scanner.Time.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Gems Collected", scanner.GemsCollected);
 			Cmd.WriteLine("Kills", scanner.Kills);
 			Cmd.WriteLine("Daggers Hit", scanner.DaggersHit);
 			Cmd.WriteLine("Daggers Fired", scanner.DaggersFired);
 			Cmd.WriteLine("Accuracy", $"{(scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (float)scanner.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
-#if DEBUG
+			Cmd.WriteLine("Hand", GetHand(scanner.LevelGems));
+			Cmd.WriteLine("Homing Daggers", scanner.HomingDaggers);
+			Cmd.WriteLine("Leviathans Alive", scanner.LeviathansAlive);
+			Cmd.WriteLine("Orbs Alive", scanner.OrbsAlive);
+			Cmd.WriteLine("Gems Despawned", scanner.GemsDespawned);
+			Cmd.WriteLine("Gems Eaten", scanner.GemsEaten);
+			Cmd.WriteLine();
+			Cmd.WriteLine("Is Player Alive", scanner.IsPlayerAlive);
+			Cmd.WriteLine("Is Replay", scanner.IsReplay);
 			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(scanner.DeathType)?.Name ?? "Invalid death type", ColorUtils.GetDeathColor(scanner.DeathType));
-			Cmd.WriteLine("Alive", scanner.IsAlive);
-			Cmd.WriteLine("Replay", scanner.IsReplay);
-#endif
+			Cmd.WriteLine("Is In-Game", scanner.IsInGame);
+			Cmd.WriteLine("SurvivalHash", scanner.SurvivalHash);
+			Cmd.WriteLine();
+			Cmd.WriteLine("Level 2", (scanner.LevelUpTime2 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Level 3", (scanner.LevelUpTime3 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Level 4", (scanner.LevelUpTime4 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
 			Cmd.WriteLine();
 
-			Cmd.WriteLine("Hand", GetHand(scanner.LevelGems));
 			static int GetHand(int levelGems)
 			{
 				if (levelGems < 10)
@@ -46,14 +53,6 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 					return 3;
 				return 4;
 			}
-
-			Cmd.WriteLine("Homing", scanner.Homing);
-			Cmd.WriteLine();
-
-			Cmd.WriteLine("Level 2", (scanner.LevelUpTime2 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
-			Cmd.WriteLine("Level 3", (scanner.LevelUpTime3 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
-			Cmd.WriteLine("Level 4", (scanner.LevelUpTime4 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
-			Cmd.WriteLine();
 		}
 
 		public static void WriteStats(this Scanner scanner, CustomLeaderboard leaderboard, CustomEntry? entry)
@@ -71,18 +70,20 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
-			int timeDiff = scanner.Time - entry.Time;
+			int timeDiff = scanner.TimeInt - entry.Time;
 			Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{scanner.Time / 10000f,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(scanner.Time, leaderboard));
+			Cmd.Write($"{scanner.Time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(scanner.TimeInt, leaderboard));
 			Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
 
+			WriteIntField("Gems Collected", scanner.GemsCollected, scanner.GemsCollected - entry.Gems);
+			WriteIntField("Gems Despawned", scanner.GemsDespawned, scanner.GemsDespawned/* - entry.Gems TODO*/);
+			WriteIntField("Gems Eaten", scanner.GemsEaten, scanner.GemsEaten/* - entry.Gems TODO*/);
 			WriteIntField("Kills", scanner.Kills, scanner.Kills - entry.Kills);
-			WriteIntField("Gems", scanner.Gems, scanner.Gems - entry.Gems);
-			WriteIntField("Daggers hit", scanner.DaggersHit, scanner.DaggersHit - entry.DaggersHit);
-			WriteIntField("Daggers fired", scanner.DaggersFired, scanner.DaggersFired - entry.DaggersFired);
+			WriteIntField("Daggers Hit", scanner.DaggersHit, scanner.DaggersHit - entry.DaggersHit);
+			WriteIntField("Daggers Fired", scanner.DaggersFired, scanner.DaggersFired - entry.DaggersFired);
 			WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
-			WriteIntField("Enemies alive", scanner.EnemiesAlive, scanner.EnemiesAlive - entry.EnemiesAlive);
-			WriteIntField("Homing", scanner.Homing, scanner.Homing - entry.Homing);
+			WriteIntField("Enemies Alive", scanner.EnemiesAlive, scanner.EnemiesAlive - entry.EnemiesAlive);
+			WriteIntField("Homing Daggers", scanner.HomingDaggers, scanner.HomingDaggers - entry.Homing);
 			WriteTimeField("Level 2", scanner.LevelUpTime2, scanner.LevelUpTime2 - entry.LevelUpTime2);
 			WriteTimeField("Level 3", scanner.LevelUpTime3, scanner.LevelUpTime3 - entry.LevelUpTime3);
 			WriteTimeField("Level 4", scanner.LevelUpTime4, scanner.LevelUpTime4 - entry.LevelUpTime4);
@@ -162,13 +163,15 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 				Cmd.Write($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ColorUtils.Better);
 			Cmd.WriteLine();
 
+			WriteIntField(us.IsNewUserOnThisLeaderboard, "Gems Collected", us.Gems, us.GemsDiff);
+			//WriteIntField(us.IsNewUserOnThisLeaderboard, "Gems Despawned", us.Gems, us.GemsDiff);
+			//WriteIntField(us.IsNewUserOnThisLeaderboard, "Gems Eaten", us.Gems, us.GemsDiff);
 			WriteIntField(us.IsNewUserOnThisLeaderboard, "Kills", us.Kills, us.KillsDiff);
-			WriteIntField(us.IsNewUserOnThisLeaderboard, "Gems", us.Gems, us.GemsDiff);
-			WriteIntField(us.IsNewUserOnThisLeaderboard, "Daggers hit", us.DaggersHit, us.DaggersHitDiff);
-			WriteIntField(us.IsNewUserOnThisLeaderboard, "Daggers fired", us.DaggersFired, us.DaggersFiredDiff);
+			WriteIntField(us.IsNewUserOnThisLeaderboard, "Daggers Hit", us.DaggersHit, us.DaggersHitDiff);
+			WriteIntField(us.IsNewUserOnThisLeaderboard, "Daggers Fired", us.DaggersFired, us.DaggersFiredDiff);
 			WritePercentageField(us.IsNewUserOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
-			WriteIntField(us.IsNewUserOnThisLeaderboard, "Enemies alive", us.EnemiesAlive, us.EnemiesAliveDiff);
-			WriteIntField(us.IsNewUserOnThisLeaderboard, "Homing", us.Homing, us.HomingDiff);
+			WriteIntField(us.IsNewUserOnThisLeaderboard, "Enemies Alive", us.EnemiesAlive, us.EnemiesAliveDiff);
+			WriteIntField(us.IsNewUserOnThisLeaderboard, "Homing Daggers", us.Homing, us.HomingDiff);
 
 			WriteTimeField(us.IsNewUserOnThisLeaderboard || us.LevelUpTime2 == us.LevelUpTime2Diff, "Level 2", us.LevelUpTime2, us.LevelUpTime2Diff);
 			WriteTimeField(us.IsNewUserOnThisLeaderboard || us.LevelUpTime3 == us.LevelUpTime3Diff, "Level 3", us.LevelUpTime3, us.LevelUpTime3Diff);

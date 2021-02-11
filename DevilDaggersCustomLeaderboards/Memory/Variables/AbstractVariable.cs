@@ -7,13 +7,10 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
 	public abstract class AbstractVariable<TVariable>
 	{
-		private readonly int[] _offsets;
-
-		protected AbstractVariable(int localBaseAddress, uint size, params int[] offsets)
+		protected AbstractVariable(long localBaseAddress, uint size)
 		{
 			LocalBaseAddress = localBaseAddress;
 			Size = size;
-			_offsets = offsets;
 
 			BytesPrevious = new byte[Size].ToImmutableArray();
 			Bytes = new byte[Size].ToImmutableArray();
@@ -24,7 +21,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		public abstract TVariable ValuePrevious { get; }
 		public abstract TVariable Value { get; }
 
-		public int LocalBaseAddress { get; set; }
+		public long LocalBaseAddress { get; set; }
 		public uint Size { get; set; }
 
 		public static implicit operator TVariable(AbstractVariable<TVariable> variable)
@@ -45,11 +42,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		/// </para>
 		/// <para>
 		/// <see cref="ProcessModule.BaseAddress"/> is where the process has its memory start point.
-		/// <see cref="LocalBaseAddress"/> bytes ahead of the process base address brings us to 4 bytes (for a 32-bit application), which contain a memory address.
-		/// </para>
-		/// <para>
-		/// Use that memory address and add the next offset from <see cref="_offsets"/> to it to get to the bytes that contain the actual value.
-		/// Note that in the second read the process's base address is not needed.
+		/// <see cref="LocalBaseAddress"/> bytes ahead of the process base address brings us to 4 bytes (for a 32-bit application), which contain the value we want.
 		/// </para>
 		/// </summary>
 		public void Scan()
@@ -59,10 +52,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 				if (Scanner.Instance.Process?.MainModule == null)
 					return;
 
-				IntPtr ptr = MemoryUtils.ReadPointer(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress);
-				for (int i = 0; i < _offsets.Length - 1; i++)
-					ptr = MemoryUtils.ReadPointer(ptr + _offsets[i]);
-				Bytes = MemoryUtils.Read(ptr + _offsets[^1], Size).ToImmutableArray();
+				Bytes = MemoryUtils.Read(new IntPtr(/*Scanner.Instance.Process.MainModule.BaseAddress.ToInt64() + */LocalBaseAddress), Size).ToImmutableArray();
 			}
 			catch (Exception ex)
 			{

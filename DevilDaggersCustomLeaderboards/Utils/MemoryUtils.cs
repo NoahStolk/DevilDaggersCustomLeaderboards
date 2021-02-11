@@ -6,9 +6,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 {
 	public static class MemoryUtils
 	{
-		public static IntPtr ReadPointer(IntPtr memoryAddress)
-			=> new IntPtr(BitConverter.ToInt32(Read(memoryAddress, sizeof(int))));
-
+		// TODO: Remove.
 		public static byte[] Read(IntPtr memoryAddress, uint size)
 		{
 			byte[] buffer = new byte[size];
@@ -16,6 +14,13 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			if (errorCode == 0)
 				throw new($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 			return buffer;
+		}
+
+		public static void Read(IntPtr memoryAddress, byte[] bytes, uint length)
+		{
+			int errorCode = NativeMethods.ReadProcessMemory(Scanner.Instance.ProcessAddress, memoryAddress, bytes, length, out _);
+			if (errorCode == 0)
+				throw new($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
 		}
 	}
 }

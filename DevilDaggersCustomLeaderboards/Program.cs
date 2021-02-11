@@ -136,11 +136,18 @@ namespace DevilDaggersCustomLeaderboards
 			_scanner.Open();
 
 			_scanner.PreScan();
-			_scanner.Scan();
+			try
+			{
+				_scanner.Scan();
+			}
+			catch (Exception ex)
+			{
+				Log.Error("Scan failed", ex);
+			}
 
 			if (!_isRecording)
 			{
-				if (_scanner.TimeFloat == _scanner.TimeFloat.ValuePrevious)
+				if (_scanner.Time == _scanner.Time.ValuePrevious)
 					return;
 
 				Console.Clear();
@@ -148,25 +155,12 @@ namespace DevilDaggersCustomLeaderboards
 				_scanner.RestartScan();
 			}
 
-			if (_scanner.IsInLobby())
-			{
-				Console.Clear();
-				Cmd.WriteLine("Currently in lobby...");
-			}
-			else if (_scanner.IsInMenu())
-			{
-				Console.Clear();
-				Cmd.WriteLine("Currently in menu...");
-			}
-			else
-			{
-				_scanner.WriteRecording();
-			}
+			_scanner.WriteRecording();
 
 			Thread.Sleep(50);
 			Console.SetCursorPosition(0, 0);
 
-			if (!_scanner.IsAlive && _scanner.IsAlive.ValuePrevious)
+			if (!_scanner.IsPlayerAlive && _scanner.IsPlayerAlive.ValuePrevious)
 			{
 				_isRecording = false;
 
@@ -224,7 +218,7 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			try
 			{
-				string toEncrypt = string.Join(";", _scanner.PlayerId, _scanner.Time, _scanner.Gems, _scanner.Kills, _scanner.DeathType, _scanner.DaggersHit, _scanner.DaggersFired, _scanner.EnemiesAlive, _scanner.Homing, string.Join(",", new[] { _scanner.LevelUpTime2, _scanner.LevelUpTime3, _scanner.LevelUpTime4 }));
+				string toEncrypt = string.Join(";", _scanner.PlayerId, _scanner.TimeInt, _scanner.GemsCollected, _scanner.Kills, _scanner.DeathType, _scanner.DaggersHit, _scanner.DaggersFired, _scanner.EnemiesAlive, _scanner.HomingDaggers, string.Join(",", new[] { _scanner.LevelUpTime2, _scanner.LevelUpTime3, _scanner.LevelUpTime4 }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 				UploadRequest uploadRequest = new UploadRequest
@@ -234,15 +228,15 @@ namespace DevilDaggersCustomLeaderboards
 					ClientVersion = LocalVersion.ToString(),
 					DeathType = _scanner.DeathType,
 					EnemiesAlive = _scanner.EnemiesAlive,
-					Gems = _scanner.Gems,
-					Homing = _scanner.Homing,
+					Gems = _scanner.GemsCollected,
+					Homing = _scanner.HomingDaggers,
 					Kills = _scanner.Kills,
 					LevelUpTime2 = _scanner.LevelUpTime2,
 					LevelUpTime3 = _scanner.LevelUpTime3,
 					LevelUpTime4 = _scanner.LevelUpTime4,
 					PlayerId = _scanner.PlayerId,
-					SpawnsetHash = _scanner.SpawnsetHash,
-					Time = _scanner.Time,
+					SpawnsetHash = _scanner.SurvivalHash.ToString(), // TODO
+					Time = _scanner.TimeInt,
 					Username = _scanner.Username,
 					Validation = HttpUtility.HtmlEncode(validation),
 					GameStates = _scanner.GameStates,
@@ -281,18 +275,8 @@ namespace DevilDaggersCustomLeaderboards
 				return "Run is replay. Unable to validate.";
 
 			// This should fix the broken submissions that occasionally get sent for some reason.
-			if (_scanner.Time < _minimalTime)
+			if (_scanner.TimeInt < _minimalTime)
 				return $"Timer is under {_minimalTime:0.0000}. Unable to validate.";
-
-			if (string.IsNullOrEmpty(_scanner.SpawnsetHash))
-			{
-				Log.Warn("Spawnset hash has not been calculated.");
-				return "Spawnset hash has not been calculated.";
-			}
-
-			// This is to prevent people from initially starting an easy spawnset to get e.g. 800 seconds, then change the survival file during the run to a different (harder) spawnset to trick the application into uploading it to the wrong leaderboard.
-			if (HashUtils.CalculateCurrentSurvivalHash() != _scanner.SpawnsetHash)
-				return "Cheats suspected. Spawnset hash has been changed since the run was started.";
 
 			return null;
 		}
