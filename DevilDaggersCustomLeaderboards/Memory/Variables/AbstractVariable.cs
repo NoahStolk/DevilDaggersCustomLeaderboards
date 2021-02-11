@@ -1,4 +1,4 @@
-﻿using DevilDaggersCustomLeaderboards.Native;
+﻿using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
@@ -59,26 +59,15 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 				if (Scanner.Instance.Process?.MainModule == null)
 					return;
 
-				IntPtr ptr = ReadPointer(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress);
+				IntPtr ptr = MemoryUtils.ReadPointer(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress);
 				for (int i = 0; i < _offsets.Length - 1; i++)
-					ptr = ReadPointer(ptr + _offsets[i]);
-				Bytes = Read(ptr + _offsets[^1], Size).ToImmutableArray();
+					ptr = MemoryUtils.ReadPointer(ptr + _offsets[i]);
+				Bytes = MemoryUtils.Read(ptr + _offsets[^1], Size).ToImmutableArray();
 			}
 			catch (Exception ex)
 			{
 				Program.Log.Error($"Error while scanning {typeof(TVariable)} variable.", ex);
 			}
-		}
-
-		private static IntPtr ReadPointer(IntPtr memoryAddress)
-			=> new IntPtr(BitConverter.ToInt32(Read(memoryAddress, sizeof(int))));
-
-		private static byte[] Read(IntPtr memoryAddress, uint size)
-		{
-			byte[] buffer = new byte[size];
-			if (NativeMethods.ReadProcessMemory(Scanner.Instance.ProcessAddress, memoryAddress, buffer, size, out _) == 0)
-				throw new($"{nameof(NativeMethods.ReadProcessMemory)} failed.");
-			return buffer;
 		}
 
 		public override string? ToString()
