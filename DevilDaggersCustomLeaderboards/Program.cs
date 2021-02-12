@@ -220,7 +220,7 @@ namespace DevilDaggersCustomLeaderboards
 				string toEncrypt = string.Join(";", _scanner.PlayerId, _scanner.TimeInt, _scanner.GemsCollected, _scanner.Kills, _scanner.DeathType, _scanner.DaggersHit, _scanner.DaggersFired, _scanner.EnemiesAlive, _scanner.HomingDaggers, string.Join(",", new[] { _scanner.LevelUpTime2, _scanner.LevelUpTime3, _scanner.LevelUpTime4 }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
-				UploadRequest uploadRequest = new UploadRequest
+				UploadRequest uploadRequest = new()
 				{
 					DaggersFired = _scanner.DaggersFired,
 					DaggersHit = _scanner.DaggersHit,

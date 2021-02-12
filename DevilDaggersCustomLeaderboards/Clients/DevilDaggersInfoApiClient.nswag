@@ -1,5 +1,5 @@
 {
-  "runtime": "NetCore31",
+  "runtime": "Net50",
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
@@ -27,6 +27,7 @@
       "useBaseUrl": false,
       "generateBaseUrlProperty": true,
       "generateSyncMethods": false,
+      "generatePrepareRequestAndProcessResponseAsAsyncMethods": false,
       "exposeJsonSerializerSettings": false,
       "clientClassAccessModifier": "public",
       "typeAccessModifier": "public",
