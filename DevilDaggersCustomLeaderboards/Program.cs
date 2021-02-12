@@ -1,5 +1,4 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
-using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Network;
@@ -29,8 +28,6 @@ namespace DevilDaggersCustomLeaderboards
 		private const int SC_MAXIMIZE = 0xF030;
 		private const int SC_SIZE = 0xF000;
 #pragma warning restore IDE1006, SA1310 // Field names should not contain underscore
-
-		private static readonly Scanner _scanner = Scanner.Instance;
 
 		private static bool _isRecording = true;
 
@@ -123,9 +120,9 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static async Task ExecuteMainLoop()
 		{
-			_scanner.FindWindow();
+			Scanner.FindWindow();
 
-			if (_scanner.Process == null)
+			if (Scanner.Process == null)
 			{
 				Cmd.WriteLine("Devil Daggers not found. Make sure the game is running. Retrying in a second...");
 				Thread.Sleep(1000);
@@ -133,11 +130,14 @@ namespace DevilDaggersCustomLeaderboards
 				return;
 			}
 
-			_scanner.Open();
+			Scanner.Open();
+
+			if (!Scanner.IsInitialized)
+				Scanner.Initialize();
 
 			try
 			{
-				_scanner.Scan();
+				Scanner.Scan();
 			}
 			catch (Exception ex)
 			{
@@ -146,20 +146,20 @@ namespace DevilDaggersCustomLeaderboards
 
 			if (!_isRecording)
 			{
-				if (_scanner.Time == _scanner.Time.ValuePrevious)
+				if (Scanner.Time == Scanner.Time.ValuePrevious)
 					return;
 
 				Console.Clear();
 				_isRecording = true;
-				_scanner.RestartScan();
+				Scanner.RestartScan();
 			}
 
-			_scanner.WriteRecording();
+			GuiUtils.WriteRecording();
 
-			Thread.Sleep(50);
+			Thread.Sleep(20);
 			Console.SetCursorPosition(0, 0);
 
-			if (!_scanner.IsPlayerAlive && _scanner.IsPlayerAlive.ValuePrevious)
+			if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious)
 			{
 				_isRecording = false;
 
@@ -182,14 +182,14 @@ namespace DevilDaggersCustomLeaderboards
 						Cmd.WriteLine("Upload successful", ColorUtils.Success);
 						Cmd.WriteLine(uploadSuccess.Message);
 						Cmd.WriteLine();
-						uploadSuccess.WriteLeaderboard(_scanner.PlayerId);
+						uploadSuccess.WriteLeaderboard(Scanner.PlayerId);
 
 						Cmd.WriteLine();
 
 						if (uploadSuccess.IsHighscore())
 							uploadSuccess.WriteHighscoreStats();
 						else
-							_scanner.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == _scanner.PlayerId));
+							GuiUtils.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == Scanner.PlayerId));
 
 						Cmd.WriteLine();
 					}
@@ -217,30 +217,30 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			try
 			{
-				string toEncrypt = string.Join(";", _scanner.PlayerId, _scanner.TimeInt, _scanner.GemsCollected, _scanner.Kills, _scanner.DeathType, _scanner.DaggersHit, _scanner.DaggersFired, _scanner.EnemiesAlive, _scanner.HomingDaggers, string.Join(",", new[] { _scanner.LevelUpTime2, _scanner.LevelUpTime3, _scanner.LevelUpTime4 }));
+				string toEncrypt = string.Join(";", Scanner.PlayerId, Scanner.TimeInt, Scanner.GemsCollected, Scanner.Kills, Scanner.DeathType, Scanner.DaggersHit, Scanner.DaggersFired, Scanner.EnemiesAlive, Scanner.HomingDaggers, string.Join(",", new[] { Scanner.LevelUpTime2, Scanner.LevelUpTime3, Scanner.LevelUpTime4 }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 				UploadRequest uploadRequest = new()
 				{
-					DaggersFired = _scanner.DaggersFired,
-					DaggersHit = _scanner.DaggersHit,
+					DaggersFired = Scanner.DaggersFired,
+					DaggersHit = Scanner.DaggersHit,
 					ClientVersion = LocalVersion.ToString(),
-					DeathType = _scanner.DeathType,
-					EnemiesAlive = _scanner.EnemiesAlive,
-					GemsCollected = _scanner.GemsCollected,
-					GemsDespawned = _scanner.GemsDespawned,
-					GemsEaten = _scanner.GemsEaten,
-					HomingDaggers = _scanner.HomingDaggers,
-					Kills = _scanner.Kills,
-					LevelUpTime2 = _scanner.LevelUpTime2,
-					LevelUpTime3 = _scanner.LevelUpTime3,
-					LevelUpTime4 = _scanner.LevelUpTime4,
-					PlayerId = _scanner.PlayerId,
-					SpawnsetHash = _scanner.SurvivalHash.ToString(), // TODO
-					Time = _scanner.TimeInt,
-					Username = _scanner.Username,
+					DeathType = Scanner.DeathType,
+					EnemiesAlive = Scanner.EnemiesAlive,
+					GemsCollected = Scanner.GemsCollected,
+					GemsDespawned = Scanner.GemsDespawned,
+					GemsEaten = Scanner.GemsEaten,
+					HomingDaggers = Scanner.HomingDaggers,
+					Kills = Scanner.Kills,
+					LevelUpTime2 = Scanner.LevelUpTime2,
+					LevelUpTime3 = Scanner.LevelUpTime3,
+					LevelUpTime4 = Scanner.LevelUpTime4,
+					PlayerId = Scanner.PlayerId,
+					SpawnsetHash = Scanner.SurvivalHash.ToString(), // TODO
+					Time = Scanner.TimeInt,
+					Username = Scanner.Username,
 					Validation = HttpUtility.HtmlEncode(validation),
-					GameStates = _scanner.GameStates,
+					GameStates = Scanner.GameStates,
 #if DEBUG
 					BuildMode = BuildMode.Debug,
 #else
@@ -266,17 +266,19 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static string? ValidateRunLocally()
 		{
-			if (_scanner.PlayerId <= 0)
+			return "Uploading scores is temporarily disabled for this build.";
+
+			if (Scanner.PlayerId <= 0)
 			{
-				Log.Warn($"Invalid player ID: {_scanner.PlayerId}");
+				Log.Warn($"Invalid player ID: {Scanner.PlayerId}");
 				return "Invalid player ID.";
 			}
 
-			if (_scanner.IsReplay)
+			if (Scanner.IsReplay)
 				return "Run is replay. Unable to validate.";
 
 			// This should fix the broken submissions that occasionally get sent for some reason.
-			if (_scanner.TimeInt < _minimalTime)
+			if (Scanner.TimeInt < _minimalTime)
 				return $"Timer is under {_minimalTime:0.0000}. Unable to validate.";
 
 			return null;

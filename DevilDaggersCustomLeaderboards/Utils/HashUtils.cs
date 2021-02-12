@@ -11,7 +11,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		{
 			try
 			{
-				if (Spawnset.TryParse(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(Scanner.Instance.Process?.MainModule?.FileName) ?? throw new("Could not retrieve process file name."), "dd", "survival")), out Spawnset spawnset))
+				if (Spawnset.TryParse(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(Scanner.Process?.MainModule?.FileName) ?? throw new("Could not retrieve process file name."), "dd", "survival")), out Spawnset spawnset))
 					return spawnset.GetHashString();
 
 				Program.Log.Error($"Failed to calculate spawnset hash because the survival file could not be parsed to a {nameof(Spawnset)} object.");

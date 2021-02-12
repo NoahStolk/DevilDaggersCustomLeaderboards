@@ -1,4 +1,4 @@
-﻿using DevilDaggersCustomLeaderboards.Utils;
+﻿using DevilDaggersCustomLeaderboards.Native;
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Memory.Variables
@@ -18,7 +18,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		public abstract TVariable ValuePrevious { get; }
 		public abstract TVariable Value { get; }
 
-		public bool IsChanged { get; private set; }
+		public bool IsChanged { get; set; }
 
 		public long Address { get; set; }
 		public uint Size { get; set; }
@@ -38,10 +38,10 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 
 			try
 			{
-				if (Scanner.Instance.Process?.MainModule == null)
+				if (Scanner.Process?.MainModule == null)
 					return;
 
-				MemoryUtils.Read(new IntPtr(Address), Bytes, Size);
+				NativeMethods.ReadProcessMemory(Scanner.ProcessAddress, new IntPtr(Address), Bytes, Size, out _);
 				IsChanged = !AreBytesEqual();
 			}
 			catch (Exception ex)
