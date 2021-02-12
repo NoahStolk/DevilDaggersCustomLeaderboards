@@ -135,7 +135,6 @@ namespace DevilDaggersCustomLeaderboards
 
 			_scanner.Open();
 
-			_scanner.PreScan();
 			try
 			{
 				_scanner.Scan();

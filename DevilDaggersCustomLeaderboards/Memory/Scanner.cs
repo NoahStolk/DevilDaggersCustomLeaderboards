@@ -15,36 +15,57 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		private Scanner()
 		{
+			Magic = GetMagic() + 12 + sizeof(int);
+
+			PlayerId = new(Magic);
+			Username = new(Magic + sizeof(int), 32);
+			Time = new(Magic + sizeof(int) + 32);
+			GemsCollected = new(Magic + sizeof(int) + 32 + sizeof(float));
+			Kills = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int));
+			DaggersFired = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int));
+			DaggersHit = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int));
+			EnemiesAlive = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
+			LevelGems = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
+			HomingDaggers = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
+			LeviathansAlive = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
+			OrbsAlive = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
+			GemsDespawned = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
+			GemsEaten = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
+			IsPlayerAlive = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
+			IsReplay = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool));
+			DeathType = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool));
+			IsInGame = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool) + sizeof(byte));
+			SurvivalHash = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool) + sizeof(byte) + sizeof(bool));
 		}
 
 		public static Scanner Instance => _lazy.Value;
 
 		public Process? Process { get; private set; } = ProcessUtils.GetDevilDaggersProcess();
 
-		public long Magic { get; private set; }
+		public long Magic { get; }
 
 		public IntPtr ProcessAddress { get; private set; } = IntPtr.Zero;
 
-		public IntVariable PlayerId { get; private set; }
-		public StringVariable Username { get; private set; }
-		public FloatVariable Time { get; private set; }
-		public IntVariable GemsCollected { get; private set; }
-		public IntVariable Kills { get; private set; }
-		public IntVariable DaggersFired { get; private set; }
-		public IntVariable DaggersHit { get; private set; }
-		public IntVariable EnemiesAlive { get; private set; }
-		public IntVariable LevelGems { get; private set; }
-		public IntVariable HomingDaggers { get; private set; }
-		public IntVariable LeviathansAlive { get; private set; }
-		public IntVariable OrbsAlive { get; private set; }
-		public IntVariable GemsDespawned { get; private set; }
-		public IntVariable GemsEaten { get; private set; }
+		public IntVariable PlayerId { get; }
+		public StringVariable Username { get; }
+		public FloatVariable Time { get; }
+		public IntVariable GemsCollected { get; }
+		public IntVariable Kills { get; }
+		public IntVariable DaggersFired { get; }
+		public IntVariable DaggersHit { get; }
+		public IntVariable EnemiesAlive { get; }
+		public IntVariable LevelGems { get; }
+		public IntVariable HomingDaggers { get; }
+		public IntVariable LeviathansAlive { get; }
+		public IntVariable OrbsAlive { get; }
+		public IntVariable GemsDespawned { get; }
+		public IntVariable GemsEaten { get; }
 
-		public BoolVariable IsPlayerAlive { get; private set; }
-		public BoolVariable IsReplay { get; private set; }
-		public ByteVariable DeathType { get; private set; }
-		public BoolVariable IsInGame { get; private set; }
-		public ULongVariable SurvivalHash { get; private set; }
+		public BoolVariable IsPlayerAlive { get; }
+		public BoolVariable IsReplay { get; }
+		public ByteVariable DeathType { get; }
+		public BoolVariable IsInGame { get; }
+		public ULongVariable SurvivalHash { get; }
 
 		public int TimeInt => (int)(Time * 10000);
 		public int LevelUpTime2 { get; private set; }
@@ -75,28 +96,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			const ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ | ProcessAccessType.PROCESS_VM_WRITE | ProcessAccessType.PROCESS_VM_OPERATION;
 			ProcessAddress = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
-
-			Magic = GetMagic() + 12 + sizeof(int);
-
-			PlayerId = new(Magic);
-			Username = new(Magic + sizeof(int), 32);
-			Time = new(Magic + sizeof(int) + 32);
-			GemsCollected = new(Magic + sizeof(int) + 32 + sizeof(float));
-			Kills = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int));
-			DaggersFired = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int));
-			DaggersHit = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int));
-			EnemiesAlive = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
-			LevelGems = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
-			HomingDaggers = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
-			LeviathansAlive = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
-			OrbsAlive = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
-			GemsDespawned = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
-			GemsEaten = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
-			IsPlayerAlive = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int));
-			IsReplay = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool));
-			DeathType = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool));
-			IsInGame = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool) + sizeof(byte));
-			SurvivalHash = new(Magic + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool) + sizeof(byte) + sizeof(bool));
 		}
 
 		public long GetMagic()
@@ -155,32 +154,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			}
 		}
 
-		/// <summary>
-		/// Used to set previous values for every <see cref="AbstractVariable{T}"/>. Must use the same order and logic as the <see cref="Scan"/> method.
-		/// </summary>
-		public void PreScan()
-		{
-			PlayerId.PreScan();
-			Username.PreScan();
-			Time.PreScan();
-			GemsCollected.PreScan();
-			Kills.PreScan();
-			DaggersFired.PreScan();
-			DaggersHit.PreScan();
-			EnemiesAlive.PreScan();
-			LevelGems.PreScan();
-			HomingDaggers.PreScan();
-			LeviathansAlive.PreScan();
-			OrbsAlive.PreScan();
-			GemsDespawned.PreScan();
-			GemsEaten.PreScan();
-			IsPlayerAlive.PreScan();
-			IsReplay.PreScan();
-			DeathType.PreScan();
-			IsInGame.PreScan();
-			SurvivalHash.PreScan();
-		}
-
 		public void Scan()
 		{
 			PlayerId.Scan();
@@ -191,8 +164,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			DaggersFired.Scan();
 			DaggersHit.Scan();
 
-			GemsDespawned.Scan();
-			GemsEaten.Scan();
 			IsPlayerAlive.Scan();
 			IsReplay.Scan();
 			IsInGame.Scan();
@@ -204,6 +175,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				LevelGems.Scan();
 				LeviathansAlive.Scan();
 				OrbsAlive.Scan();
+				GemsDespawned.Scan();
+				GemsEaten.Scan();
 
 				if (LevelGems != 0)
 				{

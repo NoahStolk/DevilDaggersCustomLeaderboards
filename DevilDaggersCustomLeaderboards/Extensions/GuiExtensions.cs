@@ -2,6 +2,7 @@
 using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Enumerators;
 using DevilDaggersCustomLeaderboards.Memory;
+using DevilDaggersCustomLeaderboards.Memory.Variables;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Globalization;
@@ -19,18 +20,18 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 			Cmd.WriteLine("Player ID", scanner.PlayerId);
 			Cmd.WriteLine("Username", scanner.Username);
 			Cmd.WriteLine("Time", scanner.Time.Value.ToString("0.0000", CultureInfo.InvariantCulture));
-			Cmd.WriteLine("Gems Collected", scanner.GemsCollected);
-			Cmd.WriteLine("Kills", scanner.Kills);
-			Cmd.WriteLine("Daggers Hit", scanner.DaggersHit);
-			Cmd.WriteLine("Daggers Fired", scanner.DaggersFired);
+			WriteVariable("Gems Collected", scanner.GemsCollected, CustomColor.Red);
+			WriteVariable("Kills", scanner.Kills, CustomColor.Thorn);
+			WriteVariable("Daggers Hit", scanner.DaggersHit, CustomColor.Green);
+			WriteVariable("Daggers Fired", scanner.DaggersFired, CustomColor.Yellow);
 			Cmd.WriteLine("Accuracy", $"{(scanner.DaggersFired == 0 ? 0 : scanner.DaggersHit / (float)scanner.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", scanner.EnemiesAlive);
 			Cmd.WriteLine("Hand", GetHand(scanner.LevelGems));
-			Cmd.WriteLine("Homing Daggers", scanner.HomingDaggers);
+			WriteVariable("Homing Daggers", scanner.HomingDaggers, CustomColor.Magenta);
 			Cmd.WriteLine("Leviathans Alive", scanner.LeviathansAlive);
 			Cmd.WriteLine("Orbs Alive", scanner.OrbsAlive);
-			Cmd.WriteLine("Gems Despawned", scanner.GemsDespawned);
-			Cmd.WriteLine("Gems Eaten", scanner.GemsEaten);
+			WriteVariable("Gems Despawned", scanner.GemsDespawned, CustomColor.Red);
+			WriteVariable("Gems Eaten", scanner.GemsEaten, CustomColor.Green);
 			Cmd.WriteLine();
 			Cmd.WriteLine("Is Player Alive", scanner.IsPlayerAlive);
 			Cmd.WriteLine("Is Replay", scanner.IsReplay);
@@ -52,6 +53,21 @@ namespace DevilDaggersCustomLeaderboards.Extensions
 				if (levelGems == 70)
 					return 3;
 				return 4;
+			}
+
+			static void WriteVariable<T>(object textLeft, AbstractVariable<T> variable, CustomColor foregroundColorModify = ColorUtils.BackgroundDefault, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
+			{
+				Console.ForegroundColor = (ConsoleColor)foregroundColor;
+
+				Console.BackgroundColor = (ConsoleColor)backgroundColor;
+				Console.Write($"{textLeft,-Cmd.TextWidthLeft}");
+
+				if (variable.IsChanged)
+					Console.ForegroundColor = (ConsoleColor)foregroundColorModify;
+				Console.Write($"{variable,Cmd.TextWidthRight}");
+
+				Console.BackgroundColor = (ConsoleColor)backgroundColor;
+				Console.WriteLine($"{new string(' ', Cmd.TextWidthFull)}");
 			}
 		}
 
