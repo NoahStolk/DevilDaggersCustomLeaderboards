@@ -197,8 +197,10 @@ namespace DevilDaggersCustomLeaderboards.Memory
 						DaggersFired = DaggersFired,
 						DaggersHit = DaggersHit,
 						EnemiesAlive = EnemiesAlive,
-						Gems = GemsCollected,
-						Homing = HomingDaggers,
+						GemsCollected = GemsCollected,
+						GemsDespawned = GemsDespawned,
+						GemsEaten = GemsEaten,
+						HomingDaggers = HomingDaggers,
 						Kills = Kills,
 					});
 				}
