@@ -60,7 +60,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void Initialize()
 		{
-			long startAddress = GetMarker() + 12 + sizeof(int);
+			long startAddress = GetMarker() + sizeof(int);
 
 			PlayerId = new(startAddress);
 			Username = new(startAddress + sizeof(int), 32);
@@ -85,36 +85,46 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			IsInitialized = true;
 		}
 
-		private static long GetMarker()
+		public static long GetMarker()
 		{
-			// return 0x5849EFF030;
-			// return 0x22D68FAAEB8;
+			ReadMarkerFromProcess(Process.MainModule);
 
-			long start = Process.MainModule.BaseAddress.ToInt64();
+			return 0xA90E2FF160 + 12;
 
-			byte[] marker = new byte[] { /*0x5F, 0x5F, 0x64, 0x64, 0x73, 0x74, 0x61, 0x74, 0x73, 0x5F, 0x5F, 0x00*/0x78, 0x76, 0x6c, 0x76 };
+			//foreach (ProcessModule mod in Process.Modules)
+			//{
+			//	long marker = ReadMarkerFromProcess(mod);
+			//	if (marker != 0)
+			//		return marker;
+			//}
 
-			const int readSize = 4096;
-			byte[] read = new byte[readSize];
+			//return 0;
+		}
+
+		private static long ReadMarkerFromProcess(ProcessModule module)
+		{
+			long start = module.BaseAddress.ToInt64();
+			int size = module.ModuleMemorySize;
+
+			byte[] marker = new byte[] { 0x5F, 0x5F, 0x64, 0x64, 0x73, 0x74, 0x61, 0x74, 0x73, 0x5F, 0x5F, 0x00/*, 0x01, 0x00, 0x00, 0x00, 0x5E, 0x55, 0x00, 0x00, 0x78, 0x76, 0x6C, 0x76*/ };
+
+			byte[] moduleMemory = new byte[size];
+			if (!NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(start), moduleMemory, (uint)size, out uint bytesRead))
+				return 0;
+
 			List<byte> successBytes = new();
-
-			for (long i = 0; ; i += readSize)
+			for (int i = 0; i < bytesRead; i++)
 			{
-				NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(start + i), read, readSize, out _);
-
-				for (int j = 0; j < readSize; j++)
+				if (moduleMemory[i] == marker[successBytes.Count])
 				{
-					if (read[j] == marker[successBytes.Count])
-					{
-						successBytes.Add(read[j]);
+					successBytes.Add(moduleMemory[i]);
 
-						if (successBytes.Count == marker.Length)
-							return start + i + j + 2; // one for null terminator and one for next index to read from
-					}
-					else
-					{
-						successBytes.Clear();
-					}
+					if (successBytes.Count == marker.Length)
+						return start + i + 1;
+				}
+				else
+				{
+					successBytes.Clear();
 				}
 			}
 
