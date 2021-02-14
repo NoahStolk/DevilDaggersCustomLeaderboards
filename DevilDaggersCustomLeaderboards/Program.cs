@@ -131,18 +131,8 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 			Scanner.Open();
-
-			if (!Scanner.IsInitialized)
-				Scanner.Initialize();
-
-			try
-			{
-				Scanner.Scan();
-			}
-			catch (Exception ex)
-			{
-				Log.Error("Scan failed", ex);
-			}
+			Scanner.Initialize();
+			Scanner.Scan();
 
 			if (!_isRecording)
 			{

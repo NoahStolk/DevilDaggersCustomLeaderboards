@@ -10,7 +10,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public static class Scanner
 	{
-		public static bool IsInitialized { get; private set; }
+		private static bool _isInitialized;
 
 		public static Process? Process { get; private set; }
 
@@ -45,7 +45,10 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static List<GameState> GameStates { get; } = new();
 
 		public static void FindWindow()
-			=> Process = ProcessUtils.GetDevilDaggersProcess();
+		{
+			if (Process == null)
+				Process = ProcessUtils.GetDevilDaggersProcess();
+		}
 
 		public static void Open()
 		{
@@ -58,7 +61,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void Initialize()
 		{
-			if (Process?.MainModule == null)
+			if (_isInitialized || Process?.MainModule == null)
 				return;
 
 			byte[] pointerBytes = new byte[sizeof(long)];
@@ -85,7 +88,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			IsInGame = new(startAddress + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool) + sizeof(byte));
 			SurvivalHash = new(startAddress + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool) + sizeof(byte) + sizeof(bool));
 
-			IsInitialized = true;
+			_isInitialized = true;
 		}
 
 		public static void Scan()
