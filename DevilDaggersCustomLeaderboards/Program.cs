@@ -146,7 +146,7 @@ namespace DevilDaggersCustomLeaderboards
 
 			GuiUtils.WriteRecording();
 
-			Thread.Sleep(50);
+			Thread.Sleep(200);
 			Console.SetCursorPosition(0, 0);
 
 			if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious)
