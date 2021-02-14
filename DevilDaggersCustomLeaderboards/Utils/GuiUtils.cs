@@ -25,7 +25,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			WriteVariable("Daggers Fired", Scanner.DaggersFired, CustomColor.Yellow);
 			Cmd.WriteLine("Accuracy", $"{(Scanner.DaggersFired == 0 ? 0 : Scanner.DaggersHit / (float)Scanner.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine("Enemies Alive", Scanner.EnemiesAlive);
-			Cmd.WriteLine("Hand", GetHand(Scanner.LevelGems));
+			Cmd.WriteLine("Hand", $"Level {GetHand(Scanner.LevelGems)}");
 			WriteVariable("Homing Daggers", Scanner.HomingDaggers, CustomColor.Magenta);
 			Cmd.WriteLine("Leviathans Alive", Scanner.LeviathansAlive);
 			Cmd.WriteLine("Orbs Alive", Scanner.OrbsAlive);
@@ -37,6 +37,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("Death Type", GameInfo.GetDeathByType(Scanner.DeathType)?.Name ?? "Invalid death type", ColorUtils.GetDeathColor(Scanner.DeathType));
 			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
 			Cmd.WriteLine("SurvivalHash", Scanner.SurvivalHash);
+			// Cmd.WriteLine("SurvivalHash", BitConverter.ToString(MD5.HashData(File.ReadAllBytes(@"C:\Program Files (x86)\Steam\steamapps\common\devildaggers\dd\survival"))).Replace("-", string.Empty));
 			Cmd.WriteLine();
 			Cmd.WriteLine("Level 2", (Scanner.LevelUpTime2 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));
 			Cmd.WriteLine("Level 3", (Scanner.LevelUpTime3 / 10000f).ToString("0.0000", CultureInfo.InvariantCulture));

@@ -45,9 +45,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static List<GameState> GameStates { get; } = new();
 
 		public static void FindWindow()
-		{
-			Process = ProcessUtils.GetDevilDaggersProcess();
-		}
+			=> Process = ProcessUtils.GetDevilDaggersProcess();
 
 		public static void Open()
 		{
@@ -60,6 +58,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void Initialize()
 		{
+			if (Process?.MainModule == null)
+				return;
+
 			byte[] pointerBytes = new byte[sizeof(long)];
 			NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(Process.MainModule.BaseAddress.ToInt64() + 0x00253DE0), pointerBytes, sizeof(long), out _);
 			long startAddress = BitConverter.ToInt64(pointerBytes) + 12 + sizeof(int);

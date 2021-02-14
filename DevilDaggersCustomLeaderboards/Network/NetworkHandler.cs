@@ -1,6 +1,5 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace DevilDaggersCustomLeaderboards.Network
@@ -13,15 +12,11 @@ namespace DevilDaggersCustomLeaderboards.Network
 		public static readonly string BaseUrl = "https://devildaggers.info";
 #endif
 
-		private static readonly Lazy<NetworkHandler> _lazy = new Lazy<NetworkHandler>(() => new NetworkHandler());
+		private static readonly Lazy<NetworkHandler> _lazy = new(() => new());
 
 		private NetworkHandler()
 		{
-			HttpClient httpClient = new HttpClient
-			{
-				BaseAddress = new Uri(BaseUrl),
-			};
-			ApiClient = new DevilDaggersInfoApiClient(httpClient);
+			ApiClient = new(new() { BaseAddress = new(BaseUrl) });
 		}
 
 		public static NetworkHandler Instance => _lazy.Value;
