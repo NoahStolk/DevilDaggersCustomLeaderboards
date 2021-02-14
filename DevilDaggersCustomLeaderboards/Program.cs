@@ -73,6 +73,30 @@ namespace DevilDaggersCustomLeaderboards
 				Console.ReadKey();
 			}
 
+			//Console.WriteLine("You will have to add the address of where the game stores it data manually. This address changes every time Devil Daggers starts up. I have not found a way to detect this value programmatically and have no idea how Cheat Engine does it.");
+			//Console.WriteLine("1. Open Cheat Engine and attach it to dd.exe.");
+			//Console.WriteLine("2. Set the 'Value Type' to 'String'.");
+			//Console.WriteLine("3. Enter the value '__ddstats__' (no quotes) in the text box for 'Value'.");
+			//Console.WriteLine("4. Click 'First Scan'.");
+			//Console.WriteLine("5. There should be 2 addresses in the left window. Copy one of them (doesn't matter which).");
+			//Console.WriteLine("Note: An address can easily be copied by double-clicking it. It will then show up in the bottom window. Double-click it again and you'll be able to select it in the 'Change address' window.");
+			//Console.WriteLine();
+			//bool success = false;
+			//while (!success)
+			//{
+			//	Console.Write("Please type the address you copied (for example 3D182FF2C0): ");
+
+			//	try
+			//	{
+			//		Scanner.ManualMarker = Convert.ToInt64(Console.ReadLine(), 16) + 12;
+			//		success = true;
+			//	}
+			//	catch
+			//	{
+			//		Console.WriteLine("Wrong input.");
+			//	}
+			//}
+
 			Console.Clear();
 			while (true)
 				await ExecuteMainLoop();
@@ -112,9 +136,9 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 #if DEBUG
-			Console.Title = $"{ApplicationDisplayName} {LocalVersion} DEBUG";
+			Console.Title = $"{ApplicationDisplayName} {LocalVersion} (QOL) DEBUG";
 #else
-			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
+			Console.Title = $"{ApplicationDisplayName} {LocalVersion} (QOL)";
 #endif
 		}
 
@@ -266,7 +290,7 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static string? ValidateRunLocally()
 		{
-			return "Uploading scores is temporarily disabled for this build.";
+			return "Uploading scores is temporarily disabled for this build. It will be enabled again once DevilDaggers.info has migrated to its new host.";
 
 			if (Scanner.PlayerId <= 0)
 			{

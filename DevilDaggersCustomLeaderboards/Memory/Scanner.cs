@@ -60,7 +60,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void Initialize()
 		{
-			long startAddress = GetMarker() + sizeof(int);
+			byte[] pointerBytes = new byte[sizeof(long)];
+			NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(Process.MainModule.BaseAddress.ToInt64() + 0x00253DE0), pointerBytes, sizeof(long), out _);
+			long startAddress = BitConverter.ToInt64(pointerBytes) + 12 + sizeof(int);
 
 			PlayerId = new(startAddress);
 			Username = new(startAddress + sizeof(int), 32);
@@ -83,52 +85,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			SurvivalHash = new(startAddress + sizeof(int) + 32 + sizeof(float) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(int) + sizeof(bool) + sizeof(bool) + sizeof(byte) + sizeof(bool));
 
 			IsInitialized = true;
-		}
-
-		public static long GetMarker()
-		{
-			ReadMarkerFromProcess(Process.MainModule);
-
-			return 0xA90E2FF160 + 12;
-
-			//foreach (ProcessModule mod in Process.Modules)
-			//{
-			//	long marker = ReadMarkerFromProcess(mod);
-			//	if (marker != 0)
-			//		return marker;
-			//}
-
-			//return 0;
-		}
-
-		private static long ReadMarkerFromProcess(ProcessModule module)
-		{
-			long start = module.BaseAddress.ToInt64();
-			int size = module.ModuleMemorySize;
-
-			byte[] marker = new byte[] { 0x5F, 0x5F, 0x64, 0x64, 0x73, 0x74, 0x61, 0x74, 0x73, 0x5F, 0x5F, 0x00/*, 0x01, 0x00, 0x00, 0x00, 0x5E, 0x55, 0x00, 0x00, 0x78, 0x76, 0x6C, 0x76*/ };
-
-			byte[] moduleMemory = new byte[size];
-			if (!NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(start), moduleMemory, (uint)size, out uint bytesRead))
-				return 0;
-
-			List<byte> successBytes = new();
-			for (int i = 0; i < bytesRead; i++)
-			{
-				if (moduleMemory[i] == marker[successBytes.Count])
-				{
-					successBytes.Add(moduleMemory[i]);
-
-					if (successBytes.Count == marker.Length)
-						return start + i + 1;
-				}
-				else
-				{
-					successBytes.Clear();
-				}
-			}
-
-			return 0;
 		}
 
 		public static void Scan()
