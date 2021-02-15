@@ -10,6 +10,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public static class Scanner
 	{
+		private const long _ddstatsMarkerOffset = 0x00255DE0;
+
 		private static bool _isInitialized;
 
 		public static Process? Process { get; private set; }
@@ -65,7 +67,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				return;
 
 			byte[] pointerBytes = new byte[sizeof(long)];
-			NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(Process.MainModule.BaseAddress.ToInt64() + 0x00253DE0), pointerBytes, sizeof(long), out _);
+			NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(Process.MainModule.BaseAddress.ToInt64() + _ddstatsMarkerOffset), pointerBytes, sizeof(long), out _);
 			long startAddress = BitConverter.ToInt64(pointerBytes) + 12 + sizeof(int);
 
 			PlayerId = new(startAddress);
