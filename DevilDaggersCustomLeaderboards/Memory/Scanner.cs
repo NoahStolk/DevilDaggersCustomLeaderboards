@@ -12,7 +12,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 	{
 		private const long _ddstatsMarkerOffset = 0x00255BD0;
 
-		private static bool _isInitialized;
+		public static bool IsInitialized;
 
 		public static Process? Process { get; private set; }
 
@@ -107,7 +107,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void Initialize()
 		{
-			if (_isInitialized || Process?.MainModule == null)
+			if (IsInitialized || Process?.MainModule == null)
 				return;
 
 			byte[] pointerBytes = new byte[sizeof(long)];
@@ -184,7 +184,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			Status = InitiateVariable(addr => new IntVariable(addr), ref address);
 
-			_isInitialized = true;
+			IsInitialized = true;
 
 			static TVariable InitiateVariable<TVariable>(Func<long, TVariable> constructor, ref long address)
 				where TVariable : IVariable

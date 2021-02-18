@@ -7,6 +7,7 @@ using log4net;
 using log4net.Config;
 using log4net.Repository;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -20,6 +21,8 @@ namespace DevilDaggersCustomLeaderboards
 {
 	public static class Program
 	{
+		private const int _mainLoopSleepMilliseconds = 50;
+
 		private const float _minimalTime = 1f;
 
 #pragma warning disable IDE1006, SA1310 // Field names should not contain underscore
@@ -75,7 +78,16 @@ namespace DevilDaggersCustomLeaderboards
 
 			Console.Clear();
 			while (true)
-				await ExecuteMainLoop();
+			{
+				try
+				{
+					await ExecuteMainLoop();
+				}
+				catch (Win32Exception)
+				{
+					// Ignore exceptions when Devil Daggers is closed.
+				}
+			}
 		}
 
 		private static void InitializeConsole()
@@ -87,7 +99,7 @@ namespace DevilDaggersCustomLeaderboards
 				try
 				{
 #pragma warning disable CA1416 // Validate platform compatibility
-					Console.WindowHeight = 40;
+					Console.WindowHeight = 60;
 					Console.WindowWidth = 170;
 #pragma warning restore CA1416 // Validate platform compatibility
 				}
@@ -124,6 +136,7 @@ namespace DevilDaggersCustomLeaderboards
 
 			if (Scanner.Process == null)
 			{
+				Scanner.IsInitialized = false;
 				Cmd.WriteLine("Devil Daggers not found. Make sure the game is running. Retrying in a second...");
 				Thread.Sleep(1000);
 				Console.Clear();
@@ -146,7 +159,7 @@ namespace DevilDaggersCustomLeaderboards
 
 			GuiUtils.WriteRecording();
 
-			Thread.Sleep(200);
+			Thread.Sleep(_mainLoopSleepMilliseconds);
 			Console.SetCursorPosition(0, 0);
 
 			if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious)
@@ -267,7 +280,7 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static string? ValidateRunLocally()
 		{
-			return "Uploading scores is temporarily disabled for this build. It will be enabled again once DevilDaggers.info has migrated to its new host.";
+			return "Uploading scores is temporarily disabled for this build.";
 
 			if (Scanner.PlayerId <= 0)
 			{
