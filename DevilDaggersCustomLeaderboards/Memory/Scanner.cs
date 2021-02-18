@@ -12,7 +12,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 	{
 		private const long _ddstatsMarkerOffset = 0x00255BD0;
 
-		public static bool IsInitialized;
+		public static bool IsInitialized { get; set; }
 
 		public static Process? Process { get; private set; }
 
@@ -76,8 +76,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static IntVariable ReplayPlayerId { get; private set; } = new(0);
 		public static StringVariable ReplayUsername { get; private set; } = new(0, 32);
 
-		// TODO: Use byte array.
-		public static ULongVariable LevelHashMd5 { get; private set; } = new(0);
+		public static ByteArrayVariable LevelHashMd5 { get; private set; } = new(0, 16);
 
 		public static FloatVariable LevelUpTime2 { get; private set; } = new(0);
 		public static FloatVariable LevelUpTime3 { get; private set; } = new(0);
@@ -172,8 +171,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			ReplayPlayerId = InitiateVariable(addr => new IntVariable(addr), ref address);
 			ReplayUsername = InitiateStringVariable(ref address, 32);
 
-			LevelHashMd5 = InitiateVariable(addr => new ULongVariable(addr), ref address);
-			address += 8;
+			LevelHashMd5 = InitiateByteArrayVariable(ref address, 16);
 
 			LevelUpTime2 = InitiateVariable(addr => new FloatVariable(addr), ref address);
 			LevelUpTime3 = InitiateVariable(addr => new FloatVariable(addr), ref address);
@@ -194,10 +192,17 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				return variable;
 			}
 
-			static StringVariable InitiateStringVariable(ref long address, uint size)
+			static StringVariable InitiateStringVariable(ref long address, uint stringLength)
 			{
-				StringVariable variable = new(address, size);
-				address += size;
+				StringVariable variable = new(address, stringLength);
+				address += stringLength;
+				return variable;
+			}
+
+			static ByteArrayVariable InitiateByteArrayVariable(ref long address, uint arrayLength)
+			{
+				ByteArrayVariable variable = new(address, arrayLength);
+				address += arrayLength;
 				return variable;
 			}
 		}

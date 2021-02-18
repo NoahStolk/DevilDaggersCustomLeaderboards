@@ -24,8 +24,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
 			Cmd.WriteLine("Is Replay", Scanner.IsReplay);
 			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
-			Cmd.WriteLine("SurvivalHash", Scanner.LevelHashMd5);
-			// Cmd.WriteLine("SurvivalHash (CUSTOM)", BitConverter.ToUInt16(MD5.HashData(File.ReadAllBytes(@"C:\Program Files (x86)\Steam\steamapps\common\devildaggers\dd\survival"))));
+			Cmd.WriteLine("SurvivalHash", ByteArrayToHexString(Scanner.LevelHashMd5)); // Use this on the server: MD5.HashData(survivalFileContentsAsByteArray)
 			Cmd.WriteLine();
 #endif
 
@@ -81,6 +80,9 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				for (int i = 0; i < 45; i++)
 					Cmd.WriteLine();
 			}
+
+			static string ByteArrayToHexString(byte[] byteArray)
+				=> BitConverter.ToString(byteArray).Replace("-", string.Empty);
 
 			static int GetHand(int levelGems)
 			{

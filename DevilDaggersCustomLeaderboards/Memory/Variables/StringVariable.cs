@@ -6,8 +6,8 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
 	public class StringVariable : AbstractVariable<string>
 	{
-		public StringVariable(long localBaseAddress, uint maxSize)
-			: base(localBaseAddress, maxSize)
+		public StringVariable(long localBaseAddress, uint stringLength)
+			: base(localBaseAddress, stringLength)
 		{
 		}
 
