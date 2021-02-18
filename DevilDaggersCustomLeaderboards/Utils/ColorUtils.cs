@@ -23,7 +23,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const CustomColor Swarmed = CustomColor.Skull;
 		public const CustomColor Impaled = CustomColor.Skull;
 		public const CustomColor Gored = CustomColor.Skull;
-		public const CustomColor Infested = CustomColor.Green;
+		public const CustomColor Infested = CustomColor.Yellow;
 		public const CustomColor Opened = CustomColor.Skull;
 		public const CustomColor Purged = CustomColor.Squid;
 		public const CustomColor Desecrated = CustomColor.Squid;
