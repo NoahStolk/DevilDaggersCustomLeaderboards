@@ -19,7 +19,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static IntPtr ProcessAddress { get; private set; } = IntPtr.Zero;
 
 		public static IntVariable PlayerId { get; private set; } = new(0);
-		public static StringVariable Username { get; private set; } = new(0, 32);
+		public static StringVariable PlayerName { get; private set; } = new(0, 32);
 		public static FloatVariable Time { get; private set; } = new(0);
 		public static IntVariable GemsCollected { get; private set; } = new(0);
 		public static IntVariable EnemiesKilled { get; private set; } = new(0);
@@ -74,9 +74,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static BoolVariable IsInGame { get; private set; } = new(0);
 
 		public static IntVariable ReplayPlayerId { get; private set; } = new(0);
-		public static StringVariable ReplayUsername { get; private set; } = new(0, 32);
+		public static StringVariable ReplayPlayerName { get; private set; } = new(0, 32);
 
-		public static ByteArrayVariable LevelHashMd5 { get; private set; } = new(0, 16);
+		public static ByteArrayVariable SurvivalHashMd5 { get; private set; } = new(0, 16);
 
 		public static FloatVariable LevelUpTime2 { get; private set; } = new(0);
 		public static FloatVariable LevelUpTime3 { get; private set; } = new(0);
@@ -114,7 +114,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			long address = BitConverter.ToInt64(pointerBytes) + 12 + sizeof(int);
 
 			PlayerId = InitiateVariable(addr => new IntVariable(addr), ref address);
-			Username = InitiateStringVariable(ref address, 32);
+			PlayerName = InitiateStringVariable(ref address, 32);
 			Time = InitiateVariable(addr => new FloatVariable(addr), ref address);
 			GemsCollected = InitiateVariable(addr => new IntVariable(addr), ref address);
 			EnemiesKilled = InitiateVariable(addr => new IntVariable(addr), ref address);
@@ -169,9 +169,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			IsInGame = InitiateVariable(addr => new BoolVariable(addr), ref address);
 
 			ReplayPlayerId = InitiateVariable(addr => new IntVariable(addr), ref address);
-			ReplayUsername = InitiateStringVariable(ref address, 32);
+			ReplayPlayerName = InitiateStringVariable(ref address, 32);
 
-			LevelHashMd5 = InitiateByteArrayVariable(ref address, 16);
+			SurvivalHashMd5 = InitiateByteArrayVariable(ref address, 16);
 
 			LevelUpTime2 = InitiateVariable(addr => new FloatVariable(addr), ref address);
 			LevelUpTime3 = InitiateVariable(addr => new FloatVariable(addr), ref address);
@@ -210,7 +210,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static void Scan()
 		{
 			PlayerId.Scan();
-			Username.Scan();
+			PlayerName.Scan();
 			Time.Scan();
 			GemsCollected.Scan();
 			EnemiesKilled.Scan();
@@ -220,7 +220,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			IsPlayerAlive.Scan();
 			IsReplay.Scan();
 			IsInGame.Scan();
-			LevelHashMd5.Scan();
+			SurvivalHashMd5.Scan();
 			Status.Scan();
 
 			if (IsPlayerAlive)
@@ -304,7 +304,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			if (IsReplay)
 			{
 				ReplayPlayerId.Scan();
-				ReplayUsername.Scan();
+				ReplayPlayerName.Scan();
 			}
 		}
 

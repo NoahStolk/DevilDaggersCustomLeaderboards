@@ -250,9 +250,9 @@ namespace DevilDaggersCustomLeaderboards
 					LevelUpTime3 = Scanner.LevelUpTime3.ConvertToTimeInt(),
 					LevelUpTime4 = Scanner.LevelUpTime4.ConvertToTimeInt(),
 					PlayerId = Scanner.PlayerId,
-					SpawnsetHash = Scanner.LevelHashMd5.ToString(), // TODO
+					SpawnsetHash = Scanner.SurvivalHashMd5.ToString(), // TODO
 					Time = Scanner.Time.ConvertToTimeInt(),
-					Username = Scanner.Username,
+					Username = Scanner.PlayerName,
 					Validation = HttpUtility.HtmlEncode(validation),
 					GameStates = Scanner.GameStates,
 #if DEBUG

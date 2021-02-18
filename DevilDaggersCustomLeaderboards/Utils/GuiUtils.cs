@@ -17,14 +17,14 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine();
 
 			Cmd.WriteLine("Player ID", Scanner.PlayerId);
-			Cmd.WriteLine("Username", Scanner.Username);
+			Cmd.WriteLine("Player Name", Scanner.PlayerName);
 			Cmd.WriteLine();
 
 #if DEBUG
 			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
 			Cmd.WriteLine("Is Replay", Scanner.IsReplay);
 			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
-			Cmd.WriteLine("SurvivalHash", ByteArrayToHexString(Scanner.LevelHashMd5)); // Use this on the server: MD5.HashData(survivalFileContentsAsByteArray)
+			Cmd.WriteLine("SurvivalHash", ByteArrayToHexString(Scanner.SurvivalHashMd5));
 			Cmd.WriteLine();
 #endif
 
