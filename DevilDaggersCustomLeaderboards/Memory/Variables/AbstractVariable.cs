@@ -3,7 +3,7 @@ using System;
 
 namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
-	public abstract class AbstractVariable<TVariable>
+	public abstract class AbstractVariable<TVariable> : IVariable
 	{
 		protected AbstractVariable(long address, uint size)
 		{
@@ -18,10 +18,10 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		public abstract TVariable ValuePrevious { get; }
 		public abstract TVariable Value { get; }
 
-		public bool IsChanged { get; set; }
-
 		public long Address { get; set; }
 		public uint Size { get; set; }
+
+		public bool IsChanged { get; set; }
 
 		public static implicit operator TVariable(AbstractVariable<TVariable> variable)
 			=> variable.Value;

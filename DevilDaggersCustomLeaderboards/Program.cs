@@ -207,7 +207,18 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			try
 			{
-				string toEncrypt = string.Join(";", Scanner.PlayerId, Scanner.TimeInt, Scanner.GemsCollected, Scanner.Kills, Scanner.DeathType, Scanner.DaggersHit, Scanner.DaggersFired, Scanner.EnemiesAlive, Scanner.HomingDaggers, string.Join(",", new[] { Scanner.LevelUpTime2, Scanner.LevelUpTime3, Scanner.LevelUpTime4 }));
+				string toEncrypt = string.Join(
+					";",
+					Scanner.PlayerId,
+					Scanner.Time.ConvertToTimeInt(),
+					Scanner.GemsCollected,
+					Scanner.EnemiesKilled,
+					Scanner.DeathType,
+					Scanner.DaggersHit,
+					Scanner.DaggersFired,
+					Scanner.EnemiesAlive,
+					Scanner.HomingDaggers,
+					string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 				UploadRequest uploadRequest = new()
@@ -221,13 +232,13 @@ namespace DevilDaggersCustomLeaderboards
 					GemsDespawned = Scanner.GemsDespawned,
 					GemsEaten = Scanner.GemsEaten,
 					HomingDaggers = Scanner.HomingDaggers,
-					Kills = Scanner.Kills,
-					LevelUpTime2 = Scanner.LevelUpTime2,
-					LevelUpTime3 = Scanner.LevelUpTime3,
-					LevelUpTime4 = Scanner.LevelUpTime4,
+					Kills = Scanner.EnemiesKilled,
+					LevelUpTime2 = Scanner.LevelUpTime2.ConvertToTimeInt(),
+					LevelUpTime3 = Scanner.LevelUpTime3.ConvertToTimeInt(),
+					LevelUpTime4 = Scanner.LevelUpTime4.ConvertToTimeInt(),
 					PlayerId = Scanner.PlayerId,
-					SpawnsetHash = Scanner.SurvivalHash.ToString(), // TODO
-					Time = Scanner.TimeInt,
+					SpawnsetHash = Scanner.LevelHashMd5.ToString(), // TODO
+					Time = Scanner.Time.ConvertToTimeInt(),
 					Username = Scanner.Username,
 					Validation = HttpUtility.HtmlEncode(validation),
 					GameStates = Scanner.GameStates,
@@ -268,7 +279,7 @@ namespace DevilDaggersCustomLeaderboards
 				return "Run is replay. Unable to validate.";
 
 			// This should fix the broken submissions that occasionally get sent for some reason.
-			if (Scanner.TimeInt < _minimalTime)
+			if (Scanner.Time < _minimalTime)
 				return $"Timer is under {_minimalTime:0.0000}. Unable to validate.";
 
 			return null;
