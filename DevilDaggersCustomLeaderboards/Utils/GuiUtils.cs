@@ -24,7 +24,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
 			Cmd.WriteLine("Is Replay", Scanner.IsReplay);
 			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
-			Cmd.WriteLine("SurvivalHash", ByteArrayToHexString(Scanner.SurvivalHashMd5));
+			Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
 			Cmd.WriteLine();
 #endif
 
@@ -80,9 +80,6 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				for (int i = 0; i < 45; i++)
 					Cmd.WriteLine();
 			}
-
-			static string ByteArrayToHexString(byte[] byteArray)
-				=> BitConverter.ToString(byteArray).Replace("-", string.Empty);
 
 			static int GetHand(int levelGems)
 			{

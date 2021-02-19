@@ -235,6 +235,7 @@ namespace DevilDaggersCustomLeaderboards
 					Scanner.DaggersFired,
 					Scanner.EnemiesAlive,
 					Scanner.HomingDaggers,
+					HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5),
 					string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
