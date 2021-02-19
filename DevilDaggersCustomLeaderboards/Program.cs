@@ -225,6 +225,9 @@ namespace DevilDaggersCustomLeaderboards
 					Scanner.PlayerId,
 					Scanner.Time.ConvertToTimeInt(),
 					Scanner.GemsCollected,
+					Scanner.GemsDespawned,
+					Scanner.GemsEaten,
+					Scanner.GemsTotal,
 					Scanner.EnemiesKilled,
 					Scanner.DeathType,
 					Scanner.DaggersHit,
@@ -281,8 +284,6 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static string? ValidateRunLocally()
 		{
-			return "Uploading scores is temporarily disabled for this build.";
-
 			if (Scanner.PlayerId <= 0)
 			{
 				Log.Warn($"Invalid player ID: {Scanner.PlayerId}");
