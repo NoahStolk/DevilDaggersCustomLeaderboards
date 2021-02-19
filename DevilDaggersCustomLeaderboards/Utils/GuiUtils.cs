@@ -257,9 +257,9 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			WritePercentageField(us.IsNewPlayerOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
 			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Homing Daggers", us.HomingDaggers, us.HomingDaggersDiff);
 
-			WriteTimeField(us.IsNewPlayerOnThisLeaderboard || us.LevelUpTime2 == us.LevelUpTime2Diff, "Level 2", us.LevelUpTime2, us.LevelUpTime2Diff);
-			WriteTimeField(us.IsNewPlayerOnThisLeaderboard || us.LevelUpTime3 == us.LevelUpTime3Diff, "Level 3", us.LevelUpTime3, us.LevelUpTime3Diff);
-			WriteTimeField(us.IsNewPlayerOnThisLeaderboard || us.LevelUpTime4 == us.LevelUpTime4Diff, "Level 4", us.LevelUpTime4, us.LevelUpTime4Diff);
+			WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime2 != us.LevelUpTime2Diff, "Level 2", us.LevelUpTime2, us.LevelUpTime2Diff);
+			WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime3 != us.LevelUpTime3Diff, "Level 3", us.LevelUpTime3, us.LevelUpTime3Diff);
+			WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime4 != us.LevelUpTime4Diff, "Level 4", us.LevelUpTime4, us.LevelUpTime4Diff);
 
 			static void WriteTimeField(bool writeDifference, string fieldName, int value, int valueDiff)
 			{
