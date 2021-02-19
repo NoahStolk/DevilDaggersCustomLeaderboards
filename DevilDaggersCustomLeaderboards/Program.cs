@@ -120,6 +120,7 @@ namespace DevilDaggersCustomLeaderboards
 				ColorUtils.ModifyConsoleColor(5, 0xAF, 0x6B, 0x00);
 				ColorUtils.ModifyConsoleColor(6, 0x97, 0x6E, 0x2E);
 				ColorUtils.ModifyConsoleColor(7, 0xDD, 0xDD, 0xDD);
+				ColorUtils.ModifyConsoleColor(11, 0x80, 0x06, 0x00);
 				ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
 			}
 

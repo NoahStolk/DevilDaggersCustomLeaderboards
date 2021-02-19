@@ -36,7 +36,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const CustomColor Discarnated = CustomColor.Magenta;
 		public const CustomColor Barbed = CustomColor.Thorn;
 
-		public const CustomColor Homing = CustomColor.Magenta;
+		public const CustomColor Leviathan = CustomColor.LeviathanDagger;
 		public const CustomColor Devil = CustomColor.Red;
 		public const CustomColor Golden = CustomColor.Yellow;
 		public const CustomColor Silver = CustomColor.Gray;
@@ -116,7 +116,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public static CustomColor GetDaggerColor(int time, CustomLeaderboard leaderboard)
 		{
 			if (Compare(time, leaderboard.TimeLeviathan))
-				return Homing;
+				return Leviathan;
 			if (Compare(time, leaderboard.TimeDevil))
 				return Devil;
 			if (Compare(time, leaderboard.TimeGolden))

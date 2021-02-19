@@ -13,7 +13,7 @@
 		DarkGray = 8,
 		Blue = 9,
 		Green = 10,
-		Cyan = 11,
+		LeviathanDagger = 11,
 		Red = 12,
 		Magenta = 13,
 		Yellow = 14,
