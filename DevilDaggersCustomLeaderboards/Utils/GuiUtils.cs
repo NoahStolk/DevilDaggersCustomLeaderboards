@@ -246,16 +246,16 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				Cmd.Write($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ColorUtils.Better);
 			Cmd.WriteLine();
 
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Collected", us.GemsCollected, us.GemsCollectedDiff);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Despawned", us.GemsDespawned, us.GemsDespawnedDiff, true);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Eaten", us.GemsEaten, us.GemsEatenDiff, true);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Total", us.GemsTotal, us.GemsTotalDiff);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Enemies Killed", us.EnemiesKilled, us.EnemiesKilledDiff);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Enemies Alive", us.EnemiesAlive, us.EnemiesAliveDiff);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Daggers Fired", us.DaggersFired, us.DaggersFiredDiff);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Daggers Hit", us.DaggersHit, us.DaggersHitDiff);
-			WritePercentageField(us.IsNewPlayerOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Homing Daggers", us.HomingDaggers, us.HomingDaggersDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Collected", us.GemsCollected, us.GemsCollectedDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Despawned", us.GemsDespawned, us.GemsDespawnedDiff, true);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Eaten", us.GemsEaten, us.GemsEatenDiff, true);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Total", us.GemsTotal, us.GemsTotalDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Enemies Killed", us.EnemiesKilled, us.EnemiesKilledDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Enemies Alive", us.EnemiesAlive, us.EnemiesAliveDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Daggers Fired", us.DaggersFired, us.DaggersFiredDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Daggers Hit", us.DaggersHit, us.DaggersHitDiff);
+			WritePercentageField(!us.IsNewPlayerOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Homing Daggers", us.HomingDaggers, us.HomingDaggersDiff);
 
 			WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime2 != us.LevelUpTime2Diff, "Level 2", us.LevelUpTime2, us.LevelUpTime2Diff);
 			WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime3 != us.LevelUpTime3Diff, "Level 3", us.LevelUpTime3, us.LevelUpTime3Diff);
@@ -269,18 +269,18 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				Cmd.WriteLine();
 			}
 
-			static void WritePercentageField(bool isNewUser, string fieldName, double value, double valueDiff)
+			static void WritePercentageField(bool writeDifference, string fieldName, double value, double valueDiff)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight:0.00%}");
-				if (!isNewUser)
+				if (writeDifference)
 					Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.00%})", ColorUtils.GetImprovementColor(valueDiff));
 				Cmd.WriteLine();
 			}
 
-			static void WriteIntField(bool isNewUser, string fieldName, int value, int valueDiff, bool negate = false)
+			static void WriteIntField(bool writeDifference, string fieldName, int value, int valueDiff, bool negate = false)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight}");
-				if (!isNewUser)
+				if (writeDifference)
 					Cmd.Write($" ({valueDiff:+0;-#})", ColorUtils.GetImprovementColor(valueDiff * (negate ? -1 : 1)));
 				Cmd.WriteLine();
 			}
