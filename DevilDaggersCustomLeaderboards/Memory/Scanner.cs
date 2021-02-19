@@ -10,7 +10,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public static class Scanner
 	{
-		private const long _ddstatsMarkerOffset = 0x00255BD0;
+		private const long _ddstatsMarkerOffset = 0x00257BD0;
 
 		public static bool IsInitialized { get; set; }
 
