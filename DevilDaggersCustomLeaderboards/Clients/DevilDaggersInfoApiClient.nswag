@@ -70,6 +70,7 @@
       "arrayBaseType": "System.Collections.Generic.List",
       "dictionaryBaseType": "System.Collections.Generic.Dictionary",
       "classStyle": "Poco",
+      "jsonLibrary": "NewtonsoftJson",
       "generateDefaultValues": true,
       "generateDataAnnotations": true,
       "excludedTypeNames": [],
