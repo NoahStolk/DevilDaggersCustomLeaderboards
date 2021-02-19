@@ -154,12 +154,12 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 			int timeDiff = Scanner.Time.ConvertToTimeInt() - entry.Time;
 			Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
-			Cmd.Write($"{Scanner.Time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(Scanner.Time.ConvertToTimeInt(), leaderboard));
+			Cmd.Write($"{Scanner.Time.Value,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(Scanner.Time.ConvertToTimeInt(), leaderboard));
 			Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
 
 			WriteIntField("Gems Collected", Scanner.GemsCollected, Scanner.GemsCollected - entry.GemsCollected);
-			WriteIntField("Gems Despawned", Scanner.GemsDespawned, Scanner.GemsDespawned - entry.GemsDespawned);
-			WriteIntField("Gems Eaten", Scanner.GemsEaten, Scanner.GemsEaten - entry.GemsEaten);
+			WriteIntField("Gems Despawned", Scanner.GemsDespawned, Scanner.GemsDespawned - entry.GemsDespawned, true);
+			WriteIntField("Gems Eaten", Scanner.GemsEaten, Scanner.GemsEaten - entry.GemsEaten, true);
 			WriteIntField("Gems Total", Scanner.GemsTotal, Scanner.GemsTotal - entry.GemsTotal);
 			WriteIntField("Enemies Killed", Scanner.EnemiesKilled, Scanner.EnemiesKilled - entry.EnemiesKilled);
 			WriteIntField("Enemies Alive", Scanner.EnemiesAlive, Scanner.EnemiesAlive - entry.EnemiesAlive);
@@ -171,10 +171,10 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			WriteTimeField("Level 3", Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt() - entry.LevelUpTime3);
 			WriteTimeField("Level 4", Scanner.LevelUpTime4.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() - entry.LevelUpTime4);
 
-			static void WriteIntField(string fieldName, int value, int valueDiff)
+			static void WriteIntField(string fieldName, int value, int valueDiff, bool negate = false)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight}");
-				Cmd.WriteLine($" ({valueDiff:+0;-#})", ColorUtils.GetImprovementColor(valueDiff));
+				Cmd.WriteLine($" ({valueDiff:+0;-#})", ColorUtils.GetImprovementColor(valueDiff * (negate ? -1 : 1)));
 			}
 
 			static void WritePercentageField(string fieldName, double value, double valueDiff)
@@ -247,8 +247,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine();
 
 			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Collected", us.GemsCollected, us.GemsCollectedDiff);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Despawned", us.GemsDespawned, us.GemsDespawnedDiff);
-			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Eaten", us.GemsEaten, us.GemsEatenDiff);
+			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Despawned", us.GemsDespawned, us.GemsDespawnedDiff, true);
+			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Eaten", us.GemsEaten, us.GemsEatenDiff, true);
 			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Gems Total", us.GemsTotal, us.GemsTotalDiff);
 			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Enemies Killed", us.EnemiesKilled, us.EnemiesKilledDiff);
 			WriteIntField(us.IsNewPlayerOnThisLeaderboard, "Enemies Alive", us.EnemiesAlive, us.EnemiesAliveDiff);
@@ -277,11 +277,11 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				Cmd.WriteLine();
 			}
 
-			static void WriteIntField(bool isNewUser, string fieldName, int value, int valueDiff)
+			static void WriteIntField(bool isNewUser, string fieldName, int value, int valueDiff, bool negate = false)
 			{
 				Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight}");
 				if (!isNewUser)
-					Cmd.Write($" ({valueDiff:+0;-#})", ColorUtils.GetImprovementColor(valueDiff));
+					Cmd.Write($" ({valueDiff:+0;-#})", ColorUtils.GetImprovementColor(valueDiff * (negate ? -1 : 1)));
 				Cmd.WriteLine();
 			}
 		}
