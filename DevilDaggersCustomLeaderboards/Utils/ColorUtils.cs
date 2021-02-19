@@ -115,15 +115,15 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 		public static CustomColor GetDaggerColor(int time, CustomLeaderboard leaderboard)
 		{
-			if (leaderboard.Homing != 0 && Compare(time, leaderboard.Homing))
+			if (Compare(time, leaderboard.TimeLeviathan))
 				return Homing;
-			if (Compare(time, leaderboard.Devil))
+			if (Compare(time, leaderboard.TimeDevil))
 				return Devil;
-			if (Compare(time, leaderboard.Golden))
+			if (Compare(time, leaderboard.TimeGolden))
 				return Golden;
-			if (Compare(time, leaderboard.Silver))
+			if (Compare(time, leaderboard.TimeSilver))
 				return Silver;
-			if (Compare(time, leaderboard.Bronze))
+			if (Compare(time, leaderboard.TimeBronze))
 				return Bronze;
 			return Default;
 
