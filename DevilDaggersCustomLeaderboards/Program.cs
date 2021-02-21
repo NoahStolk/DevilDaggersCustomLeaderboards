@@ -125,9 +125,9 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 #if DEBUG
-			Console.Title = $"{ApplicationDisplayName} {LocalVersion} (QOL) DEBUG";
+			Console.Title = $"{ApplicationDisplayName} {LocalVersion} DEBUG";
 #else
-			Console.Title = $"{ApplicationDisplayName} {LocalVersion} (QOL)";
+			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
 #endif
 		}
 
