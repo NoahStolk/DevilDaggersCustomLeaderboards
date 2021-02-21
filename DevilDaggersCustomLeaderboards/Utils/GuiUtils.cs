@@ -76,7 +76,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			}
 			else
 			{
-				Cmd.WriteLine("Not in game");
+				Cmd.WriteLine("Not in game", string.Empty);
 				for (int i = 0; i < 45; i++)
 					Cmd.WriteLine();
 			}
