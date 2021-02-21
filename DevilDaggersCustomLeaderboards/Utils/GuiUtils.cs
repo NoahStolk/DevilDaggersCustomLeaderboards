@@ -47,7 +47,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				Cmd.WriteLine("Gems In Arena", Math.Max(0, Scanner.GemsTotal - Scanner.GemsCollected - Scanner.GemsDespawned - Scanner.GemsEaten));
 				Cmd.WriteLine();
 				WriteEnemyHeaders("Enemies", "Alive", "Killed");
-				WriteEnemyVariables("Total", Scanner.EnemiesAlive, Scanner.EnemiesKilled, ColorUtils.Barbed);
+				WriteEnemyVariables("Total", Scanner.EnemiesAlive, Scanner.EnemiesKilled, ColorUtils.Entangled);
 				WriteEnemyVariables("Skull I", Scanner.Skull1sAlive, Scanner.Skull1sKilled, ColorUtils.Swarmed);
 				WriteEnemyVariables("Skull II", Scanner.Skull2sAlive, Scanner.Skull2sKilled, ColorUtils.Impaled);
 				WriteEnemyVariables("Skull III", Scanner.Skull3sAlive, Scanner.Skull3sKilled, ColorUtils.Gored);
@@ -62,7 +62,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				WriteEnemyVariables("Centipede", Scanner.CentipedesAlive, Scanner.CentipedesKilled, ColorUtils.Eviscerated);
 				WriteEnemyVariables("Gigapede", Scanner.GigapedesAlive, Scanner.GigapedesKilled, ColorUtils.Annihilated);
 				WriteEnemyVariables("Ghostpede", Scanner.GhostpedesAlive, Scanner.GhostpedesKilled, CustomColor.White);
-				WriteEnemyVariables("Thorn", Scanner.ThornsAlive, Scanner.ThornsKilled, ColorUtils.Barbed);
+				WriteEnemyVariables("Thorn", Scanner.ThornsAlive, Scanner.ThornsKilled, ColorUtils.Entangled);
 				WriteEnemyVariables("Leviathan", Scanner.LeviathansAlive, Scanner.LeviathansKilled, ColorUtils.Incarnated);
 				WriteEnemyVariables("Orb", Scanner.OrbsAlive, Scanner.OrbsKilled, ColorUtils.Discarnated);
 				Cmd.WriteLine();
