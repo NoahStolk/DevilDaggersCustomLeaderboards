@@ -11,7 +11,7 @@
 		Skull = 6,
 		Gray = 7,
 		DarkGray = 8,
-		Blue = 9,
+		Ghostpede = 9,
 		Green = 10,
 		LeviathanDagger = 11,
 		Red = 12,

@@ -35,6 +35,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const CustomColor Incarnated = CustomColor.Red;
 		public const CustomColor Discarnated = CustomColor.Magenta;
 		public const CustomColor Entangled = CustomColor.Thorn;
+		public const CustomColor Haunted = CustomColor.Ghostpede;
 
 		public const CustomColor Leviathan = CustomColor.LeviathanDagger;
 		public const CustomColor Devil = CustomColor.Red;
@@ -110,6 +111,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			13 => Incarnated,
 			14 => Discarnated,
 			15 => Entangled,
+			16 => Haunted,
 			_ => Fallen,
 		};
 

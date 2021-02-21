@@ -30,7 +30,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 			if (Scanner.IsInGame)
 			{
-				Cmd.WriteLine("Player", Scanner.IsPlayerAlive ? "Alive" : (GameInfo.GetDeathByType(Scanner.DeathType)?.Name ?? "Invalid death type"), Scanner.IsPlayerAlive ? CustomColor.Gray : ColorUtils.GetDeathColor(Scanner.DeathType));
+				Cmd.WriteLine("Player", Scanner.IsPlayerAlive ? "Alive" : (GameInfo.GetDeathByType(Scanner.DeathType, DevilDaggersCore.Game.GameVersion.V31)?.Name ?? "Invalid death type"), Scanner.IsPlayerAlive ? CustomColor.Gray : ColorUtils.GetDeathColor(Scanner.DeathType));
 				Cmd.WriteLine();
 				Cmd.WriteLine("Time", Scanner.Time.Value.ToString("0.0000", CultureInfo.InvariantCulture));
 				Cmd.WriteLine();
@@ -61,7 +61,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				WriteEnemyVariables("Spider Egg", Scanner.SpiderEggsAlive, Scanner.SpiderEggsKilled, ColorUtils.Intoxicated);
 				WriteEnemyVariables("Centipede", Scanner.CentipedesAlive, Scanner.CentipedesKilled, ColorUtils.Eviscerated);
 				WriteEnemyVariables("Gigapede", Scanner.GigapedesAlive, Scanner.GigapedesKilled, ColorUtils.Annihilated);
-				WriteEnemyVariables("Ghostpede", Scanner.GhostpedesAlive, Scanner.GhostpedesKilled, CustomColor.White);
+				WriteEnemyVariables("Ghostpede", Scanner.GhostpedesAlive, Scanner.GhostpedesKilled, ColorUtils.Haunted);
 				WriteEnemyVariables("Thorn", Scanner.ThornsAlive, Scanner.ThornsKilled, ColorUtils.Entangled);
 				WriteEnemyVariables("Leviathan", Scanner.LeviathansAlive, Scanner.LeviathansKilled, ColorUtils.Incarnated);
 				WriteEnemyVariables("Orb", Scanner.OrbsAlive, Scanner.OrbsKilled, ColorUtils.Discarnated);
