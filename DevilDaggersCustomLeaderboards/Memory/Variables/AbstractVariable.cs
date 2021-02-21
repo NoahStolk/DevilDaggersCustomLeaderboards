@@ -1,73 +1,68 @@
-﻿using DevilDaggersCustomLeaderboards.Utils;
+﻿using DevilDaggersCustomLeaderboards.Native;
 using System;
-using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
-	public abstract class AbstractVariable<TVariable>
+	public abstract class AbstractVariable<TVariable> : IVariable
 	{
-		private readonly int[] _offsets;
-
-		protected AbstractVariable(int localBaseAddress, uint size, params int[] offsets)
+		protected AbstractVariable(long address, uint size)
 		{
-			LocalBaseAddress = localBaseAddress;
+			Address = address;
 			Size = size;
-			_offsets = offsets;
-
-			BytesPrevious = new byte[Size].ToImmutableArray();
-			Bytes = new byte[Size].ToImmutableArray();
+			BytesPrevious = new byte[Size];
+			Bytes = new byte[Size];
 		}
 
-		protected ImmutableArray<byte> BytesPrevious { get; private set; }
-		protected ImmutableArray<byte> Bytes { get; private set; }
+		protected byte[] BytesPrevious { get; private set; }
+		protected byte[] Bytes { get; private set; }
 		public abstract TVariable ValuePrevious { get; }
 		public abstract TVariable Value { get; }
 
-		public int LocalBaseAddress { get; set; }
+		public long Address { get; set; }
 		public uint Size { get; set; }
+
+		public bool IsChanged { get; set; }
 
 		public static implicit operator TVariable(AbstractVariable<TVariable> variable)
 			=> variable.Value;
 
-		public void PreScan()
-			=> BytesPrevious = Bytes;
-
 		public void HardReset()
 		{
-			BytesPrevious = new byte[Size].ToImmutableArray();
-			Bytes = new byte[Size].ToImmutableArray();
+			BytesPrevious = new byte[Size];
+			Bytes = new byte[Size];
 		}
 
-		/// <summary>
-		/// <para>
-		/// Gets the bytes for this <see cref="AbstractVariable{T}"/>.
-		/// </para>
-		/// <para>
-		/// <see cref="ProcessModule.BaseAddress"/> is where the process has its memory start point.
-		/// <see cref="LocalBaseAddress"/> bytes ahead of the process base address brings us to 4 bytes (for a 32-bit application), which contain a memory address.
-		/// </para>
-		/// <para>
-		/// Use that memory address and add the next offset from <see cref="_offsets"/> to it to get to the bytes that contain the actual value.
-		/// Note that in the second read the process's base address is not needed.
-		/// </para>
-		/// </summary>
 		public void Scan()
 		{
+			Buffer.BlockCopy(Bytes, 0, BytesPrevious, 0, (int)Size);
+
 			try
 			{
-				if (Scanner.Instance.Process?.MainModule == null)
+				if (Scanner.Process?.MainModule == null)
 					return;
 
-				IntPtr ptr = MemoryUtils.ReadPointer(Scanner.Instance.Process.MainModule.BaseAddress + LocalBaseAddress);
-				for (int i = 0; i < _offsets.Length - 1; i++)
-					ptr = MemoryUtils.ReadPointer(ptr + _offsets[i]);
-				Bytes = MemoryUtils.Read(ptr + _offsets[^1], Size).ToImmutableArray();
+				NativeMethods.ReadProcessMemory(Scanner.ProcessAddress, new(Address), Bytes, Size, out _);
+				IsChanged = !AreBytesEqual();
 			}
 			catch (Exception ex)
 			{
 				Program.Log.Error($"Error while scanning {typeof(TVariable)} variable.", ex);
+
+#if DEBUG
+				throw;
+#endif
 			}
+		}
+
+		private bool AreBytesEqual()
+		{
+			for (int i = 0; i < Bytes.Length; i++)
+			{
+				if (Bytes[i] != BytesPrevious[i])
+					return false;
+			}
+
+			return true;
 		}
 
 		public override string? ToString()

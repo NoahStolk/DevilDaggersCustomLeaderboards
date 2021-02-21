@@ -1,5 +1,4 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
-using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Network;
@@ -8,6 +7,7 @@ using log4net;
 using log4net.Config;
 using log4net.Repository;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -21,6 +21,8 @@ namespace DevilDaggersCustomLeaderboards
 {
 	public static class Program
 	{
+		private const int _mainLoopSleepMilliseconds = 50;
+
 		private const float _minimalTime = 1f;
 
 #pragma warning disable IDE1006, SA1310 // Field names should not contain underscore
@@ -29,8 +31,6 @@ namespace DevilDaggersCustomLeaderboards
 		private const int SC_MAXIMIZE = 0xF030;
 		private const int SC_SIZE = 0xF000;
 #pragma warning restore IDE1006, SA1310 // Field names should not contain underscore
-
-		private static readonly Scanner _scanner = Scanner.Instance;
 
 		private static bool _isRecording = true;
 
@@ -78,7 +78,16 @@ namespace DevilDaggersCustomLeaderboards
 
 			Console.Clear();
 			while (true)
-				await ExecuteMainLoop();
+			{
+				try
+				{
+					await ExecuteMainLoop();
+				}
+				catch (Win32Exception)
+				{
+					// Ignore exceptions when Devil Daggers is closed.
+				}
+			}
 		}
 
 		private static void InitializeConsole()
@@ -90,7 +99,7 @@ namespace DevilDaggersCustomLeaderboards
 				try
 				{
 #pragma warning disable CA1416 // Validate platform compatibility
-					Console.WindowHeight = 40;
+					Console.WindowHeight = 60;
 					Console.WindowWidth = 170;
 #pragma warning restore CA1416 // Validate platform compatibility
 				}
@@ -111,6 +120,8 @@ namespace DevilDaggersCustomLeaderboards
 				ColorUtils.ModifyConsoleColor(5, 0xAF, 0x6B, 0x00);
 				ColorUtils.ModifyConsoleColor(6, 0x97, 0x6E, 0x2E);
 				ColorUtils.ModifyConsoleColor(7, 0xDD, 0xDD, 0xDD);
+				ColorUtils.ModifyConsoleColor(9, 0xC8, 0xA2, 0xC8);
+				ColorUtils.ModifyConsoleColor(11, 0x80, 0x06, 0x00);
 				ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
 			}
 
@@ -123,50 +134,37 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static async Task ExecuteMainLoop()
 		{
-			_scanner.FindWindow();
+			Scanner.FindWindow();
 
-			if (_scanner.Process == null)
+			if (Scanner.Process == null)
 			{
+				Scanner.IsInitialized = false;
 				Cmd.WriteLine("Devil Daggers not found. Make sure the game is running. Retrying in a second...");
 				Thread.Sleep(1000);
 				Console.Clear();
 				return;
 			}
 
-			_scanner.Open();
-
-			_scanner.PreScan();
-			_scanner.Scan();
+			Scanner.Open();
+			Scanner.Initialize();
+			Scanner.Scan();
 
 			if (!_isRecording)
 			{
-				if (_scanner.TimeFloat == _scanner.TimeFloat.ValuePrevious)
+				if (Scanner.Time == Scanner.Time.ValuePrevious)
 					return;
 
 				Console.Clear();
 				_isRecording = true;
-				_scanner.RestartScan();
+				Scanner.RestartScan();
 			}
 
-			if (_scanner.IsInLobby())
-			{
-				Console.Clear();
-				Cmd.WriteLine("Currently in lobby...");
-			}
-			else if (_scanner.IsInMenu())
-			{
-				Console.Clear();
-				Cmd.WriteLine("Currently in menu...");
-			}
-			else
-			{
-				_scanner.WriteRecording();
-			}
+			GuiUtils.WriteRecording();
 
-			Thread.Sleep(50);
+			Thread.Sleep(_mainLoopSleepMilliseconds);
 			Console.SetCursorPosition(0, 0);
 
-			if (!_scanner.IsAlive && _scanner.IsAlive.ValuePrevious)
+			if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious)
 			{
 				_isRecording = false;
 
@@ -189,14 +187,14 @@ namespace DevilDaggersCustomLeaderboards
 						Cmd.WriteLine("Upload successful", ColorUtils.Success);
 						Cmd.WriteLine(uploadSuccess.Message);
 						Cmd.WriteLine();
-						uploadSuccess.WriteLeaderboard(_scanner.PlayerId);
+						uploadSuccess.WriteLeaderboard(Scanner.PlayerId);
 
 						Cmd.WriteLine();
 
 						if (uploadSuccess.IsHighscore())
 							uploadSuccess.WriteHighscoreStats();
 						else
-							_scanner.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == _scanner.PlayerId));
+							GuiUtils.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == Scanner.PlayerId));
 
 						Cmd.WriteLine();
 					}
@@ -224,28 +222,46 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			try
 			{
-				string toEncrypt = string.Join(";", _scanner.PlayerId, _scanner.Time, _scanner.Gems, _scanner.Kills, _scanner.DeathType, _scanner.DaggersHit, _scanner.DaggersFired, _scanner.EnemiesAlive, _scanner.Homing, string.Join(",", new[] { _scanner.LevelUpTime2, _scanner.LevelUpTime3, _scanner.LevelUpTime4 }));
+				string toEncrypt = string.Join(
+					";",
+					Scanner.PlayerId,
+					Scanner.Time.ConvertToTimeInt(),
+					Scanner.GemsCollected,
+					Scanner.GemsDespawned,
+					Scanner.GemsEaten,
+					Scanner.GemsTotal,
+					Scanner.EnemiesKilled,
+					Scanner.DeathType,
+					Scanner.DaggersHit,
+					Scanner.DaggersFired,
+					Scanner.EnemiesAlive,
+					Scanner.HomingDaggers,
+					HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5),
+					string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
-				UploadRequest uploadRequest = new UploadRequest
+				UploadRequest uploadRequest = new()
 				{
-					DaggersFired = _scanner.DaggersFired,
-					DaggersHit = _scanner.DaggersHit,
+					DaggersFired = Scanner.DaggersFired,
+					DaggersHit = Scanner.DaggersHit,
 					ClientVersion = LocalVersion.ToString(),
-					DeathType = _scanner.DeathType,
-					EnemiesAlive = _scanner.EnemiesAlive,
-					Gems = _scanner.Gems,
-					Homing = _scanner.Homing,
-					Kills = _scanner.Kills,
-					LevelUpTime2 = _scanner.LevelUpTime2,
-					LevelUpTime3 = _scanner.LevelUpTime3,
-					LevelUpTime4 = _scanner.LevelUpTime4,
-					PlayerId = _scanner.PlayerId,
-					SpawnsetHash = _scanner.SpawnsetHash,
-					Time = _scanner.Time,
-					Username = _scanner.Username,
+					DeathType = Scanner.DeathType,
+					EnemiesAlive = Scanner.EnemiesAlive,
+					GemsCollected = Scanner.GemsCollected,
+					GemsDespawned = Scanner.GemsDespawned,
+					GemsEaten = Scanner.GemsEaten,
+					GemsTotal = Scanner.GemsTotal,
+					HomingDaggers = Scanner.HomingDaggers,
+					EnemiesKilled = Scanner.EnemiesKilled,
+					LevelUpTime2 = Scanner.LevelUpTime2.ConvertToTimeInt(),
+					LevelUpTime3 = Scanner.LevelUpTime3.ConvertToTimeInt(),
+					LevelUpTime4 = Scanner.LevelUpTime4.ConvertToTimeInt(),
+					PlayerId = Scanner.PlayerId,
+					SurvivalHashMd5 = Scanner.SurvivalHashMd5,
+					Time = Scanner.Time.ConvertToTimeInt(),
+					PlayerName = Scanner.PlayerName,
 					Validation = HttpUtility.HtmlEncode(validation),
-					GameStates = _scanner.GameStates,
+					GameStates = Scanner.GameStates,
 #if DEBUG
 					BuildMode = BuildMode.Debug,
 #else
@@ -271,28 +287,18 @@ namespace DevilDaggersCustomLeaderboards
 
 		private static string? ValidateRunLocally()
 		{
-			if (_scanner.PlayerId <= 0)
+			if (Scanner.PlayerId <= 0)
 			{
-				Log.Warn($"Invalid player ID: {_scanner.PlayerId}");
+				Log.Warn($"Invalid player ID: {Scanner.PlayerId}");
 				return "Invalid player ID.";
 			}
 
-			if (_scanner.IsReplay)
+			if (Scanner.IsReplay)
 				return "Run is replay. Unable to validate.";
 
 			// This should fix the broken submissions that occasionally get sent for some reason.
-			if (_scanner.Time < _minimalTime)
+			if (Scanner.Time < _minimalTime)
 				return $"Timer is under {_minimalTime:0.0000}. Unable to validate.";
-
-			if (string.IsNullOrEmpty(_scanner.SpawnsetHash))
-			{
-				Log.Warn("Spawnset hash has not been calculated.");
-				return "Spawnset hash has not been calculated.";
-			}
-
-			// This is to prevent people from initially starting an easy spawnset to get e.g. 800 seconds, then change the survival file during the run to a different (harder) spawnset to trick the application into uploading it to the wrong leaderboard.
-			if (HashUtils.CalculateCurrentSurvivalHash() != _scanner.SpawnsetHash)
-				return "Cheats suspected. Spawnset hash has been changed since the run was started.";
 
 			return null;
 		}
