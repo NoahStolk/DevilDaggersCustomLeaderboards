@@ -31,7 +31,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 			if (Scanner.IsInGame)
 			{
-				Cmd.WriteLine("Player", Scanner.IsPlayerAlive ? "Alive" : (GameInfo.GetDeathByType(Scanner.DeathType, DevilDaggersCore.Game.GameVersion.V31)?.Name ?? "Invalid death type"), Scanner.IsPlayerAlive ? CustomColor.Gray : ColorUtils.GetDeathColor(Scanner.DeathType));
+				Cmd.WriteLine("Player", Scanner.IsPlayerAlive ? "Alive" : (GameInfo.GetDeathByType(DevilDaggersCore.Game.GameVersion.V31, Scanner.DeathType)?.Name ?? "Invalid death type"), Scanner.IsPlayerAlive ? CustomColor.Gray : ColorUtils.GetDeathColor(Scanner.DeathType));
 				Cmd.WriteLine();
 				Cmd.WriteLine("Time", Scanner.Time.Value.ToString("0.0000", CultureInfo.InvariantCulture));
 				Cmd.WriteLine();
@@ -148,7 +148,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			double accuracy = Scanner.DaggersFired == 0 ? 0 : Scanner.DaggersHit / (double)Scanner.DaggersFired;
 			double accuracyOld = entry.DaggersFired == 0 ? 0 : entry.DaggersHit / (double)entry.DaggersFired;
 
-			Cmd.Write($"{GameInfo.GetDeathByType(Scanner.DeathType)?.Name ?? "Invalid death type"}", ColorUtils.GetDeathColor(Scanner.DeathType));
+			Cmd.Write($"{GameInfo.GetDeathByType(DevilDaggersCore.Game.GameVersion.V31, Scanner.DeathType)?.Name ?? "Invalid death type"}", ColorUtils.GetDeathColor(Scanner.DeathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
@@ -229,7 +229,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			double accuracyOld = shotsFiredOld == 0 ? 0 : shotsHitOld / (double)shotsFiredOld;
 			double accuracyDiff = accuracy - accuracyOld;
 
-			Cmd.Write($"{GameInfo.GetDeathByType(deathType)?.Name ?? "Invalid death type"}", ColorUtils.GetDeathColor(deathType));
+			Cmd.Write($"{GameInfo.GetDeathByType(DevilDaggersCore.Game.GameVersion.V31, deathType)?.Name ?? "Invalid death type"}", ColorUtils.GetDeathColor(deathType));
 			Cmd.WriteLine();
 			Cmd.WriteLine();
 
