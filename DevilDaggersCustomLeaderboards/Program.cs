@@ -235,7 +235,7 @@ namespace DevilDaggersCustomLeaderboards
 					Scanner.DaggersHit,
 					Scanner.DaggersFired,
 					Scanner.EnemiesAlive,
-					Scanner.HomingDaggers,
+					Scanner.HomingDaggersStored,
 					HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5),
 					string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
@@ -251,7 +251,7 @@ namespace DevilDaggersCustomLeaderboards
 					GemsDespawned = Scanner.GemsDespawned,
 					GemsEaten = Scanner.GemsEaten,
 					GemsTotal = Scanner.GemsTotal,
-					HomingDaggers = Scanner.HomingDaggers,
+					HomingDaggers = Scanner.HomingDaggersStored,
 					EnemiesKilled = Scanner.EnemiesKilled,
 					LevelUpTime2 = Scanner.LevelUpTime2.ConvertToTimeInt(),
 					LevelUpTime3 = Scanner.LevelUpTime3.ConvertToTimeInt(),

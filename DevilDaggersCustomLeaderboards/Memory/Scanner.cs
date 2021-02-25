@@ -10,7 +10,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public static class Scanner
 	{
-		private const long _ddstatsMarkerOffset = 0x00257BD0;
+		private const long _ddstatsMarkerOffset = 0x00226BD0;
 
 		public static bool IsInitialized { get; set; }
 
@@ -27,10 +27,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static IntVariable DaggersHit { get; private set; } = new(0);
 		public static IntVariable EnemiesAlive { get; private set; } = new(0);
 		public static IntVariable LevelGems { get; private set; } = new(0);
-		public static IntVariable HomingDaggers { get; private set; } = new(0);
+		public static IntVariable HomingDaggersStored { get; private set; } = new(0);
 		public static IntVariable GemsDespawned { get; private set; } = new(0);
 		public static IntVariable GemsEaten { get; private set; } = new(0);
 		public static IntVariable GemsTotal { get; private set; } = new(0);
+		public static IntVariable HomingDaggersEaten { get; private set; } = new(0);
 
 		public static ShortVariable Skull1sAlive { get; private set; } = new(0);
 		public static ShortVariable Skull2sAlive { get; private set; } = new(0);
@@ -122,10 +123,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			DaggersHit = InitiateVariable(addr => new IntVariable(addr), ref address);
 			EnemiesAlive = InitiateVariable(addr => new IntVariable(addr), ref address);
 			LevelGems = InitiateVariable(addr => new IntVariable(addr), ref address);
-			HomingDaggers = InitiateVariable(addr => new IntVariable(addr), ref address);
+			HomingDaggersStored = InitiateVariable(addr => new IntVariable(addr), ref address);
 			GemsDespawned = InitiateVariable(addr => new IntVariable(addr), ref address);
 			GemsEaten = InitiateVariable(addr => new IntVariable(addr), ref address);
 			GemsTotal = InitiateVariable(addr => new IntVariable(addr), ref address);
+			HomingDaggersEaten = InitiateVariable(addr => new IntVariable(addr), ref address);
 
 			Skull1sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
 			Skull2sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
@@ -278,59 +280,10 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					LevelUpTime4.Scan();
 
 					if (LevelGems == 70 || LevelGems == 71)
-						HomingDaggers.Scan();
-				}
-
-				if (Time >= GameStates.Count && Time > 0)
-				{
-					GameStates.Add(new()
 					{
-						GemsCollected = GemsCollected,
-						GemsDespawned = GemsDespawned,
-						GemsEaten = GemsEaten,
-						GemsTotal = GemsTotal,
-						EnemiesKilled = EnemiesKilled,
-						EnemiesAlive = EnemiesAlive,
-						DaggersFired = DaggersFired,
-						DaggersHit = DaggersHit,
-						HomingDaggers = HomingDaggers,
-
-						Skull1sAlive = Skull1sAlive,
-						Skull2sAlive = Skull2sAlive,
-						Skull3sAlive = Skull3sAlive,
-						SpiderlingsAlive = SpiderlingsAlive,
-						Skull4sAlive = Skull4sAlive,
-						Squid1sAlive = Squid1sAlive,
-						Squid2sAlive = Squid2sAlive,
-						Squid3sAlive = Squid3sAlive,
-						CentipedesAlive = CentipedesAlive,
-						GigapedesAlive = GigapedesAlive,
-						Spider1sAlive = Spider1sAlive,
-						Spider2sAlive = Spider2sAlive,
-						LeviathansAlive = LeviathansAlive,
-						OrbsAlive = OrbsAlive,
-						ThornsAlive = ThornsAlive,
-						GhostpedesAlive = GhostpedesAlive,
-						SpiderEggsAlive = SpiderEggsAlive,
-
-						Skull1sKilled = Skull1sKilled,
-						Skull2sKilled = Skull2sKilled,
-						Skull3sKilled = Skull3sKilled,
-						SpiderlingsKilled = SpiderlingsKilled,
-						Skull4sKilled = Skull4sKilled,
-						Squid1sKilled = Squid1sKilled,
-						Squid2sKilled = Squid2sKilled,
-						Squid3sKilled = Squid3sKilled,
-						CentipedesKilled = CentipedesKilled,
-						GigapedesKilled = GigapedesKilled,
-						Spider1sKilled = Spider1sKilled,
-						Spider2sKilled = Spider2sKilled,
-						LeviathansKilled = LeviathansKilled,
-						OrbsKilled = OrbsKilled,
-						ThornsKilled = ThornsKilled,
-						GhostpedesKilled = GhostpedesKilled,
-						SpiderEggsKilled = SpiderEggsKilled,
-					});
+						HomingDaggersStored.Scan();
+						HomingDaggersEaten.Scan();
+					}
 				}
 			}
 			else
@@ -347,7 +300,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void RestartScan()
 		{
-			HomingDaggers.HardReset();
+			HomingDaggersStored.HardReset();
 			GameStates.Clear();
 		}
 	}

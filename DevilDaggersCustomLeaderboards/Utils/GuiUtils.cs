@@ -24,6 +24,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
 			Cmd.WriteLine("Is Replay", Scanner.IsReplay);
 			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
+			Cmd.WriteLine("Status", (Status)Scanner.Status.Value);
 			Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
 			Cmd.WriteLine();
 #endif
@@ -38,13 +39,15 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				Cmd.WriteLine("Level 2", Scanner.LevelUpTime2.Value.ToString("0.0000", CultureInfo.InvariantCulture));
 				Cmd.WriteLine("Level 3", Scanner.LevelUpTime3.Value.ToString("0.0000", CultureInfo.InvariantCulture));
 				Cmd.WriteLine("Level 4", Scanner.LevelUpTime4.Value.ToString("0.0000", CultureInfo.InvariantCulture));
-				WriteVariable("Homing Daggers", Scanner.HomingDaggers, CustomColor.Magenta);
 				Cmd.WriteLine();
 				WriteVariable("Gems Collected", Scanner.GemsCollected, CustomColor.Red);
 				WriteVariable("Gems Despawned", Scanner.GemsDespawned, CustomColor.Red);
 				WriteVariable("Gems Eaten", Scanner.GemsEaten, CustomColor.Green);
 				WriteVariable("Gems Total", Scanner.GemsTotal, CustomColor.Red);
 				Cmd.WriteLine("Gems In Arena", Math.Max(0, Scanner.GemsTotal - Scanner.GemsCollected - Scanner.GemsDespawned - Scanner.GemsEaten));
+				Cmd.WriteLine();
+				WriteVariable("Homing Stored", Scanner.HomingDaggersStored, CustomColor.Magenta);
+				WriteVariable("Homing Eaten", Scanner.HomingDaggersEaten, CustomColor.Ghostpede);
 				Cmd.WriteLine();
 				WriteEnemyHeaders("Enemies", "Alive", "Killed");
 				WriteEnemyVariables("Total", Scanner.EnemiesAlive, Scanner.EnemiesKilled, ColorUtils.Entangled);
@@ -77,7 +80,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			else
 			{
 				Cmd.WriteLine("Not in game", string.Empty);
-				for (int i = 0; i < 45; i++)
+				for (int i = 0; i < 47; i++)
 					Cmd.WriteLine();
 			}
 
@@ -163,7 +166,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			WriteIntField("Daggers Fired", Scanner.DaggersFired, Scanner.DaggersFired - entry.DaggersFired);
 			WriteIntField("Daggers Hit", Scanner.DaggersHit, Scanner.DaggersHit - entry.DaggersHit);
 			WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
-			WriteIntField("Homing Daggers", Scanner.HomingDaggers, Scanner.HomingDaggers - entry.HomingDaggers);
+			WriteIntField("Homing Daggers", Scanner.HomingDaggersStored, Scanner.HomingDaggersStored - entry.HomingDaggers);
 			WriteTimeField("Level 2", Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime2.ConvertToTimeInt() - entry.LevelUpTime2);
 			WriteTimeField("Level 3", Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt() - entry.LevelUpTime3);
 			WriteTimeField("Level 4", Scanner.LevelUpTime4.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() - entry.LevelUpTime4);
