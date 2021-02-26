@@ -293,9 +293,6 @@ namespace DevilDaggersCustomLeaderboards
 				return "Invalid player ID.";
 			}
 
-			if (Scanner.IsReplay)
-				return "Run is replay. Unable to validate.";
-
 			// This should fix the broken submissions that occasionally get sent for some reason.
 			if (Scanner.Time < _minimalTime)
 				return $"Timer is under {_minimalTime:0.0000}. Unable to validate.";
