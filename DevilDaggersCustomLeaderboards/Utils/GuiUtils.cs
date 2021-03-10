@@ -46,7 +46,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				WriteVariable("Gems Total", Scanner.GemsTotal, CustomColor.Red);
 				Cmd.WriteLine("Gems In Arena", Math.Max(0, Scanner.GemsTotal - Scanner.GemsCollected - Scanner.GemsDespawned - Scanner.GemsEaten));
 				Cmd.WriteLine();
-				WriteVariable("Homing Stored", Scanner.HomingDaggersStored, CustomColor.Magenta);
+				WriteVariable("Homing Stored", Scanner.HomingDaggers, CustomColor.Magenta);
 				WriteVariable("Homing Eaten", Scanner.HomingDaggersEaten, CustomColor.Ghostpede);
 				Cmd.WriteLine();
 				WriteEnemyHeaders("Enemies", "Alive", "Killed");
@@ -166,7 +166,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			WriteIntField("Daggers Fired", Scanner.DaggersFired, Scanner.DaggersFired - entry.DaggersFired);
 			WriteIntField("Daggers Hit", Scanner.DaggersHit, Scanner.DaggersHit - entry.DaggersHit);
 			WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
-			WriteIntField("Homing Daggers", Scanner.HomingDaggersStored, Scanner.HomingDaggersStored - entry.HomingDaggers);
+			WriteIntField("Homing Daggers", Scanner.HomingDaggers, Scanner.HomingDaggers - entry.HomingDaggers);
 			WriteTimeField("Level 2", Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime2.ConvertToTimeInt() - entry.LevelUpTime2);
 			WriteTimeField("Level 3", Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt() - entry.LevelUpTime3);
 			WriteTimeField("Level 4", Scanner.LevelUpTime4.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() - entry.LevelUpTime4);

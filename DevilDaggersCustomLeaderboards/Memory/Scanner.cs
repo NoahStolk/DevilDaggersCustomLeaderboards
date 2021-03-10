@@ -27,7 +27,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static IntVariable DaggersHit { get; private set; } = new(0);
 		public static IntVariable EnemiesAlive { get; private set; } = new(0);
 		public static IntVariable LevelGems { get; private set; } = new(0);
-		public static IntVariable HomingDaggersStored { get; private set; } = new(0);
+		public static IntVariable HomingDaggers { get; private set; } = new(0);
 		public static IntVariable GemsDespawned { get; private set; } = new(0);
 		public static IntVariable GemsEaten { get; private set; } = new(0);
 		public static IntVariable GemsTotal { get; private set; } = new(0);
@@ -123,7 +123,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			DaggersHit = InitiateVariable(addr => new IntVariable(addr), ref address);
 			EnemiesAlive = InitiateVariable(addr => new IntVariable(addr), ref address);
 			LevelGems = InitiateVariable(addr => new IntVariable(addr), ref address);
-			HomingDaggersStored = InitiateVariable(addr => new IntVariable(addr), ref address);
+			HomingDaggers = InitiateVariable(addr => new IntVariable(addr), ref address);
 			GemsDespawned = InitiateVariable(addr => new IntVariable(addr), ref address);
 			GemsEaten = InitiateVariable(addr => new IntVariable(addr), ref address);
 			GemsTotal = InitiateVariable(addr => new IntVariable(addr), ref address);
@@ -281,7 +281,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 					if (LevelGems == 70 || LevelGems == 71)
 					{
-						HomingDaggersStored.Scan();
+						HomingDaggers.Scan();
 						HomingDaggersEaten.Scan();
 					}
 				}
@@ -300,7 +300,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void RestartScan()
 		{
-			HomingDaggersStored.HardReset();
+			HomingDaggers.HardReset();
 			GameStates.Clear();
 		}
 	}
