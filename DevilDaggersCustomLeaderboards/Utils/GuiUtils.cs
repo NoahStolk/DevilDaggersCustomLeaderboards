@@ -166,7 +166,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			WriteIntField("Daggers Fired", Scanner.DaggersFired, Scanner.DaggersFired - entry.DaggersFired);
 			WriteIntField("Daggers Hit", Scanner.DaggersHit, Scanner.DaggersHit - entry.DaggersHit);
 			WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
-			WriteIntField("Homing Daggers", Scanner.HomingDaggers, Scanner.HomingDaggers - entry.HomingDaggers);
+			WriteIntField("Homing Stored", Scanner.HomingDaggers, Scanner.HomingDaggers - entry.HomingDaggers);
+			WriteIntField("Homing Eaten", Scanner.HomingDaggersEaten, Scanner.HomingDaggersEaten - entry.HomingDaggersEaten);
 			WriteTimeField("Level 2", Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime2.ConvertToTimeInt() - entry.LevelUpTime2);
 			WriteTimeField("Level 3", Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt() - entry.LevelUpTime3);
 			WriteTimeField("Level 4", Scanner.LevelUpTime4.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() - entry.LevelUpTime4);
@@ -255,7 +256,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Daggers Fired", us.DaggersFired, us.DaggersFiredDiff);
 			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Daggers Hit", us.DaggersHit, us.DaggersHitDiff);
 			WritePercentageField(!us.IsNewPlayerOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
-			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Homing Daggers", us.HomingDaggers, us.HomingDaggersDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Homing Stored", us.HomingDaggers, us.HomingDaggersDiff);
+			WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Homing Eaten", us.HomingDaggersEaten, us.HomingDaggersEatenDiff);
 
 			WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime2 != us.LevelUpTime2Diff, "Level 2", us.LevelUpTime2, us.LevelUpTime2Diff);
 			WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime3 != us.LevelUpTime3Diff, "Level 3", us.LevelUpTime3, us.LevelUpTime3Diff);
