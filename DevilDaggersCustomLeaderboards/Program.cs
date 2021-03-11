@@ -237,6 +237,7 @@ namespace DevilDaggersCustomLeaderboards
 					Scanner.EnemiesAlive,
 					Scanner.HomingDaggers,
 					Scanner.HomingDaggersEaten,
+					Scanner.IsReplay ? 1 : 0,
 					HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5),
 					string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
 				string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
@@ -262,6 +263,7 @@ namespace DevilDaggersCustomLeaderboards
 					SurvivalHashMd5 = Scanner.SurvivalHashMd5,
 					Time = Scanner.Time.ConvertToTimeInt(),
 					PlayerName = Scanner.PlayerName,
+					IsReplay = Scanner.IsReplay,
 					Validation = HttpUtility.HtmlEncode(validation),
 					GameStates = Scanner.GameStates,
 #if DEBUG
