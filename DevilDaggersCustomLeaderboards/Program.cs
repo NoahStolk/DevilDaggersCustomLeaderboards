@@ -72,7 +72,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 			else
 			{
-				Cmd.WriteLine("Failed to check for updates.\n\n(Press any key to continue.)", ColorUtils.Error);
+				Cmd.WriteLine($"Failed to check for updates (host: {NetworkHandler.BaseUrl}).\n\n(Press any key to continue.)", ColorUtils.Error);
 				Console.ReadKey();
 			}
 
@@ -99,7 +99,11 @@ namespace DevilDaggersCustomLeaderboards
 				try
 				{
 #pragma warning disable CA1416 // Validate platform compatibility
+#if DEBUG
+					Console.WindowHeight = 80;
+#else
 					Console.WindowHeight = 60;
+#endif
 					Console.WindowWidth = 170;
 #pragma warning restore CA1416 // Validate platform compatibility
 				}
