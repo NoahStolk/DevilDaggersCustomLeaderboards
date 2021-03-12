@@ -98,8 +98,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void FindWindow()
 		{
-			if (Process == null)
-				Process = ProcessUtils.GetDevilDaggersProcess();
+			Process = ProcessUtils.GetDevilDaggersProcess();
 		}
 
 		public static void Open()
