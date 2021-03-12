@@ -28,12 +28,12 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			{
 				Cmd.WriteLine("Player", Scanner.IsPlayerAlive ? "Alive" : (GameInfo.GetDeathByType(DevilDaggersCore.Game.GameVersion.V31, Scanner.DeathType)?.Name ?? "Invalid death type"), Scanner.IsPlayerAlive ? CustomColor.Gray : ColorUtils.GetDeathColor(Scanner.DeathType));
 				Cmd.WriteLine();
-				Cmd.WriteLine("Time", Scanner.Time.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+				Cmd.WriteLine("Time", Scanner.Time.Value.ToString("0.0000"));
 				Cmd.WriteLine();
 				Cmd.WriteLine("Hand", $"Level {GetHand(Scanner.LevelGems)}");
-				Cmd.WriteLine("Level 2", Scanner.LevelUpTime2.Value.ToString("0.0000", CultureInfo.InvariantCulture));
-				Cmd.WriteLine("Level 3", Scanner.LevelUpTime3.Value.ToString("0.0000", CultureInfo.InvariantCulture));
-				Cmd.WriteLine("Level 4", Scanner.LevelUpTime4.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+				Cmd.WriteLine("Level 2", Scanner.LevelUpTime2.Value.ToString("0.0000"));
+				Cmd.WriteLine("Level 3", Scanner.LevelUpTime3.Value.ToString("0.0000"));
+				Cmd.WriteLine("Level 4", Scanner.LevelUpTime4.Value.ToString("0.0000"));
 				Cmd.WriteLine();
 				WriteVariable("Gems Collected", Scanner.GemsCollected, CustomColor.Red);
 				WriteVariable("Gems Despawned", Scanner.GemsDespawned, CustomColor.Red);
@@ -68,8 +68,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				WriteVariable("Daggers Fired", Scanner.DaggersFired, CustomColor.Yellow);
 				Cmd.WriteLine("Accuracy", $"{(Scanner.DaggersFired == 0 ? 0 : Scanner.DaggersHit / (float)Scanner.DaggersFired * 100):0.00}%");
 				Cmd.WriteLine();
-				Cmd.WriteLine("Leviathan Down", Scanner.LeviathanDownTime.Value.ToString("0.0000", CultureInfo.InvariantCulture));
-				Cmd.WriteLine("Orb Down", Scanner.OrbDownTime.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+				Cmd.WriteLine("Leviathan Down", Scanner.LeviathanDownTime.Value.ToString("0.0000"));
+				Cmd.WriteLine("Orb Down", Scanner.OrbDownTime.Value.ToString("0.0000"));
 				Cmd.WriteLine();
 			}
 			else
@@ -141,10 +141,10 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
 			Cmd.WriteLine();
 			Cmd.WriteLine("Homing Max", Scanner.HomingMax);
-			Cmd.WriteLine("Homing Max Time", Scanner.HomingMaxTime.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Homing Max Time", Scanner.HomingMaxTime.Value.ToString("0.0000"));
 			Cmd.WriteLine("Enemies Alive Max", Scanner.EnemiesAliveMax);
-			Cmd.WriteLine("Enemies Alive Max Time", Scanner.EnemiesAliveMaxTime.Value.ToString("0.0000", CultureInfo.InvariantCulture));
-			Cmd.WriteLine("Max Time", Scanner.MaxTime.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Enemies Alive Max Time", Scanner.EnemiesAliveMaxTime.Value.ToString("0.0000"));
+			Cmd.WriteLine("Max Time", Scanner.MaxTime.Value.ToString("0.0000"));
 			Cmd.WriteLine();
 		}
 
@@ -217,8 +217,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		{
 			for (int i = 0; i < us.TotalPlayers; i++)
 			{
-				int spaceCountCurrent = (i + 1).ToString(CultureInfo.InvariantCulture).Length;
-				int spaceCountTotal = us.TotalPlayers.ToString(CultureInfo.InvariantCulture).Length;
+				int spaceCountCurrent = (i + 1).ToString().Length;
+				int spaceCountTotal = us.TotalPlayers.ToString().Length;
 
 				CustomEntry entry = us.Entries[i];
 				CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard);
