@@ -88,6 +88,12 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static IntVariable Status { get; private set; } = new(0);
 
+		public static IntVariable HomingMax { get; private set; } = new(0);
+		public static FloatVariable HomingMaxTime { get; private set; } = new(0);
+		public static IntVariable EnemiesAliveMax { get; private set; } = new(0);
+		public static FloatVariable EnemiesAliveMaxTime { get; private set; } = new(0);
+		public static FloatVariable MaxTime { get; private set; } = new(0);
+
 		public static List<GameState> GameStates { get; } = new();
 
 		public static void FindWindow()
@@ -184,6 +190,12 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			Status = InitiateVariable(addr => new IntVariable(addr), ref address);
 
+			HomingMax = InitiateVariable(addr => new IntVariable(addr), ref address);
+			HomingMaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
+			EnemiesAliveMax = InitiateVariable(addr => new IntVariable(addr), ref address);
+			EnemiesAliveMaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
+			MaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
+
 			IsInitialized = true;
 
 			static TVariable InitiateVariable<TVariable>(Func<long, TVariable> constructor, ref long address)
@@ -224,6 +236,12 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			IsInGame.Scan();
 			SurvivalHashMd5.Scan();
 			Status.Scan();
+
+			HomingMax.Scan();
+			HomingMaxTime.Scan();
+			EnemiesAliveMax.Scan();
+			EnemiesAliveMaxTime.Scan();
+			MaxTime.Scan();
 
 			if (IsPlayerAlive)
 			{

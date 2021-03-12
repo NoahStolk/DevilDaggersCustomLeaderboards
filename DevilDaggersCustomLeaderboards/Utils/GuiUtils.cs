@@ -21,12 +21,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine();
 
 #if DEBUG
-			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
-			Cmd.WriteLine("Is Replay", Scanner.IsReplay);
-			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
-			Cmd.WriteLine("Status", (Status)Scanner.Status.Value);
-			Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
-			Cmd.WriteLine();
+			WriteDebug();
 #endif
 
 			if (Scanner.IsInGame)
@@ -137,10 +132,27 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			}
 		}
 
+		private static void WriteDebug()
+		{
+			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
+			Cmd.WriteLine("Is Replay", Scanner.IsReplay);
+			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
+			Cmd.WriteLine("Status", (Status)Scanner.Status.Value);
+			Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
+			Cmd.WriteLine();
+			Cmd.WriteLine("Homing Max", Scanner.HomingMax);
+			Cmd.WriteLine("Homing Max Time", Scanner.HomingMaxTime.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Enemies Alive Max", Scanner.EnemiesAliveMax);
+			Cmd.WriteLine("Enemies Alive Max Time", Scanner.EnemiesAliveMaxTime.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine("Max Time", Scanner.MaxTime.Value.ToString("0.0000", CultureInfo.InvariantCulture));
+			Cmd.WriteLine();
+		}
+
 		public static void WriteStats(CustomLeaderboard leaderboard, CustomEntry? entry)
 		{
 			if (entry == null)
 			{
+				// Should never happen.
 				Cmd.WriteLine("Current player not found on the leaderboard.");
 				return;
 			}
@@ -156,6 +168,10 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
 			Cmd.Write($"{Scanner.Time.Value,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(Scanner.Time.ConvertToTimeInt(), leaderboard));
 			Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
+
+#if DEBUG
+			WriteDebug();
+#endif
 
 			WriteIntField("Gems Collected", Scanner.GemsCollected, Scanner.GemsCollected - entry.GemsCollected);
 			WriteIntField("Gems Despawned", Scanner.GemsDespawned, Scanner.GemsDespawned - entry.GemsDespawned, true);
