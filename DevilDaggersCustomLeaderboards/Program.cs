@@ -36,6 +36,8 @@ namespace DevilDaggersCustomLeaderboards
 
 		public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType ?? throw new("Could not retrieve logger declaring type."));
 
+		private static long _marker;
+
 		public static string ApplicationName => "DevilDaggersCustomLeaderboards";
 		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
 
@@ -75,6 +77,11 @@ namespace DevilDaggersCustomLeaderboards
 				Cmd.WriteLine($"Failed to check for updates (host: {NetworkHandler.BaseUrl}).\n\n(Press any key to continue.)", ColorUtils.Error);
 				Console.ReadKey();
 			}
+
+			Cmd.WriteLine("Retrieving marker...");
+
+			DdclSettings? settings = await NetworkHandler.Instance.ApiClient.Tools_GetDdclSettingsAsync();
+			_marker = settings.Marker;
 
 			Console.Clear();
 			while (true)
@@ -150,7 +157,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 			Scanner.Open();
-			Scanner.Initialize();
+			Scanner.Initialize(_marker);
 			Scanner.Scan();
 
 			if (!_isRecording)
