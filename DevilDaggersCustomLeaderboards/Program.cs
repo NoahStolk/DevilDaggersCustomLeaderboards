@@ -55,20 +55,19 @@ namespace DevilDaggersCustomLeaderboards
 			InitializeConsole();
 
 			Cmd.WriteLine("Checking for updates...");
-
-			await NetworkHandler.Instance.GetOnlineTool();
-
+			Tool tool = (await NetworkHandler.Instance.ApiClient.Tools_GetToolsAsync(ApplicationName))[0];
 			Console.Clear();
-			if (NetworkHandler.Instance.Tool != null)
+
+			if (tool != null)
 			{
-				if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumberRequired))
+				if (LocalVersion < Version.Parse(tool.VersionNumberRequired))
 				{
-					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName} ({LocalVersion}).\n\nYou must use version {NetworkHandler.Instance.Tool.VersionNumberRequired} or higher.\n\nPlease update the program.\n\n(Press any key to continue.)", ColorUtils.Error);
+					Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName} ({LocalVersion}).\n\nYou must use version {tool.VersionNumberRequired} or higher.\n\nPlease update the program.\n\n(Press any key to continue.)", ColorUtils.Error);
 					Console.ReadKey();
 				}
-				else if (LocalVersion < Version.Parse(NetworkHandler.Instance.Tool.VersionNumber))
+				else if (LocalVersion < Version.Parse(tool.VersionNumber))
 				{
-					Cmd.WriteLine($"{ApplicationDisplayName} version {NetworkHandler.Instance.Tool.VersionNumber} is available.\n\n(Press any key to continue.)", ColorUtils.Warning);
+					Cmd.WriteLine($"{ApplicationDisplayName} version {tool.VersionNumber} is available.\n\n(Press any key to continue.)", ColorUtils.Warning);
 					Console.ReadKey();
 				}
 			}
@@ -79,11 +78,9 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 			Cmd.WriteLine("Retrieving marker...");
-
-			DdclSettings? settings = await NetworkHandler.Instance.ApiClient.Tools_GetDdclSettingsAsync();
-			_marker = settings.Marker;
-
+			_marker = (await NetworkHandler.Instance.ApiClient.Tools_GetDdclSettingsAsync()).Marker;
 			Console.Clear();
+
 			while (true)
 			{
 				try

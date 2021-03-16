@@ -1,6 +1,5 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
 using System;
-using System.Threading.Tasks;
 
 namespace DevilDaggersCustomLeaderboards.Network
 {
@@ -22,19 +21,5 @@ namespace DevilDaggersCustomLeaderboards.Network
 		public static NetworkHandler Instance => _lazy.Value;
 
 		public DevilDaggersInfoApiClient ApiClient { get; }
-
-		public Tool? Tool { get; private set; }
-
-		public async Task GetOnlineTool()
-		{
-			try
-			{
-				Tool = (await ApiClient.Tools_GetToolsAsync(Program.ApplicationName))[0];
-			}
-			catch (Exception ex)
-			{
-				Program.Log.Error("An error occurred while attempting to retrieve tool information from the API.", ex);
-			}
-		}
 	}
 }
