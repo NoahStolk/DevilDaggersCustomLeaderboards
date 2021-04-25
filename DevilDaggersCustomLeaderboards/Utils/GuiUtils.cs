@@ -4,7 +4,6 @@ using DevilDaggersCustomLeaderboards.Enumerators;
 using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using System;
-using System.Globalization;
 using Cmd = DevilDaggersCustomLeaderboards.Utils.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards.Utils
@@ -145,6 +144,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("Enemies Alive Max", Scanner.EnemiesAliveMax);
 			Cmd.WriteLine("Enemies Alive Max Time", Scanner.EnemiesAliveMaxTime.Value.ToString("0.0000"));
 			Cmd.WriteLine("Max Time", Scanner.MaxTime.Value.ToString("0.0000"));
+			Cmd.WriteLine("Prohibited Mods", Scanner.ProhibitedMods);
 			Cmd.WriteLine();
 		}
 

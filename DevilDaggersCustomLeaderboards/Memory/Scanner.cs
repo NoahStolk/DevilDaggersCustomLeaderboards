@@ -92,6 +92,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static FloatVariable EnemiesAliveMaxTime { get; private set; } = new(0);
 		public static FloatVariable MaxTime { get; private set; } = new(0);
 
+		public static BoolVariable ProhibitedMods { get; private set; } = new(0);
+
 		public static List<GameState> GameStates { get; } = new();
 
 		public static void FindWindow()
@@ -193,6 +195,20 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			EnemiesAliveMaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
 			MaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
 
+			/*
+			4 byte padding
+			stats_base *stats_array
+			int stats_frames_loaded
+			bool stats_finished_loading
+			3 byte padding
+			int starting_hand_level
+			int starting_homing_count
+			float starting_time
+			*/
+			address += 4 + sizeof(long) + sizeof(int) + sizeof(bool) + 3 + sizeof(int) + sizeof(int) + sizeof(float);
+
+			ProhibitedMods = InitiateVariable(addr => new BoolVariable(addr), ref address);
+
 			IsInitialized = true;
 
 			static TVariable InitiateVariable<TVariable>(Func<long, TVariable> constructor, ref long address)
@@ -239,6 +255,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			EnemiesAliveMax.Scan();
 			EnemiesAliveMaxTime.Scan();
 			MaxTime.Scan();
+
+			ProhibitedMods.Scan();
 
 			if (IsPlayerAlive)
 			{
