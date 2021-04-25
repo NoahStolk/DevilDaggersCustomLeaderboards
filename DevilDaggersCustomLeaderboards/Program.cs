@@ -280,6 +280,7 @@ namespace DevilDaggersCustomLeaderboards
 					BuildMode = BuildMode.Release,
 #endif
 					OperatingSystem = OperatingSystemUtils.GetOperatingSystem(),
+					ProhibitedMods = Scanner.ProhibitedMods,
 				};
 
 				return await NetworkHandler.Instance.ApiClient.CustomLeaderboards_UploadScoreAsync(uploadRequest);
