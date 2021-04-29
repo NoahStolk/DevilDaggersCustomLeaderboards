@@ -28,5 +28,8 @@ namespace DevilDaggersCustomLeaderboards.Native
 
 		[DllImport("user32.dll")]
 		internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+		[DllImport("libc")]
+		internal static extern int read(int handle, byte[] buf, int n);
 	}
 }
