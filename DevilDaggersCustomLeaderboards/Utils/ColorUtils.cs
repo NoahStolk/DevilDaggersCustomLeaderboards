@@ -23,7 +23,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const CustomColor Swarmed = CustomColor.Skull;
 		public const CustomColor Impaled = CustomColor.Skull;
 		public const CustomColor Gored = CustomColor.Skull;
-		public const CustomColor Infested = CustomColor.Green;
+		public const CustomColor Infested = CustomColor.Yellow;
 		public const CustomColor Opened = CustomColor.Skull;
 		public const CustomColor Purged = CustomColor.Squid;
 		public const CustomColor Desecrated = CustomColor.Squid;
@@ -34,9 +34,10 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public const CustomColor Envenomated = CustomColor.Green;
 		public const CustomColor Incarnated = CustomColor.Red;
 		public const CustomColor Discarnated = CustomColor.Magenta;
-		public const CustomColor Barbed = CustomColor.Thorn;
+		public const CustomColor Entangled = CustomColor.Thorn;
+		public const CustomColor Haunted = CustomColor.Ghostpede;
 
-		public const CustomColor Homing = CustomColor.Magenta;
+		public const CustomColor Leviathan = CustomColor.LeviathanDagger;
 		public const CustomColor Devil = CustomColor.Red;
 		public const CustomColor Golden = CustomColor.Yellow;
 		public const CustomColor Silver = CustomColor.Gray;
@@ -63,24 +64,25 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			if (!brc)
 				return Marshal.GetLastWin32Error();
 
+			ColorReference colorReference = new(r, g, b);
 			switch (colorIndex)
 			{
-				case 0: csbe._black = new ColorReference(r, g, b); break;
-				case 1: csbe._darkBlue = new ColorReference(r, g, b); break;
-				case 2: csbe._darkGreen = new ColorReference(r, g, b); break;
-				case 3: csbe._darkCyan = new ColorReference(r, g, b); break;
-				case 4: csbe._darkRed = new ColorReference(r, g, b); break;
-				case 5: csbe._darkMagenta = new ColorReference(r, g, b); break;
-				case 6: csbe._darkYellow = new ColorReference(r, g, b); break;
-				case 7: csbe._gray = new ColorReference(r, g, b); break;
-				case 8: csbe._darkGray = new ColorReference(r, g, b); break;
-				case 9: csbe._blue = new ColorReference(r, g, b); break;
-				case 10: csbe._green = new ColorReference(r, g, b); break;
-				case 11: csbe._cyan = new ColorReference(r, g, b); break;
-				case 12: csbe._red = new ColorReference(r, g, b); break;
-				case 13: csbe._magenta = new ColorReference(r, g, b); break;
-				case 14: csbe._yellow = new ColorReference(r, g, b); break;
-				case 15: csbe._white = new ColorReference(r, g, b); break;
+				case 0: csbe._black = colorReference; break;
+				case 1: csbe._darkBlue = colorReference; break;
+				case 2: csbe._darkGreen = colorReference; break;
+				case 3: csbe._darkCyan = colorReference; break;
+				case 4: csbe._darkRed = colorReference; break;
+				case 5: csbe._darkMagenta = colorReference; break;
+				case 6: csbe._darkYellow = colorReference; break;
+				case 7: csbe._gray = colorReference; break;
+				case 8: csbe._darkGray = colorReference; break;
+				case 9: csbe._blue = colorReference; break;
+				case 10: csbe._green = colorReference; break;
+				case 11: csbe._cyan = colorReference; break;
+				case 12: csbe._red = colorReference; break;
+				case 13: csbe._magenta = colorReference; break;
+				case 14: csbe._yellow = colorReference; break;
+				case 15: csbe._white = colorReference; break;
 			}
 
 			++csbe._srWindow._bottom;
@@ -108,21 +110,22 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			12 => Envenomated,
 			13 => Incarnated,
 			14 => Discarnated,
-			15 => Barbed,
+			15 => Entangled,
+			16 => Haunted,
 			_ => Fallen,
 		};
 
 		public static CustomColor GetDaggerColor(int time, CustomLeaderboard leaderboard)
 		{
-			if (leaderboard.Homing != 0 && Compare(time, leaderboard.Homing))
-				return Homing;
-			if (Compare(time, leaderboard.Devil))
+			if (Compare(time, leaderboard.TimeLeviathan))
+				return Leviathan;
+			if (Compare(time, leaderboard.TimeDevil))
 				return Devil;
-			if (Compare(time, leaderboard.Golden))
+			if (Compare(time, leaderboard.TimeGolden))
 				return Golden;
-			if (Compare(time, leaderboard.Silver))
+			if (Compare(time, leaderboard.TimeSilver))
 				return Silver;
-			if (Compare(time, leaderboard.Bronze))
+			if (Compare(time, leaderboard.TimeBronze))
 				return Bronze;
 			return Default;
 

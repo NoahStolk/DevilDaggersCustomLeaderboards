@@ -1,27 +1,10 @@
-﻿using DevilDaggersCore.Spawnsets;
-using DevilDaggersCustomLeaderboards.Memory;
-using System;
-using System.IO;
+﻿using System;
 
 namespace DevilDaggersCustomLeaderboards.Utils
 {
 	public static class HashUtils
 	{
-		public static string CalculateCurrentSurvivalHash()
-		{
-			try
-			{
-				if (Spawnset.TryParse(File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(Scanner.Instance.Process?.MainModule.FileName) ?? throw new Exception("Could not retrieve process file name."), "dd", "survival")), out Spawnset spawnset))
-					return spawnset.GetHashString();
-
-				Program.Log.Error($"Failed to calculate spawnset hash because the survival file could not be parsed to a {nameof(Spawnset)} object.");
-			}
-			catch (Exception ex)
-			{
-				Program.Log.Error("Failed to calculate spawnset hash.", ex);
-			}
-
-			return string.Empty;
-		}
+		public static string ByteArrayToHexString(byte[] byteArray)
+			=> BitConverter.ToString(byteArray).Replace("-", string.Empty);
 	}
 }
