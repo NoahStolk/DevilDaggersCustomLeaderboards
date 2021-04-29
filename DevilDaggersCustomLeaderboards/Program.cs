@@ -83,20 +83,13 @@ namespace DevilDaggersCustomLeaderboards
 
 			while (true)
 			{
-				if (OperatingSystemUtils.IsWindows())
-				{
-					try
-					{
-						await ExecuteMainLoop();
-					}
-					catch (Win32Exception)
-					{
-						// Ignore exceptions when Devil Daggers is closed.
-					}
-				}
-				else if (OperatingSystemUtils.IsLinux())
+				try
 				{
 					await ExecuteMainLoop();
+				}
+				catch (Win32Exception)
+				{
+					// Ignore exceptions when Devil Daggers is closed.
 				}
 			}
 		}
