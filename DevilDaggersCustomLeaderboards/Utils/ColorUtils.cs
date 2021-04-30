@@ -46,9 +46,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 		public static CustomColor GetDaggerHighlightColor(CustomColor daggerColor) => daggerColor switch
 		{
-			Devil => ForegroundDefault,
-			Bronze => ForegroundDefault,
-			Default => ForegroundDefault,
+			Devil or Bronze or Default => ForegroundDefault,
 			_ => BackgroundDefault,
 		};
 
