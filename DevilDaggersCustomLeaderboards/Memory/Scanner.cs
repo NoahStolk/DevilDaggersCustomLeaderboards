@@ -106,7 +106,13 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				Clients.OperatingSystem.Linux => "devildaggers",
 				_ => throw new NotSupportedException($"The operating system '{os}' is not supported."),
 			};
-			Process = ProcessUtils.GetDevilDaggersProcess(processName);
+			string processWindowTitle = os switch
+			{
+				Clients.OperatingSystem.Windows => "Devil Daggers",
+				Clients.OperatingSystem.Linux => string.Empty,
+				_ => throw new NotSupportedException($"The operating system '{os}' is not supported."),
+			};
+			Process = ProcessUtils.GetDevilDaggersProcess(processName, processWindowTitle);
 		}
 
 		public static void Open()
