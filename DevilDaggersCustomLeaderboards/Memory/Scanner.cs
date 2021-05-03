@@ -99,7 +99,14 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void FindWindow()
 		{
-			Process = ProcessUtils.GetDevilDaggersProcess();
+			Clients.OperatingSystem os = OperatingSystemUtils.GetOperatingSystem();
+			string processName = os switch
+			{
+				Clients.OperatingSystem.Windows => "dd",
+				Clients.OperatingSystem.Linux => "devildaggers",
+				_ => throw new NotSupportedException($"The operating system '{os}' is not supported."),
+			};
+			Process = ProcessUtils.GetDevilDaggersProcess(processName);
 		}
 
 		public static void Open()
