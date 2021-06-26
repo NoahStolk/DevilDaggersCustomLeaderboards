@@ -92,9 +92,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static FloatVariable EnemiesAliveMaxTime { get; private set; } = new(0);
 		public static FloatVariable MaxTime { get; private set; } = new(0);
 
-		public static BoolVariable ProhibitedMods { get; private set; } = new(0);
+		public static LongVariable StatsBase { get; private set; } = new(0);
+		public static IntVariable StatsCount { get; private set; } = new(0);
+		public static BoolVariable StatsLoaded { get; private set; } = new(0);
 
-		public static List<GameState> GameStates { get; } = new();
+		public static BoolVariable ProhibitedMods { get; private set; } = new(0);
 
 		public static void FindWindow()
 		{
@@ -205,7 +207,13 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			int starting_homing_count
 			float starting_time
 			*/
-			address += 4 + sizeof(long) + sizeof(int) + sizeof(bool) + 3 + sizeof(int) + sizeof(int) + sizeof(float);
+			address += 4;
+
+			StatsBase = InitiateVariable(addr => new LongVariable(addr), ref address);
+			StatsCount = InitiateVariable(addr => new IntVariable(addr), ref address);
+			StatsLoaded = InitiateVariable(addr => new BoolVariable(addr), ref address);
+
+			address += 3 + sizeof(int) + sizeof(int) + sizeof(float);
 
 			ProhibitedMods = InitiateVariable(addr => new BoolVariable(addr), ref address);
 
@@ -255,6 +263,10 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			EnemiesAliveMax.Scan();
 			EnemiesAliveMaxTime.Scan();
 			MaxTime.Scan();
+
+			StatsBase.Scan();
+			StatsCount.Scan();
+			StatsLoaded.Scan();
 
 			ProhibitedMods.Scan();
 
@@ -334,7 +346,84 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static void RestartScan()
 		{
 			HomingDaggers.HardReset();
-			GameStates.Clear();
+		}
+
+		public static List<GameState> GetGameStates()
+		{
+			byte[] intBytes = new byte[4];
+			byte[] shortBytes = new byte[2];
+			int offset = 0;
+			List<GameState> gameStates = new();
+			for (int i = 0; i < StatsCount; i++)
+			{
+				GameState gameState = new();
+
+				gameState.GemsCollected = ReadInt(ref offset);
+				gameState.EnemiesKilled = ReadInt(ref offset);
+				gameState.DaggersFired = ReadInt(ref offset);
+				gameState.DaggersHit = ReadInt(ref offset);
+				gameState.EnemiesAlive = ReadInt(ref offset);
+				offset += sizeof(int);
+				gameState.HomingDaggers = ReadInt(ref offset);
+				gameState.GemsDespawned = ReadInt(ref offset);
+				gameState.GemsEaten = ReadInt(ref offset);
+				gameState.GemsTotal = ReadInt(ref offset);
+				gameState.HomingDaggersEaten = ReadInt(ref offset);
+
+				gameState.Skull1sAlive = ReadShort(ref offset);
+				gameState.Skull2sAlive = ReadShort(ref offset);
+				gameState.Skull3sAlive = ReadShort(ref offset);
+				gameState.SpiderlingsAlive = ReadShort(ref offset);
+				gameState.Skull4sAlive = ReadShort(ref offset);
+				gameState.Squid1sAlive = ReadShort(ref offset);
+				gameState.Squid2sAlive = ReadShort(ref offset);
+				gameState.Squid3sAlive = ReadShort(ref offset);
+				gameState.CentipedesAlive = ReadShort(ref offset);
+				gameState.GigapedesAlive = ReadShort(ref offset);
+				gameState.Spider1sAlive = ReadShort(ref offset);
+				gameState.Spider2sAlive = ReadShort(ref offset);
+				gameState.LeviathansAlive = ReadShort(ref offset);
+				gameState.OrbsAlive = ReadShort(ref offset);
+				gameState.ThornsAlive = ReadShort(ref offset);
+				gameState.GhostpedesAlive = ReadShort(ref offset);
+				gameState.SpiderEggsAlive = ReadShort(ref offset);
+
+				gameState.Skull1sKilled = ReadShort(ref offset);
+				gameState.Skull2sKilled = ReadShort(ref offset);
+				gameState.Skull3sKilled = ReadShort(ref offset);
+				gameState.SpiderlingsKilled = ReadShort(ref offset);
+				gameState.Skull4sKilled = ReadShort(ref offset);
+				gameState.Squid1sKilled = ReadShort(ref offset);
+				gameState.Squid2sKilled = ReadShort(ref offset);
+				gameState.Squid3sKilled = ReadShort(ref offset);
+				gameState.CentipedesKilled = ReadShort(ref offset);
+				gameState.GigapedesKilled = ReadShort(ref offset);
+				gameState.Spider1sKilled = ReadShort(ref offset);
+				gameState.Spider2sKilled = ReadShort(ref offset);
+				gameState.LeviathansKilled = ReadShort(ref offset);
+				gameState.OrbsKilled = ReadShort(ref offset);
+				gameState.ThornsKilled = ReadShort(ref offset);
+				gameState.GhostpedesKilled = ReadShort(ref offset);
+				gameState.SpiderEggsKilled = ReadShort(ref offset);
+
+				gameStates.Add(gameState);
+			}
+
+			return gameStates;
+
+			int ReadInt(ref int offset)
+			{
+				NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(StatsBase.Value + offset), intBytes, sizeof(int), out _);
+				offset += sizeof(int);
+				return BitConverter.ToInt32(intBytes);
+			}
+
+			int ReadShort(ref int offset)
+			{
+				NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(StatsBase.Value + offset), shortBytes, sizeof(short), out _);
+				offset += sizeof(short);
+				return BitConverter.ToInt16(shortBytes);
+			}
 		}
 	}
 }

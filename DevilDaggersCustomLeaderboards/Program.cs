@@ -273,7 +273,7 @@ namespace DevilDaggersCustomLeaderboards
 					PlayerName = Scanner.PlayerName,
 					IsReplay = Scanner.IsReplay,
 					Validation = HttpUtility.HtmlEncode(validation),
-					GameStates = Scanner.GameStates,
+					GameStates = Scanner.GetGameStates(),
 #if DEBUG
 					BuildMode = BuildMode.Debug,
 #else
