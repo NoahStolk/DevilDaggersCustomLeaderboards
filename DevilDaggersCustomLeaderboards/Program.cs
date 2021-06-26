@@ -283,7 +283,7 @@ namespace DevilDaggersCustomLeaderboards
 					ProhibitedMods = Scanner.ProhibitedMods,
 				};
 
-				return await NetworkHandler.Instance.ApiClient.CustomLeaderboards_UploadScoreAsync(uploadRequest);
+				return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreAsync(uploadRequest);
 			}
 			catch (DevilDaggersInfoApiException<ProblemDetails> ex)
 			{
