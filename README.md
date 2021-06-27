@@ -18,7 +18,7 @@ DevilDaggersCustomLeaderboards is a console application that records data from c
 ## Installation
 1. Download the zip file.
 2. Unzip its contents.
-3. Run DevilDaggersAssetEditor.exe inside the folder.
+3. Run DevilDaggersCustomLeaderboards.exe inside the folder.
 
 ## Links
 - [DevilDaggers.info website](https://devildaggers.info)
