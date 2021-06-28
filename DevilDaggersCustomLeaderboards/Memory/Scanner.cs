@@ -343,11 +343,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			}
 		}
 
-		public static void RestartScan()
-		{
-			HomingDaggers.HardReset();
-		}
-
 		public static List<GameState> GetGameStates()
 		{
 			byte[] intBytes = new byte[4];

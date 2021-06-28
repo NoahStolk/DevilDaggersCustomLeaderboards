@@ -23,6 +23,9 @@ namespace DevilDaggersCustomLeaderboards
 	{
 		private const int _mainLoopSleepMilliseconds = 50;
 
+		/// <summary>
+		/// Only accepts submissions of at least one second.
+		/// </summary>
 		private const float _minimalTime = 1f;
 
 #pragma warning disable IDE1006, SA1310 // Field names should not contain underscore
@@ -164,7 +167,6 @@ namespace DevilDaggersCustomLeaderboards
 
 				Console.Clear();
 				_isRecording = true;
-				Scanner.RestartScan();
 			}
 
 			GuiUtils.WriteRecording();
@@ -306,7 +308,6 @@ namespace DevilDaggersCustomLeaderboards
 				return "Invalid player ID.";
 			}
 
-			// This should fix the broken submissions that occasionally get sent for some reason.
 			if (Scanner.Time < _minimalTime)
 				return $"Timer is under {_minimalTime:0.0000}. Unable to validate.";
 

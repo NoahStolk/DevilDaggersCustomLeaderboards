@@ -26,12 +26,6 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		public static implicit operator TVariable(AbstractVariable<TVariable> variable)
 			=> variable.Value;
 
-		public void HardReset()
-		{
-			BytesPrevious = new byte[Size];
-			Bytes = new byte[Size];
-		}
-
 		public void Scan()
 		{
 			Buffer.BlockCopy(Bytes, 0, BytesPrevious, 0, (int)Size);
