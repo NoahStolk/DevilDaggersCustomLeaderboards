@@ -162,6 +162,10 @@ namespace DevilDaggersCustomLeaderboards
 
 			if (!_isRecording)
 			{
+#if DEBUG
+				Console.SetCursorPosition(0, 0);
+				GuiUtils.WriteRecording();
+#endif
 				if (Scanner.Time == Scanner.Time.ValuePrevious)
 					return;
 
