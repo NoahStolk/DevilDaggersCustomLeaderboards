@@ -112,79 +112,13 @@ namespace DevilDaggersCustomLeaderboards.Clients
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="DevilDaggersInfoApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<System.Collections.Generic.List<CustomLeaderboard>> CustomLeaderboards_GetCustomLeaderboardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/custom-leaderboards");
-    
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-    
-                    PrepareRequest(client_, request_, urlBuilder_);
-    
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-    
-                    PrepareRequest(client_, request_, url_);
-    
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-    
-                        ProcessResponse(client_, response_);
-    
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.List<CustomLeaderboard>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new DevilDaggersInfoApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new DevilDaggersInfoApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-    
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="DevilDaggersInfoApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<UploadSuccess> CustomLeaderboards_UploadScoreAsync(UploadRequest uploadRequest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public async System.Threading.Tasks.Task<UploadSuccess> CustomEntries_SubmitScoreAsync(UploadRequest uploadRequest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (uploadRequest == null)
                 throw new System.ArgumentNullException("uploadRequest");
     
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/custom-leaderboards");
+            urlBuilder_.Append("api/custom-entries/submit");
     
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -237,6 +171,72 @@ namespace DevilDaggersCustomLeaderboards.Clients
                                 throw new DevilDaggersInfoApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             throw new DevilDaggersInfoApiException<ProblemDetails>("A server side error occurred.", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new DevilDaggersInfoApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+    
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="DevilDaggersInfoApiException">A server side error occurred.</exception>
+        public async System.Threading.Tasks.Task<System.Collections.Generic.List<CustomLeaderboard>> CustomLeaderboards_GetCustomLeaderboardsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/custom-leaderboards");
+    
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+    
+                    PrepareRequest(client_, request_, urlBuilder_);
+    
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+    
+                    PrepareRequest(client_, request_, url_);
+    
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+    
+                        ProcessResponse(client_, response_);
+    
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.List<CustomLeaderboard>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new DevilDaggersInfoApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
                         }
                         else
                         {
@@ -2222,114 +2222,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class CustomLeaderboard 
-    {
-        [Newtonsoft.Json.JsonProperty("spawnsetName", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string SpawnsetName { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("spawnsetAuthorName", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string SpawnsetAuthorName { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("timeBronze", Required = Newtonsoft.Json.Required.Always)]
-        public int TimeBronze { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("timeSilver", Required = Newtonsoft.Json.Required.Always)]
-        public int TimeSilver { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("timeGolden", Required = Newtonsoft.Json.Required.Always)]
-        public int TimeGolden { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("timeDevil", Required = Newtonsoft.Json.Required.Always)]
-        public int TimeDevil { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("timeLeviathan", Required = Newtonsoft.Json.Required.Always)]
-        public int TimeLeviathan { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("dateLastPlayed", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime? DateLastPlayed { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("dateCreated", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime? DateCreated { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("category", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public CustomLeaderboardCategory Category { get; set; }= default!;
-    
-        [Newtonsoft.Json.JsonProperty("isAscending", Required = Newtonsoft.Json.Required.Always)]
-        public bool IsAscending { get; set; }= default!;
-    
-    
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public enum CustomLeaderboardCategory
-    {
-        [System.Runtime.Serialization.EnumMember(Value = @"None")]
-        None = 0,
-    
-        [System.Runtime.Serialization.EnumMember(Value = @"Default")]
-        Default = 1,
-    
-        [System.Runtime.Serialization.EnumMember(Value = @"TimeAttack")]
-        TimeAttack = 2,
-    
-        [System.Runtime.Serialization.EnumMember(Value = @"Speedrun")]
-        Speedrun = 3,
-    
-    }
-    
-    /// <summary>A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807.</summary>
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class ProblemDetails 
-    {
-        /// <summary>A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
-        /// dereferenced, it provide human-readable documentation for the problem type
-        /// (e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
-        /// "about:blank".</summary>
-        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Type { get; set; }= default!;
-    
-        /// <summary>A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
-        /// of the problem, except for purposes of localization(e.g., using proactive content negotiation;
-        /// see[RFC7231], Section 3.4).</summary>
-        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Title { get; set; }= default!;
-    
-        /// <summary>The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.</summary>
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Status { get; set; }= default!;
-    
-        /// <summary>A human-readable explanation specific to this occurrence of the problem.</summary>
-        [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Detail { get; set; }= default!;
-    
-        /// <summary>A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced.</summary>
-        [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Instance { get; set; }= default!;
-    
-        /// <summary>Gets the IDictionary`2 for extension members.
-        /// 
-        /// Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
-        /// other members of a problem type.</summary>
-        [Newtonsoft.Json.JsonProperty("extensions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.Dictionary<string, object>? Extensions { get; set; }= default!;
-    
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
-    
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties; }
-            set { _additionalProperties = value; }
-        }
-    
-    
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class UploadSuccess 
     {
         [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.Always)]
@@ -2449,6 +2341,66 @@ namespace DevilDaggersCustomLeaderboards.Clients
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class CustomLeaderboard 
+    {
+        [Newtonsoft.Json.JsonProperty("spawnsetName", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string SpawnsetName { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("spawnsetAuthorName", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string SpawnsetAuthorName { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("timeBronze", Required = Newtonsoft.Json.Required.Always)]
+        public int TimeBronze { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("timeSilver", Required = Newtonsoft.Json.Required.Always)]
+        public int TimeSilver { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("timeGolden", Required = Newtonsoft.Json.Required.Always)]
+        public int TimeGolden { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("timeDevil", Required = Newtonsoft.Json.Required.Always)]
+        public int TimeDevil { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("timeLeviathan", Required = Newtonsoft.Json.Required.Always)]
+        public int TimeLeviathan { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("dateLastPlayed", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? DateLastPlayed { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("dateCreated", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? DateCreated { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("category", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public CustomLeaderboardCategory Category { get; set; }= default!;
+    
+        [Newtonsoft.Json.JsonProperty("isAscending", Required = Newtonsoft.Json.Required.Always)]
+        public bool IsAscending { get; set; }= default!;
+    
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
+    public enum CustomLeaderboardCategory
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"None")]
+        None = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Default")]
+        Default = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"TimeAttack")]
+        TimeAttack = 2,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"Speedrun")]
+        Speedrun = 3,
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class CustomEntry 
     {
         [Newtonsoft.Json.JsonProperty("playerId", Required = Newtonsoft.Json.Required.Always)]
@@ -2509,6 +2461,54 @@ namespace DevilDaggersCustomLeaderboards.Clients
     
         [Newtonsoft.Json.JsonProperty("clientVersion", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ClientVersion { get; set; }= default!;
+    
+    
+    }
+    
+    /// <summary>A machine-readable format for specifying errors in HTTP API responses based on https://tools.ietf.org/html/rfc7807.</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class ProblemDetails 
+    {
+        /// <summary>A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when
+        /// dereferenced, it provide human-readable documentation for the problem type
+        /// (e.g., using HTML [W3C.REC-html5-20141028]).  When this member is not present, its value is assumed to be
+        /// "about:blank".</summary>
+        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Type { get; set; }= default!;
+    
+        /// <summary>A short, human-readable summary of the problem type.It SHOULD NOT change from occurrence to occurrence
+        /// of the problem, except for purposes of localization(e.g., using proactive content negotiation;
+        /// see[RFC7231], Section 3.4).</summary>
+        [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Title { get; set; }= default!;
+    
+        /// <summary>The HTTP status code([RFC7231], Section 6) generated by the origin server for this occurrence of the problem.</summary>
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Status { get; set; }= default!;
+    
+        /// <summary>A human-readable explanation specific to this occurrence of the problem.</summary>
+        [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Detail { get; set; }= default!;
+    
+        /// <summary>A URI reference that identifies the specific occurrence of the problem.It may or may not yield further information if dereferenced.</summary>
+        [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Instance { get; set; }= default!;
+    
+        /// <summary>Gets the IDictionary`2 for extension members.
+        /// 
+        /// Problem type definitions MAY extend the problem details object with additional members. Extension members appear in the same namespace as
+        /// other members of a problem type.</summary>
+        [Newtonsoft.Json.JsonProperty("extensions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.Dictionary<string, object>? Extensions { get; set; }= default!;
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
     
     
     }
