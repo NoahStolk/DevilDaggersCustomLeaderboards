@@ -176,6 +176,15 @@ namespace DevilDaggersCustomLeaderboards
 
 			if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious)
 			{
+				Console.Clear();
+				Cmd.WriteLine("Waiting for stats to be loaded...");
+
+				while (!Scanner.StatsLoaded)
+				{
+					Scanner.StatsLoaded.Scan();
+					Thread.Sleep(500);
+				}
+
 				_isRecording = false;
 
 				Console.Clear();
