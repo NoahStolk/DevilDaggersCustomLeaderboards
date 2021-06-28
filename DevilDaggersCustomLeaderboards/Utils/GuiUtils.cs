@@ -144,6 +144,11 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("Enemies Alive Max", Scanner.EnemiesAliveMax);
 			Cmd.WriteLine("Enemies Alive Max Time", Scanner.EnemiesAliveMaxTime.Value.ToString("0.0000"));
 			Cmd.WriteLine("Max Time", Scanner.MaxTime.Value.ToString("0.0000"));
+			Cmd.WriteLine();
+			Cmd.WriteLine("Stats Base", Scanner.StatsBase);
+			Cmd.WriteLine("Stats Count", Scanner.StatsCount);
+			Cmd.WriteLine("Stats Loaded", Scanner.StatsLoaded);
+			Cmd.WriteLine();
 			Cmd.WriteLine("Prohibited Mods", Scanner.ProhibitedMods);
 			Cmd.WriteLine();
 		}
