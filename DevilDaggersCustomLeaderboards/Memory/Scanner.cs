@@ -418,7 +418,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				return BitConverter.ToInt32(intBytes);
 			}
 
-			int ReadShort(ref int offset)
+			short ReadShort(ref int offset)
 			{
 				NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(StatsBase.Value + offset), shortBytes, sizeof(short), out _);
 				offset += sizeof(short);
