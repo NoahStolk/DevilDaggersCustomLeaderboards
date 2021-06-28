@@ -3216,8 +3216,8 @@ namespace DevilDaggersCustomLeaderboards.Clients
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.4.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class DdclSettings 
     {
-        [Newtonsoft.Json.JsonProperty("marker", Required = Newtonsoft.Json.Required.Always)]
-        public long Marker { get; set; }= default!;
+        [Newtonsoft.Json.JsonProperty("markerWindowsSteam", Required = Newtonsoft.Json.Required.Always)]
+        public long MarkerWindowsSteam { get; set; }= default!;
     
     
     }
