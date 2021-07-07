@@ -77,7 +77,10 @@
 | Graph stats count          |    270 | 32-bit integer           |             4 |
 | Graph stats loaded         |    274 | 8-bit integer (boolean)  |             1 |
 | N/A (padding)              |    275 | N/A                      |             3 |
-| Prohibited mods            |    278 | 8-bit integer (boolean)  |             1 |
+| Hand level start           |    278 | 32-bit integer           |             4 |
+| Homing start               |    282 | 32-bit integer           |             4 |
+| Timer start                |    286 | 32-bit floating point    |             4 |
+| Prohibited mods            |    290 | 8-bit integer (boolean)  |             1 |
 
 ## Graph stats
 
