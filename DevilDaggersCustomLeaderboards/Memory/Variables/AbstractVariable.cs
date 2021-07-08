@@ -13,8 +13,8 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 			Bytes = new byte[Size];
 		}
 
-		protected byte[] BytesPrevious { get; private set; }
-		protected byte[] Bytes { get; private set; }
+		protected byte[] BytesPrevious { get; }
+		protected byte[] Bytes { get; }
 		public abstract TVariable ValuePrevious { get; }
 		public abstract TVariable Value { get; }
 

@@ -11,25 +11,10 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 		{
 		}
 
-		public override string ValuePrevious => GetStringFromBytes(BytesPrevious.ToArray());
-		public override string Value => GetStringFromBytes(Bytes.ToArray());
+		public override string ValuePrevious => GetUtf8StringFromBytes(BytesPrevious.ToArray());
+		public override string Value => GetUtf8StringFromBytes(Bytes.ToArray());
 
-		private static string GetStringFromBytes(byte[] bytes)
-		{
-			int length = 0;
-			for (int i = 0; i < bytes.Length; i++)
-			{
-				if (bytes[i] == 0x00)
-				{
-					length = i;
-					break;
-				}
-			}
-
-			byte[] newBytes = new byte[length];
-			Buffer.BlockCopy(bytes, 0, newBytes, 0, length);
-
-			return Encoding.UTF8.GetString(newBytes);
-		}
+		private static string GetUtf8StringFromBytes(byte[] bytes)
+			=> Encoding.UTF8.GetString(bytes[0..Array.IndexOf(bytes, (byte)0)]);
 	}
 }
