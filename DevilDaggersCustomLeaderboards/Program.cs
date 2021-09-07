@@ -81,7 +81,8 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 			Cmd.WriteLine("Retrieving marker...");
-			_marker = (await NetworkHandler.Instance.ApiClient.Tools_GetDdclSettingsAsync()).MarkerWindowsSteam;
+			DdclSettings settings = await NetworkHandler.Instance.ApiClient.Tools_GetDdclSettingsAsync();
+			_marker = OperatingSystemUtils.GetMarker(settings);
 			Console.Clear();
 
 			while (true)
