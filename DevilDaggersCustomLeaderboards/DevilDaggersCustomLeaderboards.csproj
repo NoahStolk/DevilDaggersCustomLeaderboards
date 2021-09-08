@@ -6,6 +6,7 @@
     <Version>1.2.0.0</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <RuntimeIdentifiers>win10-x64;linux-x64</RuntimeIdentifiers>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
   <ItemGroup>

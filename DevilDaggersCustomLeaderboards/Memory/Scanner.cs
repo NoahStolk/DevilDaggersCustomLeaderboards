@@ -2,6 +2,7 @@
 using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using DevilDaggersCustomLeaderboards.Native;
+using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -100,7 +101,14 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void FindWindow()
 		{
-			Process = ProcessUtils.GetDevilDaggersProcess();
+			Clients.OperatingSystem os = OperatingSystemUtils.GetOperatingSystem();
+			(string processName, string processWindowTitle) = os switch
+			{
+				Clients.OperatingSystem.Windows => ("dd", "Devil Daggers"),
+				Clients.OperatingSystem.Linux => ("devildaggers", string.Empty),
+				_ => throw new NotSupportedException($"The operating system '{os}' is not supported."),
+			};
+			Process = ProcessUtils.GetDevilDaggersProcess(processName, processWindowTitle);
 		}
 
 		public static void Open()
@@ -108,8 +116,15 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			if (Process == null)
 				return;
 
-			const ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ;
-			ProcessAddress = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
+			if (OperatingSystemUtils.IsWindows())
+			{
+				const ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ;
+				ProcessAddress = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
+			}
+			else if (OperatingSystemUtils.IsLinux())
+			{
+				ProcessAddress = Process.Handle;
+			}
 		}
 
 		public static void Initialize(long ddstatsMarkerOffset)
@@ -118,7 +133,16 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				return;
 
 			byte[] pointerBytes = new byte[sizeof(long)];
-			NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset), pointerBytes, sizeof(long), out _);
+
+			if (OperatingSystemUtils.IsWindows())
+			{
+				NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset), pointerBytes, sizeof(long), out _);
+			}
+			else if (OperatingSystemUtils.IsLinux())
+			{
+				NativeMethods.read((int)((long)ProcessAddress + (long)Process.MainModule.BaseAddress + ddstatsMarkerOffset), pointerBytes, sizeof(long));
+			}
+
 			long address = BitConverter.ToInt64(pointerBytes) + 12 + sizeof(int);
 
 			PlayerId = InitiateVariable(addr => new IntVariable(addr), ref address);
