@@ -4,7 +4,6 @@
 	{
 		long Address { get; set; }
 		uint Size { get; set; }
-
 		bool IsChanged { get; set; }
 	}
 }

@@ -21,7 +21,6 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 
 		public long Address { get; set; }
 		public uint Size { get; set; }
-
 		public bool IsChanged { get; set; }
 
 		public static implicit operator TVariable(AbstractVariable<TVariable> variable)

@@ -153,7 +153,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine();
 		}
 
-		public static void WriteStats(CustomLeaderboard leaderboard, CustomEntry? entry)
+		public static void WriteStats(GetCustomLeaderboard leaderboard, CustomEntry? entry)
 		{
 			if (entry == null)
 			{

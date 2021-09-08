@@ -113,7 +113,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			_ => Fallen,
 		};
 
-		public static CustomColor GetDaggerColor(int time, CustomLeaderboard leaderboard)
+		public static CustomColor GetDaggerColor(int time, GetCustomLeaderboard leaderboard)
 		{
 			if (Compare(time, leaderboard.TimeLeviathan))
 				return Leviathan;
