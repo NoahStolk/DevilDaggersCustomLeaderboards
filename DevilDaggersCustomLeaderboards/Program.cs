@@ -157,7 +157,6 @@ namespace DevilDaggersCustomLeaderboards
 				return;
 			}
 
-			Scanner.Open();
 			Scanner.Initialize(_marker);
 			Scanner.Scan();
 

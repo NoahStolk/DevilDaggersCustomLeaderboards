@@ -34,7 +34,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 				if (Scanner.Process?.MainModule == null)
 					return;
 
-				NativeMethods.ReadMemory(Scanner.ProcessAddress, Address, Bytes, (int)Size);
+				NativeMethods.ReadMemory(Scanner.Process.Handle, Address, Bytes, (int)Size);
 
 				IsChanged = !AreBytesEqual();
 			}

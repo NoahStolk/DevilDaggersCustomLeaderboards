@@ -16,8 +16,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static Process? Process { get; private set; }
 
-		public static IntPtr ProcessAddress { get; private set; } = IntPtr.Zero;
-
 		public static IntVariable PlayerId { get; private set; } = new(0);
 		public static StringVariable PlayerName { get; private set; } = new(0, 32);
 		public static FloatVariable Time { get; private set; } = new(0);
@@ -111,12 +109,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			Process = ProcessUtils.GetDevilDaggersProcess(processName, processWindowTitle);
 		}
 
-		public static void Open()
-		{
-			if (Process != null)
-				ProcessAddress = NativeMethods.OpenProcess(Process);
-		}
-
 		public static void Initialize(long ddstatsMarkerOffset)
 		{
 			if (IsInitialized || Process?.MainModule == null)
@@ -124,7 +116,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			byte[] pointerBytes = new byte[sizeof(long)];
 
-			NativeMethods.ReadMemory(ProcessAddress, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+			NativeMethods.ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
 
 			long address = BitConverter.ToInt64(pointerBytes) + 12 + sizeof(int);
 
@@ -406,14 +398,20 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			int ReadInt(ref int offset)
 			{
-				NativeMethods.ReadMemory(ProcessAddress, StatsBase.Value + offset, intBytes, sizeof(int));
+				if (Process == null)
+					return 0;
+
+				NativeMethods.ReadMemory(Process.Handle, StatsBase.Value + offset, intBytes, sizeof(int));
 				offset += sizeof(int);
 				return BitConverter.ToInt32(intBytes);
 			}
 
 			short ReadShort(ref int offset)
 			{
-				NativeMethods.ReadMemory(ProcessAddress, StatsBase.Value + offset, shortBytes, sizeof(short));
+				if (Process == null)
+					return 0;
+
+				NativeMethods.ReadMemory(Process.Handle, StatsBase.Value + offset, shortBytes, sizeof(short));
 				offset += sizeof(short);
 				return BitConverter.ToInt16(shortBytes);
 			}

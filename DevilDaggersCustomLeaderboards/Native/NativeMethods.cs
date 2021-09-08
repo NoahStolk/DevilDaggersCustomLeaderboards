@@ -1,7 +1,6 @@
 ﻿using DevilDaggersCustomLeaderboards.Exceptions;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace DevilDaggersCustomLeaderboards.Native
@@ -16,9 +15,6 @@ namespace DevilDaggersCustomLeaderboards.Native
 
 		[DllImport("kernel32.dll", SetLastError = true)]
 		internal static extern IntPtr GetStdHandle(StdHandle index);
-
-		[DllImport("kernel32.dll")]
-		private static extern IntPtr OpenProcess(uint dwDesiredAccess, int bInheritHandle, uint dwProcessId);
 
 		[DllImport("kernel32.dll")]
 		private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, uint size, out uint lpNumberOfBytesRead);
@@ -45,12 +41,5 @@ namespace DevilDaggersCustomLeaderboards.Native
 			};
 			call();
 		}
-
-		public static nint OpenProcess(Process process) => OperatingSystemUtils.OperatingSystem switch
-		{
-			Clients.OperatingSystem.Windows => OpenProcess((uint)ProcessAccessType.PROCESS_VM_READ, 1, (uint)process.Id),
-			Clients.OperatingSystem.Linux => process.Handle,
-			_ => throw new OperatingSystemNotSupportedException(),
-		};
 	}
 }
