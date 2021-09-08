@@ -1,5 +1,6 @@
 ﻿using DevilDaggersCore.Utils;
 using DevilDaggersCustomLeaderboards.Clients;
+using DevilDaggersCustomLeaderboards.Exceptions;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Utils;
@@ -101,30 +102,19 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void FindWindow()
 		{
-			Clients.OperatingSystem os = OperatingSystemUtils.GetOperatingSystem();
-			(string processName, string processWindowTitle) = os switch
+			(string processName, string processWindowTitle) = OperatingSystemUtils.OperatingSystem switch
 			{
 				Clients.OperatingSystem.Windows => ("dd", "Devil Daggers"),
 				Clients.OperatingSystem.Linux => ("devildaggers", string.Empty),
-				_ => throw new NotSupportedException($"The operating system '{os}' is not supported."),
+				_ => throw new OperatingSystemNotSupportedException(),
 			};
 			Process = ProcessUtils.GetDevilDaggersProcess(processName, processWindowTitle);
 		}
 
 		public static void Open()
 		{
-			if (Process == null)
-				return;
-
-			if (OperatingSystemUtils.IsWindows())
-			{
-				const ProcessAccessType access = ProcessAccessType.PROCESS_VM_READ;
-				ProcessAddress = NativeMethods.OpenProcess((uint)access, 1, (uint)Process.Id);
-			}
-			else if (OperatingSystemUtils.IsLinux())
-			{
-				ProcessAddress = Process.Handle;
-			}
+			if (Process != null)
+				ProcessAddress = NativeMethods.OpenProcess(Process);
 		}
 
 		public static void Initialize(long ddstatsMarkerOffset)
@@ -134,14 +124,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			byte[] pointerBytes = new byte[sizeof(long)];
 
-			if (OperatingSystemUtils.IsWindows())
-			{
-				NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset), pointerBytes, sizeof(long), out _);
-			}
-			else if (OperatingSystemUtils.IsLinux())
-			{
-				NativeMethods.read((int)((long)ProcessAddress + (long)Process.MainModule.BaseAddress + ddstatsMarkerOffset), pointerBytes, sizeof(long));
-			}
+			NativeMethods.ReadMemory(ProcessAddress, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
 
 			long address = BitConverter.ToInt64(pointerBytes) + 12 + sizeof(int);
 
@@ -423,14 +406,14 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			int ReadInt(ref int offset)
 			{
-				NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(StatsBase.Value + offset), intBytes, sizeof(int), out _);
+				NativeMethods.ReadMemory(ProcessAddress, StatsBase.Value + offset, intBytes, sizeof(int));
 				offset += sizeof(int);
 				return BitConverter.ToInt32(intBytes);
 			}
 
 			short ReadShort(ref int offset)
 			{
-				NativeMethods.ReadProcessMemory(ProcessAddress, new IntPtr(StatsBase.Value + offset), shortBytes, sizeof(short), out _);
+				NativeMethods.ReadMemory(ProcessAddress, StatsBase.Value + offset, shortBytes, sizeof(short));
 				offset += sizeof(short);
 				return BitConverter.ToInt16(shortBytes);
 			}

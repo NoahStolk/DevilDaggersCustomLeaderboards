@@ -102,7 +102,7 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			Console.CursorVisible = false;
 
-			if (OperatingSystemUtils.IsWindows())
+			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Windows)
 			{
 				try
 				{
@@ -295,7 +295,7 @@ namespace DevilDaggersCustomLeaderboards
 #else
 					BuildMode = BuildMode.Release,
 #endif
-					OperatingSystem = OperatingSystemUtils.GetOperatingSystem(),
+					OperatingSystem = OperatingSystemUtils.OperatingSystem,
 					ProhibitedMods = Scanner.ProhibitedMods,
 				};
 
