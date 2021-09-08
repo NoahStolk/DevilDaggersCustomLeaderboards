@@ -197,22 +197,13 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			EnemiesAliveMaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
 			MaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
 
-			/*
-			4 byte padding
-			stats_base *stats_array
-			int stats_frames_loaded
-			bool stats_finished_loading
-			3 byte padding
-			int starting_hand_level
-			int starting_homing_count
-			float starting_time
-			*/
 			address += 4;
 
 			StatsBase = InitiateVariable(addr => new LongVariable(addr), ref address);
 			StatsCount = InitiateVariable(addr => new IntVariable(addr), ref address);
 			StatsLoaded = InitiateVariable(addr => new BoolVariable(addr), ref address);
 
+			// 3 byte padding + int starting_hand_level + int starting_homing_count + float starting_time
 			address += 3 + sizeof(int) + sizeof(int) + sizeof(float);
 
 			ProhibitedMods = InitiateVariable(addr => new BoolVariable(addr), ref address);
