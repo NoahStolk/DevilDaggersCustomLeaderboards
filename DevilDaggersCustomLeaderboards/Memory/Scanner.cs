@@ -117,8 +117,14 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			byte[] pointerBytes = new byte[sizeof(long)];
 
 			NativeMethods.ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
+			{
+				// TODO: Test.
+				NativeMethods.ReadMemory(Process.Handle, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
+			}
 
-			long address = BitConverter.ToInt64(pointerBytes) + 12 + sizeof(int);
+			int headerSize = "__ddstats__\0".Length;
+			long address = BitConverter.ToInt64(pointerBytes) + headerSize + sizeof(int);
 
 			PlayerId = InitiateVariable(addr => new IntVariable(addr), ref address);
 			PlayerName = InitiateStringVariable(ref address, 32);
