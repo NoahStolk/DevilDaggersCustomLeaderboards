@@ -9,12 +9,12 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DevilDaggersCore" Version="2.0.1" />
-    <PackageReference Include="Roslynator.Analyzers" Version="3.2.0">
+    <PackageReference Include="DevilDaggersCore" Version="2.1.2" />
+    <PackageReference Include="Roslynator.Analyzers" Version="3.2.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.25.0.33663">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.28.0.36354">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
