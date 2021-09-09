@@ -8,6 +8,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
     <RuntimeIdentifiers>win10-x64;linux-x64</RuntimeIdentifiers>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevilDaggersCore" Version="2.1.2" />
