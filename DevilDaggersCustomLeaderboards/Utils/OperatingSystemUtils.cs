@@ -19,13 +19,6 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 		public static OperatingSystem OperatingSystem { get; }
 
-		public static long GetMarker(DdclSettings ddclSettings) => OperatingSystem switch
-		{
-			OperatingSystem.Windows => ddclSettings.MarkerWindowsSteam,
-			OperatingSystem.Linux => ddclSettings.MarkerLinuxSteam,
-			_ => throw new OperatingSystemNotSupportedException(),
-		};
-
 		public static string GetProcessName() => OperatingSystem switch
 		{
 			OperatingSystem.Windows => "dd",

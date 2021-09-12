@@ -58,7 +58,7 @@ namespace DevilDaggersCustomLeaderboards
 			InitializeConsole();
 
 			Cmd.WriteLine("Checking for updates...");
-			Tool tool = (await NetworkHandler.Instance.ApiClient.Tools_GetToolsAsync(ApplicationName))[0];
+			Tool tool = await NetworkHandler.Instance.ApiClient.Tools_GetToolAsync(ApplicationName);
 			Console.Clear();
 
 			if (tool != null)
@@ -81,8 +81,8 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 			Cmd.WriteLine("Retrieving marker...");
-			DdclSettings settings = await NetworkHandler.Instance.ApiClient.Tools_GetDdclSettingsAsync();
-			_marker = OperatingSystemUtils.GetMarker(settings);
+			Marker marker = await NetworkHandler.Instance.ApiClient.ProcessMemory_GetMarkerAsync(OperatingSystemUtils.OperatingSystem);
+			_marker = marker.Value;
 			Console.Clear();
 
 			while (true)
