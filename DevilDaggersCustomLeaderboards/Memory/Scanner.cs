@@ -10,9 +10,21 @@ namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public static class Scanner
 	{
+		private const int _bufferSize = 301;
+		private const string _markerValue = "__ddstats__\0";
+
+		private static long _baseAddress;
+
 		public static bool IsInitialized { get; set; }
 
 		public static Process? Process { get; private set; }
+
+		public static byte[] Buffer { get; } = new byte[_bufferSize];
+
+		#region Variables
+
+		public static StringVariable Marker { get; private set; } = new(0, 12);
+		public static IntVariable FormatVersion { get; private set; } = new(0);
 
 		public static IntVariable PlayerId { get; private set; } = new(0);
 		public static StringVariable PlayerName { get; private set; } = new(0, 32);
@@ -96,6 +108,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static BoolVariable ProhibitedMods { get; private set; } = new(0);
 
+		#endregion Variables
+
 		public static void FindWindow()
 		{
 			Process = ProcessUtils.GetDevilDaggersProcess(OperatingSystemUtils.GetProcessName(), OperatingSystemUtils.GetProcessWindowTitle());
@@ -112,123 +126,136 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
 				OperatingSystemUtils.ReadMemory(Process.Handle, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
 
-			int headerSize = "__ddstats__\0".Length;
-			long address = BitConverter.ToInt64(pointerBytes) + headerSize + sizeof(int);
+			_baseAddress = BitConverter.ToInt64(pointerBytes);
 
-			PlayerId = InitiateVariable(addr => new IntVariable(addr), ref address);
-			PlayerName = InitiateStringVariable(ref address, 32);
-			Time = InitiateVariable(addr => new FloatVariable(addr), ref address);
-			GemsCollected = InitiateVariable(addr => new IntVariable(addr), ref address);
-			EnemiesKilled = InitiateVariable(addr => new IntVariable(addr), ref address);
-			DaggersFired = InitiateVariable(addr => new IntVariable(addr), ref address);
-			DaggersHit = InitiateVariable(addr => new IntVariable(addr), ref address);
-			EnemiesAlive = InitiateVariable(addr => new IntVariable(addr), ref address);
-			LevelGems = InitiateVariable(addr => new IntVariable(addr), ref address);
-			HomingDaggers = InitiateVariable(addr => new IntVariable(addr), ref address);
-			GemsDespawned = InitiateVariable(addr => new IntVariable(addr), ref address);
-			GemsEaten = InitiateVariable(addr => new IntVariable(addr), ref address);
-			GemsTotal = InitiateVariable(addr => new IntVariable(addr), ref address);
-			HomingDaggersEaten = InitiateVariable(addr => new IntVariable(addr), ref address);
+			int offset = 0;
+			Marker = InitiateStringVariable(ref offset, _markerValue.Length);
+			FormatVersion = InitiateVariable(addr => new IntVariable(addr), ref offset);
 
-			Skull1sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Skull2sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Skull3sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			SpiderlingsAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Skull4sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Squid1sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Squid2sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Squid3sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			CentipedesAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			GigapedesAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Spider1sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Spider2sAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			LeviathansAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			OrbsAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			ThornsAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			GhostpedesAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			SpiderEggsAlive = InitiateVariable(addr => new ShortVariable(addr), ref address);
+			PlayerId = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			PlayerName = InitiateStringVariable(ref offset, 32);
+			Time = InitiateVariable(addr => new FloatVariable(addr), ref offset);
+			GemsCollected = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			EnemiesKilled = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			DaggersFired = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			DaggersHit = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			EnemiesAlive = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			LevelGems = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			HomingDaggers = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			GemsDespawned = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			GemsEaten = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			GemsTotal = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			HomingDaggersEaten = InitiateVariable(addr => new IntVariable(addr), ref offset);
 
-			Skull1sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Skull2sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Skull3sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			SpiderlingsKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Skull4sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Squid1sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Squid2sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Squid3sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			CentipedesKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			GigapedesKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Spider1sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			Spider2sKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			LeviathansKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			OrbsKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			ThornsKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			GhostpedesKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
-			SpiderEggsKilled = InitiateVariable(addr => new ShortVariable(addr), ref address);
+			Skull1sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Skull2sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Skull3sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			SpiderlingsAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Skull4sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Squid1sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Squid2sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Squid3sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			CentipedesAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			GigapedesAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Spider1sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Spider2sAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			LeviathansAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			OrbsAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			ThornsAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			GhostpedesAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			SpiderEggsAlive = InitiateVariable(addr => new ShortVariable(addr), ref offset);
 
-			IsPlayerAlive = InitiateVariable(addr => new BoolVariable(addr), ref address);
-			IsReplay = InitiateVariable(addr => new BoolVariable(addr), ref address);
-			DeathType = InitiateVariable(addr => new ByteVariable(addr), ref address);
-			IsInGame = InitiateVariable(addr => new BoolVariable(addr), ref address);
+			Skull1sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Skull2sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Skull3sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			SpiderlingsKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Skull4sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Squid1sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Squid2sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Squid3sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			CentipedesKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			GigapedesKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Spider1sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			Spider2sKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			LeviathansKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			OrbsKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			ThornsKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			GhostpedesKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
+			SpiderEggsKilled = InitiateVariable(addr => new ShortVariable(addr), ref offset);
 
-			ReplayPlayerId = InitiateVariable(addr => new IntVariable(addr), ref address);
-			ReplayPlayerName = InitiateStringVariable(ref address, 32);
+			IsPlayerAlive = InitiateVariable(addr => new BoolVariable(addr), ref offset);
+			IsReplay = InitiateVariable(addr => new BoolVariable(addr), ref offset);
+			DeathType = InitiateVariable(addr => new ByteVariable(addr), ref offset);
+			IsInGame = InitiateVariable(addr => new BoolVariable(addr), ref offset);
 
-			SurvivalHashMd5 = InitiateByteArrayVariable(ref address, 16);
+			ReplayPlayerId = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			ReplayPlayerName = InitiateStringVariable(ref offset, 32);
 
-			LevelUpTime2 = InitiateVariable(addr => new FloatVariable(addr), ref address);
-			LevelUpTime3 = InitiateVariable(addr => new FloatVariable(addr), ref address);
-			LevelUpTime4 = InitiateVariable(addr => new FloatVariable(addr), ref address);
+			SurvivalHashMd5 = InitiateByteArrayVariable(ref offset, 16);
 
-			LeviathanDownTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
-			OrbDownTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
+			LevelUpTime2 = InitiateVariable(addr => new FloatVariable(addr), ref offset);
+			LevelUpTime3 = InitiateVariable(addr => new FloatVariable(addr), ref offset);
+			LevelUpTime4 = InitiateVariable(addr => new FloatVariable(addr), ref offset);
 
-			Status = InitiateVariable(addr => new IntVariable(addr), ref address);
+			LeviathanDownTime = InitiateVariable(addr => new FloatVariable(addr), ref offset);
+			OrbDownTime = InitiateVariable(addr => new FloatVariable(addr), ref offset);
 
-			HomingMax = InitiateVariable(addr => new IntVariable(addr), ref address);
-			HomingMaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
-			EnemiesAliveMax = InitiateVariable(addr => new IntVariable(addr), ref address);
-			EnemiesAliveMaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
-			MaxTime = InitiateVariable(addr => new FloatVariable(addr), ref address);
+			Status = InitiateVariable(addr => new IntVariable(addr), ref offset);
 
-			address += 4;
+			HomingMax = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			HomingMaxTime = InitiateVariable(addr => new FloatVariable(addr), ref offset);
+			EnemiesAliveMax = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			EnemiesAliveMaxTime = InitiateVariable(addr => new FloatVariable(addr), ref offset);
+			MaxTime = InitiateVariable(addr => new FloatVariable(addr), ref offset);
 
-			StatsBase = InitiateVariable(addr => new LongVariable(addr), ref address);
-			StatsCount = InitiateVariable(addr => new IntVariable(addr), ref address);
-			StatsLoaded = InitiateVariable(addr => new BoolVariable(addr), ref address);
+			// Padding
+			offset += 4;
+
+			StatsBase = InitiateVariable(addr => new LongVariable(addr), ref offset);
+			StatsCount = InitiateVariable(addr => new IntVariable(addr), ref offset);
+			StatsLoaded = InitiateVariable(addr => new BoolVariable(addr), ref offset);
 
 			// 3 byte padding + int starting_hand_level + int starting_homing_count + float starting_time
-			address += 3 + sizeof(int) + sizeof(int) + sizeof(float);
+			offset += 3 + sizeof(int) + sizeof(int) + sizeof(float);
 
-			ProhibitedMods = InitiateVariable(addr => new BoolVariable(addr), ref address);
+			ProhibitedMods = InitiateVariable(addr => new BoolVariable(addr), ref offset);
 
 			IsInitialized = true;
 
-			static TVariable InitiateVariable<TVariable>(Func<long, TVariable> constructor, ref long address)
+			static TVariable InitiateVariable<TVariable>(Func<int, TVariable> constructor, ref int offset)
 				where TVariable : IVariable
 			{
-				TVariable variable = constructor(address);
-				address += variable.Size;
+				TVariable variable = constructor(offset);
+				offset += variable.Size;
 				return variable;
 			}
 
-			static StringVariable InitiateStringVariable(ref long address, uint stringLength)
+			static StringVariable InitiateStringVariable(ref int offset, int stringLength)
 			{
-				StringVariable variable = new(address, stringLength);
-				address += stringLength;
+				StringVariable variable = new(offset, stringLength);
+				offset += stringLength;
 				return variable;
 			}
 
-			static ByteArrayVariable InitiateByteArrayVariable(ref long address, uint arrayLength)
+			static ByteArrayVariable InitiateByteArrayVariable(ref int offset, int arrayLength)
 			{
-				ByteArrayVariable variable = new(address, arrayLength);
-				address += arrayLength;
+				ByteArrayVariable variable = new(offset, arrayLength);
+				offset += arrayLength;
 				return variable;
 			}
 		}
 
 		public static void Scan()
 		{
+			if (Process == null)
+				return;
+
+			OperatingSystemUtils.ReadMemory(Process.Handle, _baseAddress, Buffer, _bufferSize);
+
+			// TODO: Emit warning when this value does not hold MarkerValue.
+			Marker.Scan();
+			FormatVersion.Scan();
+
 			PlayerId.Scan();
 			PlayerName.Scan();
 			Time.Scan();

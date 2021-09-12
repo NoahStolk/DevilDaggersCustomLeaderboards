@@ -2,8 +2,8 @@
 {
 	public class ByteVariable : AbstractVariable<byte>
 	{
-		public ByteVariable(long localBaseAddress)
-			: base(localBaseAddress, sizeof(byte))
+		public ByteVariable(int offset)
+			: base(offset, sizeof(byte))
 		{
 		}
 

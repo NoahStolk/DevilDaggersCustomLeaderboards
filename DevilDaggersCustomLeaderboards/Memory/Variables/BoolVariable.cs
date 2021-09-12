@@ -5,8 +5,8 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
 	public class BoolVariable : AbstractVariable<bool>
 	{
-		public BoolVariable(long localBaseAddress)
-			: base(localBaseAddress, sizeof(bool))
+		public BoolVariable(int offset)
+			: base(offset, sizeof(bool))
 		{
 		}
 

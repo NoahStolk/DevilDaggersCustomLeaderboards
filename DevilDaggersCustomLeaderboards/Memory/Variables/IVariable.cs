@@ -2,8 +2,8 @@
 {
 	public interface IVariable
 	{
-		long Address { get; set; }
-		uint Size { get; set; }
+		int Offset { get; set; }
+		int Size { get; set; }
 		bool IsChanged { get; set; }
 	}
 }

@@ -5,8 +5,8 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
 	public class ShortVariable : AbstractVariable<short>
 	{
-		public ShortVariable(long localBaseAddress)
-			: base(localBaseAddress, sizeof(short))
+		public ShortVariable(int offset)
+			: base(offset, sizeof(short))
 		{
 		}
 

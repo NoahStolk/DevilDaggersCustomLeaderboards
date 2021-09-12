@@ -5,8 +5,8 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
 	public class FloatVariable : AbstractVariable<float>
 	{
-		public FloatVariable(long localBaseAddress)
-			: base(localBaseAddress, sizeof(float))
+		public FloatVariable(int offset)
+			: base(offset, sizeof(float))
 		{
 		}
 
