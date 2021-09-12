@@ -1,8 +1,6 @@
 ﻿using DevilDaggersCore.Utils;
 using DevilDaggersCustomLeaderboards.Clients;
-using DevilDaggersCustomLeaderboards.Exceptions;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
-using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Collections.Generic;
@@ -110,9 +108,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			byte[] pointerBytes = new byte[sizeof(long)];
 
-			ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+			OperatingSystemUtils.ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
 			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
-				ReadMemory(Process.Handle, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
+				OperatingSystemUtils.ReadMemory(Process.Handle, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
 
 			int headerSize = "__ddstats__\0".Length;
 			long address = BitConverter.ToInt64(pointerBytes) + headerSize + sizeof(int);
@@ -392,7 +390,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				if (Process == null)
 					return 0;
 
-				ReadMemory(Process.Handle, StatsBase.Value + offset, intBytes, sizeof(int));
+				OperatingSystemUtils.ReadMemory(Process.Handle, StatsBase.Value + offset, intBytes, sizeof(int));
 				offset += sizeof(int);
 				return BitConverter.ToInt32(intBytes);
 			}
@@ -402,27 +400,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				if (Process == null)
 					return 0;
 
-				ReadMemory(Process.Handle, StatsBase.Value + offset, shortBytes, sizeof(short));
+				OperatingSystemUtils.ReadMemory(Process.Handle, StatsBase.Value + offset, shortBytes, sizeof(short));
 				offset += sizeof(short);
 				return BitConverter.ToInt16(shortBytes);
-			}
-		}
-
-		public static void ReadMemory(nint processAddress, long address, byte[] bytes, int size)
-		{
-			if (Process == null)
-				return;
-
-			switch (OperatingSystemUtils.OperatingSystem)
-			{
-				case Clients.OperatingSystem.Windows:
-					NativeMethods.ReadProcessMemory(processAddress, new(address), bytes, (uint)size, out _);
-					break;
-				case Clients.OperatingSystem.Linux:
-					// TODO
-					break;
-				default:
-					throw new OperatingSystemNotSupportedException();
 			}
 		}
 	}
