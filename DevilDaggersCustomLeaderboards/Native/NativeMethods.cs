@@ -1,6 +1,4 @@
-﻿using DevilDaggersCustomLeaderboards.Exceptions;
-using DevilDaggersCustomLeaderboards.Utils;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace DevilDaggersCustomLeaderboards.Native
@@ -17,7 +15,7 @@ namespace DevilDaggersCustomLeaderboards.Native
 		internal static extern IntPtr GetStdHandle(StdHandle index);
 
 		[DllImport("kernel32.dll")]
-		private static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, uint size, out uint lpNumberOfBytesRead);
+		internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, uint size, out uint lpNumberOfBytesRead);
 
 		[DllImport("kernel32.dll", SetLastError = true)]
 		internal static extern bool SetConsoleScreenBufferInfoEx(IntPtr hConsoleOutput, ref ConsoleScreenBufferInfoEx csbe);
@@ -27,19 +25,5 @@ namespace DevilDaggersCustomLeaderboards.Native
 
 		[DllImport("user32.dll")]
 		internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-
-		[DllImport("libc")]
-		private static extern int read(int handle, byte[] buf, int n);
-
-		public static void ReadMemory(nint processAddress, long address, byte[] bytes, int size)
-		{
-			Action call = OperatingSystemUtils.OperatingSystem switch
-			{
-				Clients.OperatingSystem.Windows => () => ReadProcessMemory(processAddress, new(address), bytes, (uint)size, out _),
-				Clients.OperatingSystem.Linux => () => read((int)(processAddress + address), bytes, size),
-				_ => throw new OperatingSystemNotSupportedException(),
-			};
-			call();
-		}
 	}
 }

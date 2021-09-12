@@ -1,5 +1,4 @@
-﻿using DevilDaggersCustomLeaderboards.Native;
-using System;
+﻿using System;
 
 namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
@@ -34,7 +33,7 @@ namespace DevilDaggersCustomLeaderboards.Memory.Variables
 				if (Scanner.Process?.MainModule == null)
 					return;
 
-				NativeMethods.ReadMemory(Scanner.Process.Handle, Address, Bytes, (int)Size);
+				Scanner.ReadMemory(Scanner.Process.Handle, Address, Bytes, (int)Size);
 
 				IsChanged = !AreBytesEqual();
 			}
