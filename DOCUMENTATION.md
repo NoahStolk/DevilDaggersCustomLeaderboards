@@ -60,27 +60,27 @@
 | Is in game                 |    171 | 8-bit integer (boolean)  |             1 |
 | Replay player ID           |    172 | 32-bit integer           |             4 |
 | Replay player name         |    176 | String                   |            32 |
-| Survival hash              |    198 | MD5 hash byte array      |            16 |
-| Level up time 2            |    214 | 32-bit floating point    |             4 |
-| Level up time 3            |    218 | 32-bit floating point    |             4 |
-| Level up time 4            |    222 | 32-bit floating point    |             4 |
-| Leviathan down time        |    226 | 32-bit floating point    |             4 |
-| Orb down time              |    230 | 32-bit floating point    |             4 |
-| Game status                |    234 | 32-bit integer           |             4 |
-| Max homing                 |    238 | 32-bit integer           |             4 |
-| Max homing time            |    242 | 32-bit floating point    |             4 |
-| Max enemies alive          |    246 | 32-bit integer           |             4 |
-| Max enemies alive time     |    250 | 32-bit floating point    |             4 |
-| Max time                   |    254 | 32-bit floating point    |             4 |
-| N/A (padding)              |    258 | N/A                      |             4 |
-| Graph stats base address   |    262 | 64-bit integer (pointer) |             8 |
-| Graph stats count          |    270 | 32-bit integer           |             4 |
-| Graph stats loaded         |    274 | 8-bit integer (boolean)  |             1 |
-| N/A (padding)              |    275 | N/A                      |             3 |
-| Hand level start           |    278 | 32-bit integer           |             4 |
-| Homing start               |    282 | 32-bit integer           |             4 |
-| Timer start                |    286 | 32-bit floating point    |             4 |
-| Prohibited mods            |    290 | 8-bit integer (boolean)  |             1 |
+| Survival hash              |    208 | MD5 hash byte array      |            16 |
+| Level up time 2            |    224 | 32-bit floating point    |             4 |
+| Level up time 3            |    228 | 32-bit floating point    |             4 |
+| Level up time 4            |    232 | 32-bit floating point    |             4 |
+| Leviathan down time        |    236 | 32-bit floating point    |             4 |
+| Orb down time              |    240 | 32-bit floating point    |             4 |
+| Game status                |    244 | 32-bit integer           |             4 |
+| Max homing                 |    248 | 32-bit integer           |             4 |
+| Max homing time            |    252 | 32-bit floating point    |             4 |
+| Max enemies alive          |    256 | 32-bit integer           |             4 |
+| Max enemies alive time     |    260 | 32-bit floating point    |             4 |
+| Max time                   |    264 | 32-bit floating point    |             4 |
+| N/A (padding)              |    268 | N/A                      |             4 |
+| Graph stats base address   |    272 | 64-bit integer (pointer) |             8 |
+| Graph stats count          |    280 | 32-bit integer           |             4 |
+| Graph stats loaded         |    284 | 8-bit integer (boolean)  |             1 |
+| N/A (padding)              |    285 | N/A                      |             3 |
+| Hand level start           |    288 | 32-bit integer           |             4 |
+| Homing start               |    292 | 32-bit integer           |             4 |
+| Timer start                |    296 | 32-bit floating point    |             4 |
+| Prohibited mods            |    300 | 8-bit integer (boolean)  |             1 |
 
 ## Graph stats
 
