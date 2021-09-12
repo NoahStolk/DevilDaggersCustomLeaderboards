@@ -86,40 +86,51 @@
 
 | Data name                  | Offset | Data type                | Size in bytes |
 |----------------------------|--------|--------------------------|---------------|
-| Skull Is alive             |      0 | 16-bit integer           |             2 |
-| Skull IIs alive            |      2 | 16-bit integer           |             2 |
-| Skull IIIs alive           |      4 | 16-bit integer           |             2 |
-| Spiderlings alive          |      6 | 16-bit integer           |             2 |
-| Skull IVs alive            |      8 | 16-bit integer           |             2 |
-| Squid Is alive             |     10 | 16-bit integer           |             2 |
-| Squid IIs alive            |     12 | 16-bit integer           |             2 |
-| Squid IIIs alive           |     14 | 16-bit integer           |             2 |
-| Centipedes alive           |     16 | 16-bit integer           |             2 |
-| Gigapedes alive            |     18 | 16-bit integer           |             2 |
-| Spider Is alive            |     20 | 16-bit integer           |             2 |
-| Spider IIs alive           |     22 | 16-bit integer           |             2 |
-| Leviathans alive           |     24 | 16-bit integer           |             2 |
-| Orbs alive                 |     26 | 16-bit integer           |             2 |
-| Thorns alive               |     28 | 16-bit integer           |             2 |
-| Ghostpedes alive           |     30 | 16-bit integer           |             2 |
-| Spider eggs alive          |     32 | 16-bit integer           |             2 |
-| Skull Is killed            |     34 | 16-bit integer           |             2 |
-| Skull IIs killed           |     36 | 16-bit integer           |             2 |
-| Skull IIIs killed          |     38 | 16-bit integer           |             2 |
-| Spiderlings killed         |     40 | 16-bit integer           |             2 |
-| Skull IVs killed           |     42 | 16-bit integer           |             2 |
-| Squid Is killed            |     44 | 16-bit integer           |             2 |
-| Squid IIs killed           |     46 | 16-bit integer           |             2 |
-| Squid IIIs killed          |     48 | 16-bit integer           |             2 |
-| Centipedes killed          |     50 | 16-bit integer           |             2 |
-| Gigapedes killed           |     52 | 16-bit integer           |             2 |
-| Spider Is killed           |     54 | 16-bit integer           |             2 |
-| Spider IIs killed          |     56 | 16-bit integer           |             2 |
-| Leviathans killed          |     58 | 16-bit integer           |             2 |
-| Orbs killed                |     60 | 16-bit integer           |             2 |
-| Thorns killed              |     62 | 16-bit integer           |             2 |
-| Ghostpedes killed          |     64 | 16-bit integer           |             2 |
-| Spider eggs killed         |     66 | 16-bit integer           |             2 |
+| Gems collected             |      0 | 32-bit integer           |             4 |
+| Enemies killed             |      4 | 32-bit integer           |             4 |
+| Daggers fired              |      8 | 32-bit integer           |             4 |
+| Daggers hit                |     12 | 32-bit integer           |             4 |
+| Enemies alive              |     16 | 32-bit integer           |             4 |
+| Level gems                 |     20 | 32-bit integer           |             4 |
+| Homing daggers             |     24 | 32-bit integer           |             4 |
+| Gems despawned             |     28 | 32-bit integer           |             4 |
+| Gems eaten                 |     32 | 32-bit integer           |             4 |
+| Gems total                 |     36 | 32-bit integer           |             4 |
+| Homing daggers eaten       |     40 | 32-bit integer           |             4 |
+| Skull Is alive             |     44 | 16-bit integer           |             2 |
+| Skull IIs alive            |     46 | 16-bit integer           |             2 |
+| Skull IIIs alive           |     48 | 16-bit integer           |             2 |
+| Spiderlings alive          |     50 | 16-bit integer           |             2 |
+| Skull IVs alive            |     52 | 16-bit integer           |             2 |
+| Squid Is alive             |     54 | 16-bit integer           |             2 |
+| Squid IIs alive            |     56 | 16-bit integer           |             2 |
+| Squid IIIs alive           |     58 | 16-bit integer           |             2 |
+| Centipedes alive           |     60 | 16-bit integer           |             2 |
+| Gigapedes alive            |     62 | 16-bit integer           |             2 |
+| Spider Is alive            |     64 | 16-bit integer           |             2 |
+| Spider IIs alive           |     66 | 16-bit integer           |             2 |
+| Leviathans alive           |     68 | 16-bit integer           |             2 |
+| Orbs alive                 |     70 | 16-bit integer           |             2 |
+| Thorns alive               |     72 | 16-bit integer           |             2 |
+| Ghostpedes alive           |     74 | 16-bit integer           |             2 |
+| Spider eggs alive          |     76 | 16-bit integer           |             2 |
+| Skull Is killed            |     78 | 16-bit integer           |             2 |
+| Skull IIs killed           |     80 | 16-bit integer           |             2 |
+| Skull IIIs killed          |     82 | 16-bit integer           |             2 |
+| Spiderlings killed         |     84 | 16-bit integer           |             2 |
+| Skull IVs killed           |     86 | 16-bit integer           |             2 |
+| Squid Is killed            |     88 | 16-bit integer           |             2 |
+| Squid IIs killed           |     90 | 16-bit integer           |             2 |
+| Squid IIIs killed          |     92 | 16-bit integer           |             2 |
+| Centipedes killed          |     94 | 16-bit integer           |             2 |
+| Gigapedes killed           |     96 | 16-bit integer           |             2 |
+| Spider Is killed           |     98 | 16-bit integer           |             2 |
+| Spider IIs killed          |    100 | 16-bit integer           |             2 |
+| Leviathans killed          |    102 | 16-bit integer           |             2 |
+| Orbs killed                |    104 | 16-bit integer           |             2 |
+| Thorns killed              |    106 | 16-bit integer           |             2 |
+| Ghostpedes killed          |    108 | 16-bit integer           |             2 |
+| Spider eggs killed         |    110 | 16-bit integer           |             2 |
 
 ## Game status
 
