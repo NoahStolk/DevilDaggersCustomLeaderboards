@@ -5,12 +5,14 @@ using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public static class Scanner
 	{
 		private const int _bufferSize = 301;
+		private const int _statesBufferSize = 112;
 		private const string _markerValue = "__ddstats__\0";
 
 		private static long _baseAddress;
@@ -351,86 +353,72 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static List<GameState> GetGameStates()
 		{
-			byte[] intBytes = new byte[4];
-			byte[] shortBytes = new byte[2];
-			int offset = 0;
+			if (Process == null)
+				return new();
+
+			byte[] buffer = new byte[_statesBufferSize * StatsCount];
+			OperatingSystemUtils.ReadMemory(Process.Handle, StatsBase.Value, buffer, buffer.Length);
+
 			List<GameState> gameStates = new();
+
+			using MemoryStream ms = new(buffer);
+			using BinaryReader br = new(ms);
 			for (int i = 0; i < StatsCount; i++)
 			{
 				GameState gameState = new();
 
-				gameState.GemsCollected = ReadInt(ref offset);
-				gameState.EnemiesKilled = ReadInt(ref offset);
-				gameState.DaggersFired = ReadInt(ref offset);
-				gameState.DaggersHit = ReadInt(ref offset);
-				gameState.EnemiesAlive = ReadInt(ref offset);
-				offset += sizeof(int);
-				gameState.HomingDaggers = ReadInt(ref offset);
-				gameState.GemsDespawned = ReadInt(ref offset);
-				gameState.GemsEaten = ReadInt(ref offset);
-				gameState.GemsTotal = ReadInt(ref offset);
-				gameState.HomingDaggersEaten = ReadInt(ref offset);
+				gameState.GemsCollected = br.ReadInt32();
+				gameState.EnemiesKilled = br.ReadInt32();
+				gameState.DaggersFired = br.ReadInt32();
+				gameState.DaggersHit = br.ReadInt32();
+				gameState.EnemiesAlive = br.ReadInt32();
+				_ = br.ReadInt32(); // Skip level gems.
+				gameState.HomingDaggers = br.ReadInt32();
+				gameState.GemsDespawned = br.ReadInt32();
+				gameState.GemsEaten = br.ReadInt32();
+				gameState.GemsTotal = br.ReadInt32();
+				gameState.HomingDaggersEaten = br.ReadInt32();
 
-				gameState.Skull1sAlive = ReadShort(ref offset);
-				gameState.Skull2sAlive = ReadShort(ref offset);
-				gameState.Skull3sAlive = ReadShort(ref offset);
-				gameState.SpiderlingsAlive = ReadShort(ref offset);
-				gameState.Skull4sAlive = ReadShort(ref offset);
-				gameState.Squid1sAlive = ReadShort(ref offset);
-				gameState.Squid2sAlive = ReadShort(ref offset);
-				gameState.Squid3sAlive = ReadShort(ref offset);
-				gameState.CentipedesAlive = ReadShort(ref offset);
-				gameState.GigapedesAlive = ReadShort(ref offset);
-				gameState.Spider1sAlive = ReadShort(ref offset);
-				gameState.Spider2sAlive = ReadShort(ref offset);
-				gameState.LeviathansAlive = ReadShort(ref offset);
-				gameState.OrbsAlive = ReadShort(ref offset);
-				gameState.ThornsAlive = ReadShort(ref offset);
-				gameState.GhostpedesAlive = ReadShort(ref offset);
-				gameState.SpiderEggsAlive = ReadShort(ref offset);
+				gameState.Skull1sAlive = br.ReadInt16();
+				gameState.Skull2sAlive = br.ReadInt16();
+				gameState.Skull3sAlive = br.ReadInt16();
+				gameState.SpiderlingsAlive = br.ReadInt16();
+				gameState.Skull4sAlive = br.ReadInt16();
+				gameState.Squid1sAlive = br.ReadInt16();
+				gameState.Squid2sAlive = br.ReadInt16();
+				gameState.Squid3sAlive = br.ReadInt16();
+				gameState.CentipedesAlive = br.ReadInt16();
+				gameState.GigapedesAlive = br.ReadInt16();
+				gameState.Spider1sAlive = br.ReadInt16();
+				gameState.Spider2sAlive = br.ReadInt16();
+				gameState.LeviathansAlive = br.ReadInt16();
+				gameState.OrbsAlive = br.ReadInt16();
+				gameState.ThornsAlive = br.ReadInt16();
+				gameState.GhostpedesAlive = br.ReadInt16();
+				gameState.SpiderEggsAlive = br.ReadInt16();
 
-				gameState.Skull1sKilled = ReadShort(ref offset);
-				gameState.Skull2sKilled = ReadShort(ref offset);
-				gameState.Skull3sKilled = ReadShort(ref offset);
-				gameState.SpiderlingsKilled = ReadShort(ref offset);
-				gameState.Skull4sKilled = ReadShort(ref offset);
-				gameState.Squid1sKilled = ReadShort(ref offset);
-				gameState.Squid2sKilled = ReadShort(ref offset);
-				gameState.Squid3sKilled = ReadShort(ref offset);
-				gameState.CentipedesKilled = ReadShort(ref offset);
-				gameState.GigapedesKilled = ReadShort(ref offset);
-				gameState.Spider1sKilled = ReadShort(ref offset);
-				gameState.Spider2sKilled = ReadShort(ref offset);
-				gameState.LeviathansKilled = ReadShort(ref offset);
-				gameState.OrbsKilled = ReadShort(ref offset);
-				gameState.ThornsKilled = ReadShort(ref offset);
-				gameState.GhostpedesKilled = ReadShort(ref offset);
-				gameState.SpiderEggsKilled = ReadShort(ref offset);
+				gameState.Skull1sKilled = br.ReadInt16();
+				gameState.Skull2sKilled = br.ReadInt16();
+				gameState.Skull3sKilled = br.ReadInt16();
+				gameState.SpiderlingsKilled = br.ReadInt16();
+				gameState.Skull4sKilled = br.ReadInt16();
+				gameState.Squid1sKilled = br.ReadInt16();
+				gameState.Squid2sKilled = br.ReadInt16();
+				gameState.Squid3sKilled = br.ReadInt16();
+				gameState.CentipedesKilled = br.ReadInt16();
+				gameState.GigapedesKilled = br.ReadInt16();
+				gameState.Spider1sKilled = br.ReadInt16();
+				gameState.Spider2sKilled = br.ReadInt16();
+				gameState.LeviathansKilled = br.ReadInt16();
+				gameState.OrbsKilled = br.ReadInt16();
+				gameState.ThornsKilled = br.ReadInt16();
+				gameState.GhostpedesKilled = br.ReadInt16();
+				gameState.SpiderEggsKilled = br.ReadInt16();
 
 				gameStates.Add(gameState);
 			}
 
 			return gameStates;
-
-			int ReadInt(ref int offset)
-			{
-				if (Process == null)
-					return 0;
-
-				OperatingSystemUtils.ReadMemory(Process.Handle, StatsBase.Value + offset, intBytes, sizeof(int));
-				offset += sizeof(int);
-				return BitConverter.ToInt32(intBytes);
-			}
-
-			short ReadShort(ref int offset)
-			{
-				if (Process == null)
-					return 0;
-
-				OperatingSystemUtils.ReadMemory(Process.Handle, StatsBase.Value + offset, shortBytes, sizeof(short));
-				offset += sizeof(short);
-				return BitConverter.ToInt16(shortBytes);
-			}
 		}
 	}
 }
