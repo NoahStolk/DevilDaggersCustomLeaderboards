@@ -305,18 +305,12 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				LeviathanDownTime.Scan();
 				OrbDownTime.Scan();
 
-				if (LevelGems > 0)
-				{
-					LevelUpTime2.Scan();
-					LevelUpTime3.Scan();
-					LevelUpTime4.Scan();
+				LevelUpTime2.Scan();
+				LevelUpTime3.Scan();
+				LevelUpTime4.Scan();
 
-					if (LevelGems == 70 || LevelGems == 71)
-					{
-						HomingDaggers.Scan();
-						HomingDaggersEaten.Scan();
-					}
-				}
+				HomingDaggers.Scan();
+				HomingDaggersEaten.Scan();
 			}
 			else
 			{
