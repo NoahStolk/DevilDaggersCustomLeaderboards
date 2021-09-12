@@ -7,8 +7,6 @@ using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace DevilDaggersCustomLeaderboards.Memory
 {
@@ -112,19 +110,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			byte[] pointerBytes = new byte[sizeof(long)];
 
-			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Windows)
-			{
-				ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
-			}
-			else if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
-			{
-				ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+			ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
 				ReadMemory(Process.Handle, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
-			}
-			else
-			{
-				throw new OperatingSystemNotSupportedException();
-			}
 
 			int headerSize = "__ddstats__\0".Length;
 			long address = BitConverter.ToInt64(pointerBytes) + headerSize + sizeof(int);
@@ -437,8 +425,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					NativeMethods.ReadProcessMemory(processAddress, new(address), bytes, (uint)size, out _);
 					break;
 				case Clients.OperatingSystem.Linux:
-					
-
+					// TODO
 					break;
 				default:
 					throw new OperatingSystemNotSupportedException();
