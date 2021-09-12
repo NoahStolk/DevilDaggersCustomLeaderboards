@@ -24,5 +24,19 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			OperatingSystem.Linux => ddclSettings.MarkerLinuxSteam,
 			_ => throw new OperatingSystemNotSupportedException(),
 		};
+
+		public static string GetProcessName() => OperatingSystem switch
+		{
+			OperatingSystem.Windows => "dd",
+			OperatingSystem.Linux => "devildaggers",
+			_ => throw new OperatingSystemNotSupportedException(),
+		};
+
+		public static string GetProcessWindowTitle() => OperatingSystem switch
+		{
+			OperatingSystem.Windows => "Devil Daggers",
+			OperatingSystem.Linux => string.Empty,
+			_ => throw new OperatingSystemNotSupportedException(),
+		};
 	}
 }

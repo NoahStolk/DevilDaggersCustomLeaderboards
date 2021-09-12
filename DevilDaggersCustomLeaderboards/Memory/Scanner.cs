@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace DevilDaggersCustomLeaderboards.Memory
 {
@@ -101,13 +102,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void FindWindow()
 		{
-			(string processName, string processWindowTitle) = OperatingSystemUtils.OperatingSystem switch
-			{
-				Clients.OperatingSystem.Windows => ("dd", "Devil Daggers"),
-				Clients.OperatingSystem.Linux => ("devildaggers", string.Empty),
-				_ => throw new OperatingSystemNotSupportedException(),
-			};
-			Process = ProcessUtils.GetDevilDaggersProcess(processName, processWindowTitle);
+			Process = ProcessUtils.GetDevilDaggersProcess(OperatingSystemUtils.GetProcessName(), OperatingSystemUtils.GetProcessWindowTitle());
 		}
 
 		public static void Initialize(long ddstatsMarkerOffset)
@@ -117,11 +112,18 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			byte[] pointerBytes = new byte[sizeof(long)];
 
-			ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
-			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
+			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Windows)
 			{
-				// TODO: Test.
+				ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+			}
+			else if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
+			{
+				ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
 				ReadMemory(Process.Handle, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
+			}
+			else
+			{
+				throw new OperatingSystemNotSupportedException();
 			}
 
 			int headerSize = "__ddstats__\0".Length;
@@ -435,10 +437,8 @@ namespace DevilDaggersCustomLeaderboards.Memory
 					NativeMethods.ReadProcessMemory(processAddress, new(address), bytes, (uint)size, out _);
 					break;
 				case Clients.OperatingSystem.Linux:
-					// TODO: Test.
-					int pid = Process.Id;
-					byte[] memory = File.ReadAllBytes($"/proc/{pid}/maps");
-					Buffer.BlockCopy(memory, (int)address, bytes, 0, size);
+					
+
 					break;
 				default:
 					throw new OperatingSystemNotSupportedException();
