@@ -5,7 +5,7 @@
 | Data name                  | Offset | Data type                | Size in bytes |
 |----------------------------|--------|--------------------------|---------------|
 | Marker ("`__ddstats__\0`") |      0 | String                   |            12 |
-| N/A (padding)              |     12 | N/A                      |             4 |
+| Format version             |     12 | 32-bit integer           |             4 |
 | Player ID                  |     16 | 32-bit integer           |             4 |
 | Player name                |     20 | String                   |            32 |
 | Timer time                 |     52 | 32-bit floating point    |             4 |
