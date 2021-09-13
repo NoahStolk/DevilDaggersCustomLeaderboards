@@ -1,8 +1,8 @@
-﻿using DevilDaggersCustomLeaderboards.Clients;
-using DevilDaggersCustomLeaderboards.Exceptions;
+﻿using DevilDaggersCustomLeaderboards.Exceptions;
 using DevilDaggersCustomLeaderboards.Native;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Os = DevilDaggersCustomLeaderboards.Clients.OperatingSystem;
 
 namespace DevilDaggersCustomLeaderboards.Utils
 {
@@ -11,26 +11,26 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		static OperatingSystemUtils()
 		{
 			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-				OperatingSystem = OperatingSystem.Windows;
+				OperatingSystem = Os.Windows;
 			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-				OperatingSystem = OperatingSystem.Linux;
+				OperatingSystem = Os.Linux;
 			else
-				OperatingSystem = OperatingSystem.None;
+				OperatingSystem = Os.None;
 		}
 
-		public static OperatingSystem OperatingSystem { get; }
+		public static Os OperatingSystem { get; }
 
 		public static string GetProcessName() => OperatingSystem switch
 		{
-			OperatingSystem.Windows => "dd",
-			OperatingSystem.Linux => "devildaggers",
+			Os.Windows => "dd",
+			Os.Linux => "devildaggers",
 			_ => throw new OperatingSystemNotSupportedException(),
 		};
 
 		public static string GetProcessWindowTitle() => OperatingSystem switch
 		{
-			OperatingSystem.Windows => "Devil Daggers",
-			OperatingSystem.Linux => string.Empty,
+			Os.Windows => "Devil Daggers",
+			Os.Linux => string.Empty,
 			_ => throw new OperatingSystemNotSupportedException(),
 		};
 
@@ -38,11 +38,11 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		{
 			switch (OperatingSystem)
 			{
-				case OperatingSystem.Windows:
+				case Os.Windows:
 					NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
 					break;
-				case OperatingSystem.Linux:
 					// TODO
+				case Os.Linux:
 					break;
 				default:
 					throw new OperatingSystemNotSupportedException();
