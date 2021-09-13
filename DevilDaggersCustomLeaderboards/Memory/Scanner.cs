@@ -124,9 +124,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			byte[] pointerBytes = new byte[sizeof(long)];
 
-			OperatingSystemUtils.ReadMemory(Process.Handle, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+			OperatingSystemUtils.ReadMemory(Process, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
 			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
-				OperatingSystemUtils.ReadMemory(Process.Handle, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
+				OperatingSystemUtils.ReadMemory(Process, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
 
 			_baseAddress = BitConverter.ToInt64(pointerBytes);
 
@@ -252,7 +252,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			if (Process == null)
 				return;
 
-			OperatingSystemUtils.ReadMemory(Process.Handle, _baseAddress, Buffer, _bufferSize);
+			OperatingSystemUtils.ReadMemory(Process, _baseAddress, Buffer, _bufferSize);
 
 			// TODO: Emit warning when this value does not hold MarkerValue.
 			Marker.Scan();
@@ -357,7 +357,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 				return new();
 
 			byte[] buffer = new byte[_statesBufferSize * StatsCount];
-			OperatingSystemUtils.ReadMemory(Process.Handle, StatsBase.Value, buffer, buffer.Length);
+			OperatingSystemUtils.ReadMemory(Process, StatsBase.Value, buffer, buffer.Length);
 
 			List<GameState> gameStates = new();
 

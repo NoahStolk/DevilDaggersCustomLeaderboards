@@ -1,6 +1,7 @@
 ﻿using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Exceptions;
 using DevilDaggersCustomLeaderboards.Native;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace DevilDaggersCustomLeaderboards.Utils
@@ -33,12 +34,12 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			_ => throw new OperatingSystemNotSupportedException(),
 		};
 
-		public static void ReadMemory(nint processAddress, long address, byte[] bytes, int size)
+		public static void ReadMemory(Process process, long address, byte[] bytes, int size)
 		{
 			switch (OperatingSystem)
 			{
 				case OperatingSystem.Windows:
-					NativeMethods.ReadProcessMemory(processAddress, new(address), bytes, (uint)size, out _);
+					NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
 					break;
 				case OperatingSystem.Linux:
 					// TODO
