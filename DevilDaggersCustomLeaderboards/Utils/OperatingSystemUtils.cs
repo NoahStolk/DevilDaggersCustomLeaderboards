@@ -25,6 +25,10 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 		public static Os OperatingSystem { get; }
 
+		public static bool IsWindows => OperatingSystem == Os.Windows;
+
+		public static bool IsLinux => OperatingSystem == Os.Linux;
+
 		public static void ReadMemory(Process process, long address, byte[] bytes, int size)
 		{
 			switch (OperatingSystem)

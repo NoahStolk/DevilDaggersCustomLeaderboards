@@ -39,11 +39,11 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 		public static void Clear()
 		{
-			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Windows)
+			if (OperatingSystemUtils.IsWindows)
 			{
 				Console.SetCursorPosition(0, 0);
 			}
-			else if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
+			else if (OperatingSystemUtils.IsLinux)
 			{
 				Console.Clear();
 			}
