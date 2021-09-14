@@ -1,5 +1,4 @@
-﻿using DevilDaggersCustomLeaderboards.Exceptions;
-using DevilDaggersCustomLeaderboards.Memory.Linux;
+﻿using DevilDaggersCustomLeaderboards.Memory.Linux;
 using DevilDaggersCustomLeaderboards.Native;
 using System;
 using System.Diagnostics;
@@ -30,14 +29,14 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		{
 			Os.Windows => "dd",
 			Os.Linux => "devildaggers",
-			_ => throw new OperatingSystemNotSupportedException(),
+			_ => throw new PlatformNotSupportedException(),
 		};
 
 		public static string GetProcessWindowTitle() => OperatingSystem switch
 		{
 			Os.Windows => "Devil Daggers",
 			Os.Linux => string.Empty,
-			_ => throw new OperatingSystemNotSupportedException(),
+			_ => throw new PlatformNotSupportedException(),
 		};
 
 		public static void ReadMemory(Process process, long address, byte[] bytes, int size)
@@ -60,7 +59,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 					break;
 				default:
-					throw new OperatingSystemNotSupportedException();
+					throw new PlatformNotSupportedException();
 			}
 		}
 
@@ -89,7 +88,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			}
 			else
 			{
-				throw new OperatingSystemNotSupportedException();
+				throw new PlatformNotSupportedException();
 			}
 		}
 
@@ -162,7 +161,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			}
 			else
 			{
-				throw new OperatingSystemNotSupportedException();
+				throw new PlatformNotSupportedException();
 			}
 		}
 	}

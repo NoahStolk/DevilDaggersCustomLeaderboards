@@ -1,5 +1,4 @@
 ﻿using DevilDaggersCustomLeaderboards.Enumerators;
-using DevilDaggersCustomLeaderboards.Exceptions;
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Utils
@@ -50,7 +49,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			}
 			else
 			{
-				throw new OperatingSystemNotSupportedException();
+				throw new PlatformNotSupportedException();
 			}
 		}
 	}
