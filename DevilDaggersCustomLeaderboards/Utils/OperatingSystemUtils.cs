@@ -25,20 +25,6 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 		public static Os OperatingSystem { get; }
 
-		public static string GetProcessName() => OperatingSystem switch
-		{
-			Os.Windows => "dd",
-			Os.Linux => "devildaggers",
-			_ => throw new PlatformNotSupportedException(),
-		};
-
-		public static string GetProcessWindowTitle() => OperatingSystem switch
-		{
-			Os.Windows => "Devil Daggers",
-			Os.Linux => string.Empty,
-			_ => throw new PlatformNotSupportedException(),
-		};
-
 		public static void ReadMemory(Process process, long address, byte[] bytes, int size)
 		{
 			switch (OperatingSystem)
