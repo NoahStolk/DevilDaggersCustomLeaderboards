@@ -1,56 +1,36 @@
-﻿using DevilDaggersCustomLeaderboards.Memory.Linux;
-using DevilDaggersCustomLeaderboards.Native;
-using System;
+﻿using System;
 using System.Diagnostics;
+#if WINDOWS
+using DevilDaggersCustomLeaderboards.Native;
+#elif LINUX
+﻿using DevilDaggersCustomLeaderboards.Memory.Linux;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
-using Os = DevilDaggersCustomLeaderboards.Clients.OperatingSystem;
+#endif
 
 namespace DevilDaggersCustomLeaderboards.Utils
 {
 	public static class OperatingSystemUtils
 	{
+#if LINUX
 		private static LinuxHeapAccessor? _linuxHeapAccessor;
-
-		static OperatingSystemUtils()
-		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-				OperatingSystem = Os.Windows;
-			else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-				OperatingSystem = Os.Linux;
-			else
-				OperatingSystem = Os.None;
-		}
-
-		public static Os OperatingSystem { get; }
-
-		public static bool IsWindows => OperatingSystem == Os.Windows;
-
-		public static bool IsLinux => OperatingSystem == Os.Linux;
+#endif
 
 		public static void ReadMemory(Process process, long address, byte[] bytes, int size)
 		{
-			switch (OperatingSystem)
+#if WINDOWS
+			NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
+#elif LINUX
+			if (_linuxHeapAccessor != null)
 			{
-				case Os.Windows:
-					NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
-					break;
-				case Os.Linux:
-					if (_linuxHeapAccessor != null)
-					{
-						_linuxHeapAccessor.Stream.Seek(address, SeekOrigin.Begin);
-						_linuxHeapAccessor.Stream.Read(bytes, 0, size);
-					}
-					else
-					{
-						Console.WriteLine("Linux: Cannot read memory block when heap is not accessible.");
-					}
-
-					break;
-				default:
-					throw new PlatformNotSupportedException();
+				_linuxHeapAccessor.Stream.Seek(address, SeekOrigin.Begin);
+				_linuxHeapAccessor.Stream.Read(bytes, 0, size);
 			}
+			else
+			{
+				Console.WriteLine("Linux: Cannot read memory block when heap is not accessible.");
+			}
+#endif
 		}
 
 		public static long? GetMemoryBlockAddress(Process process, long ddstatsMarkerOffset)
@@ -58,31 +38,25 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			if (process.MainModule == null)
 				return null;
 
+#if WINDOWS
 			byte[] pointerBytes = new byte[sizeof(long)];
-			if (OperatingSystem == Os.Windows)
+			ReadMemory(process, process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+			return BitConverter.ToInt64(pointerBytes);
+#elif LINUX
+			try
 			{
-				ReadMemory(process, process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
-				return BitConverter.ToInt64(pointerBytes);
+				return BruteForceFindMarker(process);
 			}
-			else if (OperatingSystem == Os.Linux)
+			catch (Exception ex)
 			{
-				try
-				{
-					return BruteForceFindMarkerOnLinux(process);
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine($"Linux: Error while trying to find memory block:\n{ex.Message}");
-					return null;
-				}
+				Console.WriteLine($"Linux: Error while trying to find memory block:\n{ex.Message}");
+				return null;
 			}
-			else
-			{
-				throw new PlatformNotSupportedException();
-			}
+#endif
 		}
 
-		private static long BruteForceFindMarkerOnLinux(Process process)
+#if LINUX
+		private static long BruteForceFindMarker(Process process)
 		{
 			string[] mapLines = File.ReadAllLines($"/proc/{process.Id}/maps");
 			string heapLine = Array.Find(mapLines, s => s.Contains("heap")) ?? throw new("No heap line in map file.");
@@ -126,33 +100,27 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 			return 0;
 		}
+#endif
 
 		public static Process? GetDevilDaggersProcess()
 		{
-			if (OperatingSystem == Os.Linux)
+#if WINDOWS
+			foreach (Process process in Process.GetProcessesByName("dd"))
 			{
-				foreach (Process process in Process.GetProcesses())
-				{
-					if (process.ProcessName.StartsWith("devildaggers"))
-						return process;
-				}
+				if (process.MainWindowTitle == "Devil Daggers")
+					return process;
+			}
 
-				return null;
-			}
-			else if (OperatingSystem == Os.Windows)
+			return null;
+#elif LINUX
+			foreach (Process process in Process.GetProcesses())
 			{
-				foreach (Process process in Process.GetProcessesByName("dd"))
-				{
-					if (process.MainWindowTitle == "Devil Daggers")
-						return process;
-				}
+				if (process.ProcessName.StartsWith("devildaggers"))
+					return process;
+			}
 
-				return null;
-			}
-			else
-			{
-				throw new PlatformNotSupportedException();
-			}
+			return null;
+#endif
 		}
 	}
 }

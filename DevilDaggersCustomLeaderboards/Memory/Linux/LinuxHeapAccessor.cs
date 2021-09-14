@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if LINUX
+using System;
 using System.IO;
 
 namespace DevilDaggersCustomLeaderboards.Memory.Linux
@@ -33,3 +34,4 @@ namespace DevilDaggersCustomLeaderboards.Memory.Linux
 		}
 	}
 }
+#endif

@@ -81,7 +81,12 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 			Cmd.WriteLine("Retrieving marker...");
-			Marker marker = await NetworkHandler.Instance.ApiClient.ProcessMemory_GetMarkerAsync(OperatingSystemUtils.OperatingSystem);
+#if WINDOWS
+			const Clients.OperatingSystem os = Clients.OperatingSystem.Windows;
+#elif LINUX
+			const Clients.OperatingSystem os = Clients.OperatingSystem.Linux;
+#endif
+			Marker marker = await NetworkHandler.Instance.ApiClient.ProcessMemory_GetMarkerAsync(os);
 			_marker = marker.Value;
 			Console.Clear();
 
@@ -102,40 +107,39 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			Console.CursorVisible = false;
 
-			if (OperatingSystemUtils.IsWindows)
+#if WINDOWS
+			try
 			{
-				try
-				{
 #pragma warning disable CA1416 // Validate platform compatibility
 #if DEBUG
-					Console.WindowHeight = 80;
+				Console.WindowHeight = 80;
 #else
-					Console.WindowHeight = 60;
+				Console.WindowHeight = 60;
 #endif
-					Console.WindowWidth = 170;
+				Console.WindowWidth = 170;
 #pragma warning restore CA1416 // Validate platform compatibility
-				}
-				catch
-				{
-					// Do nothing if resizing the console failed. It usually means a very large custom font caused the window to be too large which throws an exception.
-				}
+			}
+			catch
+			{
+				// Do nothing if resizing the console failed. It usually means a very large custom font caused the window to be too large which throws an exception.
+			}
 
 #pragma warning disable CA1806 // Do not ignore method results
-				NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
-				NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
-				NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
+			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
+			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
+			NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
 #pragma warning restore CA1806 // Do not ignore method results
 
-				ColorUtils.ModifyConsoleColor(2, 0x47, 0x8B, 0x41);
-				ColorUtils.ModifyConsoleColor(3, 0xCD, 0x7F, 0x32);
-				ColorUtils.ModifyConsoleColor(4, 0x77, 0x1D, 0x00);
-				ColorUtils.ModifyConsoleColor(5, 0xAF, 0x6B, 0x00);
-				ColorUtils.ModifyConsoleColor(6, 0x97, 0x6E, 0x2E);
-				ColorUtils.ModifyConsoleColor(7, 0xDD, 0xDD, 0xDD);
-				ColorUtils.ModifyConsoleColor(9, 0xC8, 0xA2, 0xC8);
-				ColorUtils.ModifyConsoleColor(11, 0x80, 0x06, 0x00);
-				ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
-			}
+			ColorUtils.ModifyConsoleColor(2, 0x47, 0x8B, 0x41);
+			ColorUtils.ModifyConsoleColor(3, 0xCD, 0x7F, 0x32);
+			ColorUtils.ModifyConsoleColor(4, 0x77, 0x1D, 0x00);
+			ColorUtils.ModifyConsoleColor(5, 0xAF, 0x6B, 0x00);
+			ColorUtils.ModifyConsoleColor(6, 0x97, 0x6E, 0x2E);
+			ColorUtils.ModifyConsoleColor(7, 0xDD, 0xDD, 0xDD);
+			ColorUtils.ModifyConsoleColor(9, 0xC8, 0xA2, 0xC8);
+			ColorUtils.ModifyConsoleColor(11, 0x80, 0x06, 0x00);
+			ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
+#endif
 
 #if DEBUG
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion} DEBUG";
@@ -302,7 +306,11 @@ namespace DevilDaggersCustomLeaderboards
 #else
 					BuildMode = BuildMode.Release,
 #endif
-					OperatingSystem = OperatingSystemUtils.OperatingSystem,
+#if WINDOWS
+					OperatingSystem = Clients.OperatingSystem.Windows,
+#elif LINUX
+					OperatingSystem = Clients.OperatingSystem.Linux,
+#endif
 					ProhibitedMods = Scanner.ProhibitedMods,
 				};
 
