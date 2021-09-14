@@ -110,8 +110,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				Console.BackgroundColor = (ConsoleColor)backgroundColor;
 
 				Console.Write($"{textLeft,-Cmd.TextWidthLeft}");
-				Console.Write($"{variableHeaderLeft,Cmd.TextWidthRight - 15}");
-				Console.Write($"{variableHeaderRight,Cmd.TextWidthRight - 10}");
+				Console.Write($"{variableHeaderLeft,Cmd.TextWidthRight - Cmd.LeftMargin}");
+				Console.Write($"{variableHeaderRight,Cmd.TextWidthRight - Cmd.RightMargin}");
 				Console.WriteLine($"{new string(' ', Cmd.TextWidthFull)}");
 			}
 
@@ -122,9 +122,9 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				Console.Write($"{textLeft,-Cmd.TextWidthLeft}");
 
 				Console.ForegroundColor = (ConsoleColor)(variableLeft.IsChanged ? enemyColor : foregroundColor);
-				Console.Write($"{variableLeft,Cmd.TextWidthRight - 15}");
+				Console.Write($"{variableLeft,Cmd.TextWidthRight - Cmd.LeftMargin}");
 				Console.ForegroundColor = (ConsoleColor)(variableRight.IsChanged ? enemyColor : foregroundColor);
-				Console.Write($"{variableRight,Cmd.TextWidthRight - 10}");
+				Console.Write($"{variableRight,Cmd.TextWidthRight - Cmd.RightMargin}");
 
 				Console.BackgroundColor = (ConsoleColor)backgroundColor;
 				Console.WriteLine($"{new string(' ', Cmd.TextWidthFull)}");
