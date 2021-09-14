@@ -15,7 +15,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		private const int _statesBufferSize = 112;
 		private const string _markerValue = "__ddstats__\0";
 
-		private static long _baseAddress;
+		private static long _memoryBlockAddress;
 
 		public static bool IsInitialized { get; set; }
 
@@ -122,13 +122,11 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			if (IsInitialized || Process?.MainModule == null)
 				return;
 
-			byte[] pointerBytes = new byte[sizeof(long)];
+			long? memoryBlockAddress = OperatingSystemUtils.GetMemoryBlockAddress(Process, ddstatsMarkerOffset);
+			if (!memoryBlockAddress.HasValue)
+				return;
 
-			OperatingSystemUtils.ReadMemory(Process, Process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
-			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
-				OperatingSystemUtils.ReadMemory(Process, BitConverter.ToInt64(pointerBytes) + 0x1F10, pointerBytes, sizeof(long));
-
-			_baseAddress = BitConverter.ToInt64(pointerBytes);
+			_memoryBlockAddress = memoryBlockAddress.Value;
 
 			int offset = 0;
 			Marker = InitiateStringVariable(ref offset, _markerValue.Length);
@@ -252,7 +250,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			if (Process == null)
 				return;
 
-			OperatingSystemUtils.ReadMemory(Process, _baseAddress, Buffer, _bufferSize);
+			OperatingSystemUtils.ReadMemory(Process, _memoryBlockAddress, Buffer, _bufferSize);
 
 			// TODO: Emit warning when this value does not hold MarkerValue.
 			Marker.Scan();

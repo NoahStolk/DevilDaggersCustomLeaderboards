@@ -1,5 +1,6 @@
 ﻿using DevilDaggersCustomLeaderboards.Exceptions;
 using DevilDaggersCustomLeaderboards.Native;
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Os = DevilDaggersCustomLeaderboards.Clients.OperatingSystem;
@@ -41,11 +42,33 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				case Os.Windows:
 					NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
 					break;
-					// TODO
 				case Os.Linux:
+					// TODO
 					break;
 				default:
 					throw new OperatingSystemNotSupportedException();
+			}
+		}
+
+		public static long? GetMemoryBlockAddress(Process process, long ddstatsMarkerOffset)
+		{
+			if (process.MainModule == null)
+				return null;
+
+			byte[] pointerBytes = new byte[sizeof(long)];
+			if (OperatingSystem == Os.Windows)
+			{
+				ReadMemory(process, process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+				return BitConverter.ToInt64(pointerBytes);
+			}
+			else if (OperatingSystem == Os.Linux)
+			{
+				// TODO
+				return null;
+			}
+			else
+			{
+				throw new OperatingSystemNotSupportedException();
 			}
 		}
 	}
