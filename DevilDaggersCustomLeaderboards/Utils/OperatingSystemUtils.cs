@@ -137,5 +137,33 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 			return 0;
 		}
+
+		public static Process? GetDevilDaggersProcess()
+		{
+			if (OperatingSystem == Os.Linux)
+			{
+				foreach (Process process in Process.GetProcesses())
+				{
+					if (process.ProcessName.StartsWith("devildaggers"))
+						return process;
+				}
+
+				return null;
+			}
+			else if (OperatingSystem == Os.Windows)
+			{
+				foreach (Process process in Process.GetProcessesByName("dd"))
+				{
+					if (process.MainWindowTitle == "Devil Daggers")
+						return process;
+				}
+
+				return null;
+			}
+			else
+			{
+				throw new OperatingSystemNotSupportedException();
+			}
+		}
 	}
 }

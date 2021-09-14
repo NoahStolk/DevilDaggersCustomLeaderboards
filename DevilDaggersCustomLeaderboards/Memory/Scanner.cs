@@ -1,5 +1,4 @@
-﻿using DevilDaggersCore.Utils;
-using DevilDaggersCustomLeaderboards.Clients;
+﻿using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
@@ -114,7 +113,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 		public static void FindWindow()
 		{
-			Process = ProcessUtils.GetDevilDaggersProcess(OperatingSystemUtils.GetProcessName(), OperatingSystemUtils.GetProcessWindowTitle());
+			Process = OperatingSystemUtils.GetDevilDaggersProcess();
 		}
 
 		public static void Initialize(long ddstatsMarkerOffset)
@@ -252,7 +251,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			OperatingSystemUtils.ReadMemory(Process, _memoryBlockAddress, Buffer, _bufferSize);
 
-			// TODO: Emit warning when this value does not hold MarkerValue.
+			// TODO: Emit warning when this value does not hold _markerValue.
 			Marker.Scan();
 			FormatVersion.Scan();
 
