@@ -20,7 +20,24 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine();
 
 #if DEBUG
-			WriteDebug();
+			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
+			Cmd.WriteLine("Is Replay", Scanner.IsReplay);
+			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
+			Cmd.WriteLine("Status", (Status)Scanner.Status.Value);
+			Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
+			Cmd.WriteLine();
+			Cmd.WriteLine("Homing Max", Scanner.HomingMax);
+			Cmd.WriteLine("Homing Max Time", Scanner.HomingMaxTime.Value.ToString("0.0000"));
+			Cmd.WriteLine("Enemies Alive Max", Scanner.EnemiesAliveMax);
+			Cmd.WriteLine("Enemies Alive Max Time", Scanner.EnemiesAliveMaxTime.Value.ToString("0.0000"));
+			Cmd.WriteLine("Max Time", Scanner.MaxTime.Value.ToString("0.0000"));
+			Cmd.WriteLine();
+			Cmd.WriteLine("Stats Base", Scanner.StatsBase);
+			Cmd.WriteLine("Stats Count", Scanner.StatsCount);
+			Cmd.WriteLine("Stats Loaded", Scanner.StatsLoaded);
+			Cmd.WriteLine();
+			Cmd.WriteLine("Prohibited Mods", Scanner.ProhibitedMods);
+			Cmd.WriteLine();
 #endif
 
 			if (Scanner.IsInGame)
@@ -129,28 +146,6 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				Console.BackgroundColor = (ConsoleColor)backgroundColor;
 				Console.WriteLine($"{new string(' ', Cmd.TextWidthFull)}");
 			}
-		}
-
-		private static void WriteDebug()
-		{
-			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
-			Cmd.WriteLine("Is Replay", Scanner.IsReplay);
-			Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
-			Cmd.WriteLine("Status", (Status)Scanner.Status.Value);
-			Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
-			Cmd.WriteLine();
-			Cmd.WriteLine("Homing Max", Scanner.HomingMax);
-			Cmd.WriteLine("Homing Max Time", Scanner.HomingMaxTime.Value.ToString("0.0000"));
-			Cmd.WriteLine("Enemies Alive Max", Scanner.EnemiesAliveMax);
-			Cmd.WriteLine("Enemies Alive Max Time", Scanner.EnemiesAliveMaxTime.Value.ToString("0.0000"));
-			Cmd.WriteLine("Max Time", Scanner.MaxTime.Value.ToString("0.0000"));
-			Cmd.WriteLine();
-			Cmd.WriteLine("Stats Base", Scanner.StatsBase);
-			Cmd.WriteLine("Stats Count", Scanner.StatsCount);
-			Cmd.WriteLine("Stats Loaded", Scanner.StatsLoaded);
-			Cmd.WriteLine();
-			Cmd.WriteLine("Prohibited Mods", Scanner.ProhibitedMods);
-			Cmd.WriteLine();
 		}
 
 		public static void WriteStats(GetCustomLeaderboard leaderboard, CustomEntry? entry)
