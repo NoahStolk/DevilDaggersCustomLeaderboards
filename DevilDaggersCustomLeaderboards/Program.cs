@@ -160,7 +160,7 @@ namespace DevilDaggersCustomLeaderboards
 			Scanner.Initialize(_marker);
 			if (!Scanner.IsInitialized)
 			{
-				Cmd.WriteLine("Not yet done initializing memory block starting address. Retrying in a second...");
+				Cmd.WriteLine("Could not find memory block starting address. Retrying in a second...");
 				Thread.Sleep(1000);
 				Console.Clear();
 				return;
