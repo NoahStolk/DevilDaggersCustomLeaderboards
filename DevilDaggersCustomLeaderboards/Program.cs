@@ -170,7 +170,7 @@ namespace DevilDaggersCustomLeaderboards
 
 			if (!_isRecording)
 			{
-#if DEBUG
+#if WINDOWS && DEBUG
 				Console.SetCursorPosition(0, 0);
 				GuiUtils.WriteRecording();
 #endif

@@ -9,11 +9,11 @@ namespace DevilDaggersCustomLeaderboards.Utils
 	/// </summary>
 	public static class ConsoleUtils
 	{
-#if Linux
+#if LINUX
 		public const int TextWidthFull = 32;
 		public const int TextWidthLeft = 16;
 		public const int TextWidthRight = 20;
-#elif Windows
+#elif WINDOWS
 		public const int TextWidthFull = 50;
 		public const int TextWidthLeft = 20;
 		public const int TextWidthRight = 25;
@@ -45,12 +45,11 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 		public static void Clear()
 		{
-			if (OperatingSystemUtils.IsWindows)
-				Console.SetCursorPosition(0, 0);
-			else if (OperatingSystemUtils.IsLinux)
-				Console.Clear();
-			else
-				throw new PlatformNotSupportedException();
+#if WINDOWS
+			Console.SetCursorPosition(0, 0);
+#elif LINUX
+			Console.Clear();
+#endif
 		}
 	}
 }
