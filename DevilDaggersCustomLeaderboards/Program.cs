@@ -188,7 +188,7 @@ namespace DevilDaggersCustomLeaderboards
 			GuiUtils.WriteRecording();
 
 			Thread.Sleep(_mainLoopSleepMilliseconds);
-			Cmd.Clear();
+			Console.SetCursorPosition(0, 0);
 
 			if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious)
 			{
@@ -247,7 +247,7 @@ namespace DevilDaggersCustomLeaderboards
 					Thread.Sleep(500);
 				}
 
-				Cmd.Clear();
+				Console.SetCursorPosition(0, 0);
 				Cmd.WriteLine("Ready to restart");
 				Cmd.WriteLine();
 			}

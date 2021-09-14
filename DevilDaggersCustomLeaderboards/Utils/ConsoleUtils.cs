@@ -42,14 +42,5 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.WriteLine($"{textLeft,-TextWidthLeft}{textRight,TextWidthRight}{new string(' ', TextWidthFull)}");
 		}
-
-		public static void Clear()
-		{
-#if WINDOWS
-			Console.SetCursorPosition(0, 0);
-#elif LINUX
-			Console.Clear();
-#endif
-		}
 	}
 }
