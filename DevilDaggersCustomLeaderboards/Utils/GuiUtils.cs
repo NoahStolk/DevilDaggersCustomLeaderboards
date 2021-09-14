@@ -131,6 +131,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			}
 		}
 
+#if DEBUG
 		private static void WriteDebug()
 		{
 			Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
@@ -152,6 +153,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("Prohibited Mods", Scanner.ProhibitedMods);
 			Cmd.WriteLine();
 		}
+#endif
 
 		public static void WriteStats(GetCustomLeaderboard leaderboard, CustomEntry? entry)
 		{
