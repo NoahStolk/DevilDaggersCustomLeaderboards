@@ -1,4 +1,5 @@
 ﻿using DevilDaggersCustomLeaderboards.Enumerators;
+using DevilDaggersCustomLeaderboards.Exceptions;
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Utils
@@ -35,6 +36,22 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Console.ForegroundColor = (ConsoleColor)foregroundColor;
 			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.WriteLine($"{textLeft,-TextWidthLeft}{textRight,TextWidthRight}{new string(' ', TextWidthFull)}");
+		}
+
+		public static void Clear()
+		{
+			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Windows)
+			{
+				Console.SetCursorPosition(0, 0);
+			}
+			else if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Linux)
+			{
+				Console.Clear();
+			}
+			else
+			{
+				throw new OperatingSystemNotSupportedException();
+			}
 		}
 	}
 }
