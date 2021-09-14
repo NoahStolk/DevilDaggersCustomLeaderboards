@@ -40,17 +40,11 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public static void Clear()
 		{
 			if (OperatingSystemUtils.IsWindows)
-			{
 				Console.SetCursorPosition(0, 0);
-			}
 			else if (OperatingSystemUtils.IsLinux)
-			{
 				Console.Clear();
-			}
 			else
-			{
 				throw new PlatformNotSupportedException();
-			}
 		}
 	}
 }
