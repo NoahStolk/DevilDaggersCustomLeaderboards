@@ -102,7 +102,7 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			Console.CursorVisible = false;
 
-			if (OperatingSystemUtils.OperatingSystem == Clients.OperatingSystem.Windows)
+			if (OperatingSystemUtils.IsWindows)
 			{
 				try
 				{
