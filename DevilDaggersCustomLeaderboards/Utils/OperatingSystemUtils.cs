@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 #if WINDOWS
-using DevilDaggersCustomLeaderboards.Native;
+using Windows.Win32;
 #elif LINUX
 ﻿using DevilDaggersCustomLeaderboards.Memory.Linux;
 using System.Globalization;
@@ -16,10 +16,10 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		private static LinuxHeapAccessor? _linuxHeapAccessor;
 #endif
 
-		public static void ReadMemory(Process process, long address, byte[] bytes, int size)
+		public static unsafe void ReadMemory(Process process, long address, byte[] bytes, int size)
 		{
 #if WINDOWS
-			NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
+			PInvoke.ReadProcessMemory(process.Handle, address, bytes, (uint)size, (nuint*)0);
 #elif LINUX
 			if (_linuxHeapAccessor != null)
 			{

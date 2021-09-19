@@ -1,0 +1,7 @@
+﻿GetConsoleScreenBufferInfoEx
+GetConsoleWindow
+GetStdHandle
+ReadProcessMemory
+SetConsoleScreenBufferInfoEx
+DeleteMenu
+GetSystemMenu
