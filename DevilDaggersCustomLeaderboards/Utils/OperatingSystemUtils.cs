@@ -35,10 +35,10 @@ namespace DevilDaggersCustomLeaderboards.Utils
 
 		public static long? GetMemoryBlockAddress(Process process, long ddstatsMarkerOffset)
 		{
+#if WINDOWS
 			if (process.MainModule == null)
 				return null;
 
-#if WINDOWS
 			byte[] pointerBytes = new byte[sizeof(long)];
 			ReadMemory(process, process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
 			return BitConverter.ToInt64(pointerBytes);
