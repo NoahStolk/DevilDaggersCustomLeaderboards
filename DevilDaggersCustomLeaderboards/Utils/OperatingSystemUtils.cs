@@ -19,7 +19,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		public static unsafe void ReadMemory(Process process, long address, byte[] bytes, int size)
 		{
 #if WINDOWS
-			PInvoke.ReadProcessMemory(process.Handle, address, bytes, (uint)size, (nuint*)0);
+			PInvoke.ReadProcessMemory(process.SafeHandle, address, bytes, (uint)size, (nuint*)0);
 #elif LINUX
 			if (_linuxHeapAccessor != null)
 			{

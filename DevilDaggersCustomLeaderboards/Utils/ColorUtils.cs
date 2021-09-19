@@ -54,8 +54,8 @@ namespace DevilDaggersCustomLeaderboards.Utils
 		{
 			Windows.Win32.System.Console.CONSOLE_SCREEN_BUFFER_INFOEX csbe = default;
 			csbe.cbSize = (uint)Marshal.SizeOf(csbe);
-			Windows.Win32.Foundation.HANDLE hConsoleOutput = PInvoke.GetStdHandle(Windows.Win32.System.Console.STD_HANDLE.STD_OUTPUT_HANDLE);
-			if (hConsoleOutput == new IntPtr(-1))
+			SafeHandle hConsoleOutput = PInvoke.GetStdHandle_SafeHandle(Windows.Win32.System.Console.STD_HANDLE.STD_OUTPUT_HANDLE);
+			if (hConsoleOutput.IsInvalid)
 				return Marshal.GetLastWin32Error();
 
 			bool brc = PInvoke.GetConsoleScreenBufferInfoEx(hConsoleOutput, ref csbe);
