@@ -1,4 +1,4 @@
-﻿#pragma warning disable CA1707 // Identifiers should not contain underscores
+#pragma warning disable CA1707 // Identifiers should not contain underscores
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Native

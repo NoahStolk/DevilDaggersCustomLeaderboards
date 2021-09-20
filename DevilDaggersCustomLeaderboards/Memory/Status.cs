@@ -1,4 +1,4 @@
-﻿namespace DevilDaggersCustomLeaderboards.Memory
+namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public enum Status
 	{

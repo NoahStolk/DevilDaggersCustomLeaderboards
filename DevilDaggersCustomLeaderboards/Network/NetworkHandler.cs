@@ -1,4 +1,4 @@
-﻿using DevilDaggersCustomLeaderboards.Clients;
+using DevilDaggersCustomLeaderboards.Clients;
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Network

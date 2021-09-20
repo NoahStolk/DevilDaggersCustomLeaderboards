@@ -1,4 +1,4 @@
-﻿namespace DevilDaggersCustomLeaderboards.Native
+namespace DevilDaggersCustomLeaderboards.Native
 {
 	internal enum StdHandle
 	{

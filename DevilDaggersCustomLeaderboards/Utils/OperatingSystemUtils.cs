@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 #if WINDOWS
 using DevilDaggersCustomLeaderboards.Native;

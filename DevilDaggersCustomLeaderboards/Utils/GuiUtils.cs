@@ -1,4 +1,4 @@
-﻿using DevilDaggersCore.Game;
+using DevilDaggersCore.Game;
 using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Enumerators;
 using DevilDaggersCustomLeaderboards.Memory;

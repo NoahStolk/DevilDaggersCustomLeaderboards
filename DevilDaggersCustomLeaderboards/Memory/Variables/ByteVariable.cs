@@ -1,4 +1,4 @@
-﻿namespace DevilDaggersCustomLeaderboards.Memory.Variables
+namespace DevilDaggersCustomLeaderboards.Memory.Variables
 {
 	public class ByteVariable : AbstractVariable<byte>
 	{

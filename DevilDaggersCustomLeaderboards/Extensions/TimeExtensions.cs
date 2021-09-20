@@ -1,4 +1,4 @@
-﻿using DevilDaggersCustomLeaderboards.Memory.Variables;
+using DevilDaggersCustomLeaderboards.Memory.Variables;
 
 namespace DevilDaggersCustomLeaderboards.Utils
 {
