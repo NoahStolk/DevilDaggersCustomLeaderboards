@@ -312,6 +312,7 @@ namespace DevilDaggersCustomLeaderboards
 					OperatingSystem = Clients.OperatingSystem.Linux,
 #endif
 					ProhibitedMods = Scanner.ProhibitedMods,
+					Client = CustomLeaderboardsClient.DevilDaggersCustomLeaderboards,
 				};
 
 				return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreAsync(uploadRequest);
