@@ -81,6 +81,9 @@
 | Homing start               |    292 | 32-bit integer           |             4 |
 | Timer start                |    296 | 32-bit floating point    |             4 |
 | Prohibited mods            |    300 | 8-bit integer (boolean)  |             1 |
+| N/A (padding)              |    301 | N/A                      |             3 |
+| Replay base address        |    304 | 64-bit integer (pointer) |             8 |
+| Replay buffer length       |    312 | 32-bit integer           |             4 |
 
 ## Graph stats
 

@@ -152,6 +152,9 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine();
 			Cmd.WriteLine("Prohibited Mods", Scanner.ProhibitedMods);
 			Cmd.WriteLine();
+			Cmd.WriteLine("Replay Base", Scanner.ReplayBase);
+			Cmd.WriteLine("Replay Length", Scanner.ReplayLength);
+			Cmd.WriteLine();
 		}
 #endif
 

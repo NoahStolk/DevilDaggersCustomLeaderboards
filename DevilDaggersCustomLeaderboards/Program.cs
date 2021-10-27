@@ -201,6 +201,15 @@ namespace DevilDaggersCustomLeaderboards
 					Thread.Sleep(500);
 				}
 
+				Console.Clear();
+				Cmd.WriteLine("Waiting for replay to be loaded...");
+
+				while (Scanner.ReplayLength == 0)
+				{
+					Scanner.ReplayLength.Scan();
+					Thread.Sleep(500);
+				}
+
 				_isRecording = false;
 
 				Console.Clear();
@@ -313,6 +322,7 @@ namespace DevilDaggersCustomLeaderboards
 #endif
 					ProhibitedMods = Scanner.ProhibitedMods,
 					Client = CustomLeaderboardsClient.DevilDaggersCustomLeaderboards,
+					ReplayData = Scanner.GetReplay(),
 				};
 
 				return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreAsync(uploadRequest);

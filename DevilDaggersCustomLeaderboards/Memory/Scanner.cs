@@ -10,7 +10,7 @@ namespace DevilDaggersCustomLeaderboards.Memory
 {
 	public static class Scanner
 	{
-		private const int _bufferSize = 301;
+		private const int _bufferSize = 316;
 		private const int _statesBufferSize = 112;
 		private const string _markerValue = "__ddstats__\0";
 
@@ -108,6 +108,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		public static BoolVariable StatsLoaded { get; private set; } = new(0);
 
 		public static BoolVariable ProhibitedMods { get; private set; } = new(0);
+
+		public static LongVariable ReplayBase { get; private set; } = new(0);
+		public static IntVariable ReplayLength { get; private set; } = new(0);
 
 		#endregion Variables
 
@@ -219,6 +222,12 @@ namespace DevilDaggersCustomLeaderboards.Memory
 
 			ProhibitedMods = InitiateVariable(addr => new BoolVariable(addr), ref offset);
 
+			// Padding
+			offset += 3;
+
+			ReplayBase = InitiateVariable(addr => new LongVariable(addr), ref offset);
+			ReplayLength = InitiateVariable(addr => new IntVariable(addr), ref offset);
+
 			IsInitialized = true;
 
 			static TVariable InitiateVariable<TVariable>(Func<int, TVariable> constructor, ref int offset)
@@ -280,6 +289,9 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			StatsLoaded.Scan();
 
 			ProhibitedMods.Scan();
+
+			ReplayBase.Scan();
+			ReplayLength.Scan();
 
 			if (IsPlayerAlive)
 			{
@@ -416,6 +428,17 @@ namespace DevilDaggersCustomLeaderboards.Memory
 			}
 
 			return gameStates;
+		}
+
+		public static byte[] GetReplay()
+		{
+			if (Process == null)
+				return Array.Empty<byte>();
+
+			byte[] buffer = new byte[ReplayLength];
+			OperatingSystemUtils.ReadMemory(Process, ReplayBase, buffer, buffer.Length);
+
+			return buffer;
 		}
 	}
 }

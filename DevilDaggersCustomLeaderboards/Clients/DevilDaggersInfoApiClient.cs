@@ -3087,6 +3087,9 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.List<GameState> GameStates { get; set; } = new System.Collections.Generic.List<GameState>();
     
+        [Newtonsoft.Json.JsonProperty("replayData", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public byte[]? ReplayData { get; set; }= default!;
+    
     
     }
     
