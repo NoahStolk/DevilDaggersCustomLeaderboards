@@ -323,6 +323,7 @@ namespace DevilDaggersCustomLeaderboards
 					ProhibitedMods = Scanner.ProhibitedMods,
 					Client = CustomLeaderboardsClient.DevilDaggersCustomLeaderboards,
 					ReplayData = Scanner.GetReplay(),
+					Status = Scanner.Status,
 				};
 
 				return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreAsync(uploadRequest);
