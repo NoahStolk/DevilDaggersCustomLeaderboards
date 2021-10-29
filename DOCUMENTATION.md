@@ -147,6 +147,7 @@
 | Own replay from last run    |     5 |
 | Own replay from leaderboard |     6 |
 | Other player's replay       |     7 |
+| Local replay                |     8 |
 
 ## Death types
 

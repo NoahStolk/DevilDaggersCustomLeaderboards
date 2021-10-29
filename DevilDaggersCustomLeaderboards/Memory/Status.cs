@@ -10,5 +10,6 @@ namespace DevilDaggersCustomLeaderboards.Memory
 		OwnReplayFromLastRun = 5,
 		OwnReplayFromLeaderboard = 6,
 		OtherPlayersReplay = 7,
+		LocalReplay = 8,
 	}
 }

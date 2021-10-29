@@ -324,6 +324,7 @@ namespace DevilDaggersCustomLeaderboards
 					Client = CustomLeaderboardsClient.DevilDaggersCustomLeaderboards,
 					ReplayData = Scanner.GetReplay(),
 					Status = Scanner.Status,
+					ReplayPlayerId = Scanner.ReplayPlayerId,
 				};
 
 				return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreAsync(uploadRequest);

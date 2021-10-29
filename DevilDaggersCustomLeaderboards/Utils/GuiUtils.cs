@@ -140,6 +140,9 @@ namespace DevilDaggersCustomLeaderboards.Utils
 			Cmd.WriteLine("Status", (Status)Scanner.Status.Value);
 			Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
 			Cmd.WriteLine();
+			Cmd.WriteLine("Replay Player ID", Scanner.ReplayPlayerId);
+			Cmd.WriteLine("Replay Player Name", Scanner.ReplayPlayerName);
+			Cmd.WriteLine();
 			Cmd.WriteLine("Homing Max", Scanner.HomingMax);
 			Cmd.WriteLine("Homing Max Time", Scanner.HomingMaxTime.Value.ToString("0.0000"));
 			Cmd.WriteLine("Enemies Alive Max", Scanner.EnemiesAliveMax);
