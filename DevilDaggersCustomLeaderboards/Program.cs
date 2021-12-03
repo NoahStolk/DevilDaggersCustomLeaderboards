@@ -48,7 +48,9 @@ namespace DevilDaggersCustomLeaderboards
 		public static Assembly Assembly { get; } = Assembly.GetExecutingAssembly();
 		public static Version LocalVersion { get; } = Version.Parse(FileVersionInfo.GetVersionInfo(Assembly.Location).FileVersion ?? throw new("Could not get file version from current assembly."));
 
+#pragma warning disable S2190 // Recursion should not be infinite
 		public static async Task Main()
+#pragma warning restore S2190 // Recursion should not be infinite
 		{
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
