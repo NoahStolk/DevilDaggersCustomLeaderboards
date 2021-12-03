@@ -15,7 +15,7 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DevilDaggersCore" Version="2.3.3" />
+    <PackageReference Include="DevilDaggersCore" Version="2.4.0" />
     <PackageReference Include="Roslynator.Analyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
