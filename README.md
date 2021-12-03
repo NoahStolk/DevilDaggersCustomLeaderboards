@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/NoahStolk/DevilDaggersCustomLeaderboards.svg?branch=master)](https://travis-ci.org/NoahStolk/DevilDaggersCustomLeaderboards)
 [![Scc Count Badge](https://sloc.xyz/github/NoahStolk/DevilDaggersCustomLeaderboards/)](https://github.com/NoahStolk/DevilDaggersCustomLeaderboards/)
 
 # DevilDaggersCustomLeaderboards ([Download](https://devildaggers.info/api/tools/DevilDaggersCustomLeaderboards/file))
