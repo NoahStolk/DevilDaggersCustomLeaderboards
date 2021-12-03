@@ -1,10 +1,9 @@
 using System;
 
-namespace DevilDaggersCustomLeaderboards.Utils
+namespace DevilDaggersCustomLeaderboards.Utils;
+
+public static class HashUtils
 {
-	public static class HashUtils
-	{
-		public static string ByteArrayToHexString(byte[] byteArray)
-			=> BitConverter.ToString(byteArray).Replace("-", string.Empty);
-	}
+	public static string ByteArrayToHexString(byte[] byteArray)
+		=> BitConverter.ToString(byteArray).Replace("-", string.Empty);
 }

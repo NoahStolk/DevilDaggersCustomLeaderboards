@@ -1,11 +1,10 @@
 using System.Runtime.InteropServices;
 
-namespace DevilDaggersCustomLeaderboards.Native
+namespace DevilDaggersCustomLeaderboards.Native;
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct Coord
 {
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct Coord
-	{
-		internal short _x;
-		internal short _y;
-	}
+	internal short _x;
+	internal short _y;
 }

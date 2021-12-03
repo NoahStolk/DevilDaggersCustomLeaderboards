@@ -1,7 +1,6 @@
-namespace DevilDaggersCustomLeaderboards.Native
+namespace DevilDaggersCustomLeaderboards.Native;
+
+internal enum StdHandle
 {
-	internal enum StdHandle
-	{
-		OutputHandle = -11,
-	}
+	OutputHandle = -11,
 }

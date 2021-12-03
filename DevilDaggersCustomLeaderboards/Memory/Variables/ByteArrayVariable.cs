@@ -1,13 +1,12 @@
-namespace DevilDaggersCustomLeaderboards.Memory.Variables
-{
-	public class ByteArrayVariable : AbstractVariable<byte[]>
-	{
-		public ByteArrayVariable(int offset, int arrayLength)
-			: base(offset, sizeof(byte) * arrayLength)
-		{
-		}
+namespace DevilDaggersCustomLeaderboards.Memory.Variables;
 
-		public override byte[] ValuePrevious => BytesPrevious;
-		public override byte[] Value => Bytes;
+public class ByteArrayVariable : AbstractVariable<byte[]>
+{
+	public ByteArrayVariable(int offset, int arrayLength)
+		: base(offset, sizeof(byte) * arrayLength)
+	{
 	}
+
+	public override byte[] ValuePrevious => BytesPrevious;
+	public override byte[] Value => Bytes;
 }

@@ -1,9 +1,8 @@
-namespace DevilDaggersCustomLeaderboards.Memory.Variables
+namespace DevilDaggersCustomLeaderboards.Memory.Variables;
+
+public interface IVariable
 {
-	public interface IVariable
-	{
-		int Offset { get; set; }
-		int Size { get; set; }
-		bool IsChanged { get; set; }
-	}
+	int Offset { get; set; }
+	int Size { get; set; }
+	bool IsChanged { get; set; }
 }
