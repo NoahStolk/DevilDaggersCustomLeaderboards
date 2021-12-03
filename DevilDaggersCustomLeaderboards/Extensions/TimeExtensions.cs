@@ -1,6 +1,6 @@
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 
-namespace DevilDaggersCustomLeaderboards.Utils
+namespace DevilDaggersCustomLeaderboards.Extensions
 {
 	public static class TimeExtensions
 	{

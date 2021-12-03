@@ -1,4 +1,5 @@
 using DevilDaggersCustomLeaderboards.Clients;
+using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Network;
