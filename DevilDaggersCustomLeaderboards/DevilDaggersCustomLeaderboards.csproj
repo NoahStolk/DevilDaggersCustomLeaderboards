@@ -1,14 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <Version>1.4.2.0</Version>
+    <Version>1.4.3.0</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <Platforms>x64</Platforms>
+    <PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DevilDaggersCore" Version="2.3.3" />

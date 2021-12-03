@@ -46,7 +46,7 @@ namespace DevilDaggersCustomLeaderboards
 		public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
 
 		public static Assembly Assembly { get; } = Assembly.GetExecutingAssembly();
-		public static Version LocalVersion { get; } = Version.Parse(FileVersionInfo.GetVersionInfo(Assembly.Location).FileVersion ?? throw new("Could not get file version from current assembly."));
+		public static Version LocalVersion { get; } = Version.Parse(FileVersionInfo.GetVersionInfo(Path.Combine(AppContext.BaseDirectory, $"{ApplicationName}.exe")).FileVersion ?? throw new("Could not get file version from current assembly."));
 
 #pragma warning disable S2190 // Recursion should not be infinite
 		public static async Task Main()
