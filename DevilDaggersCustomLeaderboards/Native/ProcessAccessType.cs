@@ -1,4 +1,3 @@
-#pragma warning disable CA1707 // Identifiers should not contain underscores
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Native
@@ -21,5 +20,3 @@ namespace DevilDaggersCustomLeaderboards.Native
 		PROCESS_QUERY_INFORMATION = 0x0400,
 	}
 }
-
-#pragma warning restore CA1707 // Identifiers should not contain underscores

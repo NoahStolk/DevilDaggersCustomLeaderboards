@@ -242,7 +242,7 @@ namespace DevilDaggersCustomLeaderboards.Utils
 				CustomColor backgroundColor = isCurrentPlayer ? daggerColor : ColorUtils.BackgroundDefault;
 
 				Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ", foregroundColor, backgroundColor);
-				Cmd.Write($"{entry.PlayerName.Substring(0, Math.Min(entry.PlayerName.Length, Cmd.TextWidthLeft))}", foregroundColor, backgroundColor);
+				Cmd.Write($"{entry.PlayerName[..Math.Min(entry.PlayerName.Length, Cmd.TextWidthLeft)]}", foregroundColor, backgroundColor);
 				Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", foregroundColor, backgroundColor);
 			}
 

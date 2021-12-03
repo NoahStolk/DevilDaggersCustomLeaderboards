@@ -84,12 +84,7 @@ namespace DevilDaggersCustomLeaderboards
 			}
 
 			Cmd.WriteLine("Retrieving marker...");
-#if WINDOWS
-			const Clients.OperatingSystem os = Clients.OperatingSystem.Windows;
-#elif LINUX
-			const Clients.OperatingSystem os = Clients.OperatingSystem.Linux;
-#endif
-			Marker marker = await NetworkHandler.Instance.ApiClient.ProcessMemory_GetMarkerAsync(os);
+			Marker marker = await NetworkHandler.Instance.ApiClient.ProcessMemory_GetMarkerAsync(Clients.OperatingSystem.Windows);
 			_marker = marker.Value;
 			Console.Clear();
 
@@ -110,7 +105,6 @@ namespace DevilDaggersCustomLeaderboards
 		{
 			Console.CursorVisible = false;
 
-#if WINDOWS
 			try
 			{
 #pragma warning disable CA1416 // Validate platform compatibility
@@ -142,7 +136,6 @@ namespace DevilDaggersCustomLeaderboards
 			ColorUtils.ModifyConsoleColor(9, 0xC8, 0xA2, 0xC8);
 			ColorUtils.ModifyConsoleColor(11, 0x80, 0x06, 0x00);
 			ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
-#endif
 
 #if DEBUG
 			Console.Title = $"{ApplicationDisplayName} {LocalVersion} DEBUG";
@@ -177,7 +170,7 @@ namespace DevilDaggersCustomLeaderboards
 
 			if (!_isRecording)
 			{
-#if WINDOWS && DEBUG
+#if DEBUG
 				Console.SetCursorPosition(0, 0);
 				GuiUtils.WriteRecording();
 #endif
@@ -318,11 +311,7 @@ namespace DevilDaggersCustomLeaderboards
 #else
 					BuildMode = BuildMode.Release,
 #endif
-#if WINDOWS
 					OperatingSystem = Clients.OperatingSystem.Windows,
-#elif LINUX
-					OperatingSystem = Clients.OperatingSystem.Linux,
-#endif
 					ProhibitedMods = Scanner.ProhibitedMods,
 					Client = CustomLeaderboardsClient.DevilDaggersCustomLeaderboards,
 					ReplayData = Scanner.GetReplay(),

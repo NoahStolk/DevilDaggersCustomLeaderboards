@@ -9,19 +9,11 @@ namespace DevilDaggersCustomLeaderboards.Utils
 	/// </summary>
 	public static class ConsoleUtils
 	{
-#if WINDOWS
 		public const int TextWidthFull = 50;
 		public const int TextWidthLeft = 20;
 		public const int TextWidthRight = 25;
 		public const int LeftMargin = 15;
 		public const int RightMargin = 10;
-#elif LINUX
-		public const int TextWidthFull = 30;
-		public const int TextWidthLeft = 15;
-		public const int TextWidthRight = 20;
-		public const int LeftMargin = 10;
-		public const int RightMargin = 10;
-#endif
 
 		public static void Write(object text, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
 		{
