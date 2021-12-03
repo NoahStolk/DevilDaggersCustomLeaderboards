@@ -111,7 +111,7 @@ public static class Program
 #if DEBUG
 			Console.WindowHeight = 80;
 #else
-				Console.WindowHeight = 60;
+			Console.WindowHeight = 60;
 #endif
 			Console.WindowWidth = 170;
 #pragma warning restore CA1416 // Validate platform compatibility
@@ -140,7 +140,7 @@ public static class Program
 #if DEBUG
 		Console.Title = $"{ApplicationDisplayName} {LocalVersion} DEBUG";
 #else
-			Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
+		Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
 #endif
 	}
 
@@ -309,7 +309,7 @@ public static class Program
 #if DEBUG
 				BuildMode = BuildMode.Debug,
 #else
-					BuildMode = BuildMode.Release,
+				BuildMode = BuildMode.Release,
 #endif
 				OperatingSystem = Clients.OperatingSystem.Windows,
 				ProhibitedMods = Scanner.ProhibitedMods,
