@@ -61,7 +61,7 @@ public static class Program
 		InitializeConsole();
 
 		Cmd.WriteLine("Checking for updates...");
-		Tool tool = await NetworkHandler.Instance.ApiClient.Tools_GetToolAsync(ApplicationName);
+		GetTool tool = await NetworkHandler.Instance.ApiClient.Tools_GetToolAsync(ApplicationName);
 		Console.Clear();
 
 		if (tool != null)
@@ -84,7 +84,7 @@ public static class Program
 		}
 
 		Cmd.WriteLine("Retrieving marker...");
-		Marker marker = await NetworkHandler.Instance.ApiClient.ProcessMemory_GetMarkerAsync(Clients.OperatingSystem.Windows);
+		Marker marker = await NetworkHandler.Instance.ApiClient.ProcessMemory_GetMarkerAsync(SupportedOperatingSystem.Windows);
 		_marker = marker.Value;
 		Console.Clear();
 
@@ -220,7 +220,7 @@ public static class Program
 				Cmd.WriteLine();
 
 				// Thread is being blocked by the upload.
-				UploadSuccess? uploadSuccess = await UploadRun();
+				GetUploadSuccess? uploadSuccess = await UploadRun();
 
 				if (uploadSuccess != null)
 				{
@@ -258,7 +258,7 @@ public static class Program
 		}
 	}
 
-	private static async Task<UploadSuccess?> UploadRun()
+	private static async Task<GetUploadSuccess?> UploadRun()
 	{
 		try
 		{
@@ -282,7 +282,7 @@ public static class Program
 				string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
 			string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
-			UploadRequest uploadRequest = new()
+			AddUploadRequest uploadRequest = new()
 			{
 				DaggersFired = Scanner.DaggersFired,
 				DaggersHit = Scanner.DaggersHit,
@@ -307,19 +307,19 @@ public static class Program
 				Validation = HttpUtility.HtmlEncode(validation),
 				GameStates = Scanner.GetGameStates(),
 #if DEBUG
-				BuildMode = BuildMode.Debug,
+				BuildMode = "Debug",
 #else
-				BuildMode = BuildMode.Release,
+				BuildMode = "Release",
 #endif
-				OperatingSystem = Clients.OperatingSystem.Windows,
+				OperatingSystem = "Windows",
 				ProhibitedMods = Scanner.ProhibitedMods,
-				Client = CustomLeaderboardsClient.DevilDaggersCustomLeaderboards,
+				Client = "DevilDaggersCustomLeaderboards",
 				ReplayData = Scanner.GetReplay(),
 				Status = Scanner.Status,
 				ReplayPlayerId = Scanner.ReplayPlayerId,
 			};
 
-			return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreAsync(uploadRequest);
+			return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreForDdclAsync(uploadRequest);
 		}
 		catch (DevilDaggersInfoApiException<ProblemDetails> ex)
 		{

@@ -113,7 +113,7 @@ public static class ColorUtils
 		_ => Fallen,
 	};
 
-	public static CustomColor GetDaggerColor(int time, GetCustomLeaderboard leaderboard)
+	public static CustomColor GetDaggerColor(int time, GetCustomLeaderboardDdcl leaderboard)
 	{
 		if (Compare(time, leaderboard.TimeLeviathan))
 			return Leviathan;

@@ -162,7 +162,7 @@ public static class GuiUtils
 	}
 #endif
 
-	public static void WriteStats(GetCustomLeaderboard leaderboard, CustomEntry? entry)
+	public static void WriteStats(GetCustomLeaderboardDdcl leaderboard, GetCustomEntryDdcl? entry)
 	{
 		if (entry == null)
 		{
@@ -224,17 +224,17 @@ public static class GuiUtils
 		}
 	}
 
-	public static bool IsHighscore(this UploadSuccess us)
+	public static bool IsHighscore(this GetUploadSuccess us)
 		=> us.Rank != 0;
 
-	public static void WriteLeaderboard(this UploadSuccess us, int currentPlayerId)
+	public static void WriteLeaderboard(this GetUploadSuccess us, int currentPlayerId)
 	{
 		for (int i = 0; i < us.TotalPlayers; i++)
 		{
 			int spaceCountCurrent = (i + 1).ToString().Length;
 			int spaceCountTotal = us.TotalPlayers.ToString().Length;
 
-			CustomEntry entry = us.Entries[i];
+			GetCustomEntryDdcl entry = us.Entries[i];
 			CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard);
 
 			bool isCurrentPlayer = entry.PlayerId == currentPlayerId;
@@ -249,7 +249,7 @@ public static class GuiUtils
 		Console.BackgroundColor = (ConsoleColor)ColorUtils.BackgroundDefault;
 	}
 
-	public static void WriteHighscoreStats(this UploadSuccess us)
+	public static void WriteHighscoreStats(this GetUploadSuccess us)
 	{
 		int deathType = us.Entries[us.Rank - 1].DeathType;
 

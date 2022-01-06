@@ -360,7 +360,7 @@ public static class Scanner
 		}
 	}
 
-	public static List<GameState> GetGameStates()
+	public static List<AddGameState> GetGameStates()
 	{
 		if (Process == null)
 			return new();
@@ -368,13 +368,13 @@ public static class Scanner
 		byte[] buffer = new byte[_statesBufferSize * StatsCount];
 		OperatingSystemUtils.ReadMemory(Process, StatsBase.Value, buffer, buffer.Length);
 
-		List<GameState> gameStates = new();
+		List<AddGameState> gameStates = new();
 
 		using MemoryStream ms = new(buffer);
 		using BinaryReader br = new(ms);
 		for (int i = 0; i < StatsCount; i++)
 		{
-			GameState gameState = new();
+			AddGameState gameState = new();
 
 			gameState.GemsCollected = br.ReadInt32();
 			gameState.EnemiesKilled = br.ReadInt32();
