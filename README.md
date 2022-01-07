@@ -1,5 +1,3 @@
-[![Scc Count Badge](https://sloc.xyz/github/NoahStolk/DevilDaggersCustomLeaderboards/)](https://github.com/NoahStolk/DevilDaggersCustomLeaderboards/)
-
 # DevilDaggersCustomLeaderboards ([Download](https://devildaggers.info/api/tools/DevilDaggersCustomLeaderboards/file))
 DevilDaggersCustomLeaderboards is a console application that records data from custom spawnset runs in Devil Daggers by scanning the memory of the application in real-time, and uploads it to a custom leaderboard hosted on [devildaggers.info](https://devildaggers.info).
 
@@ -21,7 +19,7 @@ DevilDaggersCustomLeaderboards is a console application that records data from c
 ## License
 MIT License
 
-Copyright (c) 2019-2021 Noah Stolk
+Copyright (c) 2019-2022 Noah Stolk
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
