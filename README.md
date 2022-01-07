@@ -14,8 +14,8 @@ DevilDaggersCustomLeaderboards is a console application that records data from c
 
 ## Links
 - [DevilDaggers.info website](https://devildaggers.info)
-- [Main web page for DevilDaggersCustomLeaderboards](https://devildaggers.info/Tools/DevilDaggersCustomLeaderboards)
-- [List of custom leaderboards](https://devildaggers.info/CustomLeaderboards)
+- [Main web page for DevilDaggersCustomLeaderboards](https://devildaggers.info/tools/custom-leaderboards)
+- [List of custom leaderboards](https://devildaggers.info/custom/leaderboards)
 - [Discord server](https://discord.gg/NF32j8S)
 
 ## License
