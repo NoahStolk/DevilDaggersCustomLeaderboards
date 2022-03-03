@@ -1,4 +1,4 @@
-using DevilDaggersCustomLeaderboards.Enumerators;
+using DevilDaggersCustomLeaderboards.Enums;
 using System;
 
 namespace DevilDaggersCustomLeaderboards.Utils;

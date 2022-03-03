@@ -1,5 +1,5 @@
 using DevilDaggersCustomLeaderboards.Clients;
-using DevilDaggersCustomLeaderboards.Enumerators;
+using DevilDaggersCustomLeaderboards.Enums;
 using DevilDaggersCustomLeaderboards.Native;
 using System;
 using System.Runtime.InteropServices;

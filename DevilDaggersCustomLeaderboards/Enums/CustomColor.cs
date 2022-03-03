@@ -1,4 +1,4 @@
-namespace DevilDaggersCustomLeaderboards.Enumerators;
+namespace DevilDaggersCustomLeaderboards.Enums;
 
 public enum CustomColor
 {

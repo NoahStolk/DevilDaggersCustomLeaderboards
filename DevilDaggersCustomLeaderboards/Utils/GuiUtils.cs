@@ -1,5 +1,5 @@
 using DevilDaggersCustomLeaderboards.Clients;
-using DevilDaggersCustomLeaderboards.Enumerators;
+using DevilDaggersCustomLeaderboards.Enums;
 using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
