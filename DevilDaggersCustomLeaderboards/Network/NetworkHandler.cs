@@ -6,7 +6,7 @@ namespace DevilDaggersCustomLeaderboards.Network;
 public sealed class NetworkHandler
 {
 #if TESTING
-		public static readonly string BaseUrl = "http://localhost:2964";
+	public static readonly string BaseUrl = "https://localhost:5001";
 #else
 	public static readonly string BaseUrl = "https://devildaggers.info";
 #endif

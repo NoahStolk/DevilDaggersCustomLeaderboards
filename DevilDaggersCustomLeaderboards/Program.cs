@@ -215,10 +215,6 @@ public static class Program
 			string? errorMessage = ValidateRunLocally();
 			if (errorMessage == null)
 			{
-				Console.Clear();
-				Cmd.WriteLine("Uploading...");
-				Cmd.WriteLine();
-
 				// Thread is being blocked by the upload.
 				GetUploadSuccess? uploadSuccess = await UploadRun();
 
@@ -253,72 +249,90 @@ public static class Program
 			}
 
 			Console.SetCursorPosition(0, 0);
-			Cmd.WriteLine("Ready to restart");
+			Cmd.WriteLine("Ready to restart", string.Empty);
 			Cmd.WriteLine();
 		}
 	}
 
 	private static async Task<GetUploadSuccess?> UploadRun()
 	{
+		Console.Clear();
+		Cmd.WriteLine("Checking if this spawnset has a leaderboard...");
+		Cmd.WriteLine();
+
 		try
 		{
-			string toEncrypt = string.Join(
-				";",
-				Scanner.PlayerId,
-				Scanner.Time.ConvertToTimeInt(),
-				Scanner.GemsCollected,
-				Scanner.GemsDespawned,
-				Scanner.GemsEaten,
-				Scanner.GemsTotal,
-				Scanner.EnemiesKilled,
-				Scanner.DeathType,
-				Scanner.DaggersHit,
-				Scanner.DaggersFired,
-				Scanner.EnemiesAlive,
-				Scanner.HomingDaggers,
-				Scanner.HomingDaggersEaten,
-				Scanner.IsReplay ? 1 : 0,
-				HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5),
-				string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
-			string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
+			await NetworkHandler.Instance.ApiClient.CustomLeaderboards_CustomLeaderboardExistsBySpawnsetHashAsync(Scanner.SurvivalHashMd5);
+		}
+		catch (DevilDaggersInfoApiException ex) when (ex.StatusCode == 404)
+		{
+			Cmd.WriteLine("This spawnset does not have a leaderboard.", string.Empty, ColorUtils.Warning);
+			return null;
+		}
 
-			AddUploadRequest uploadRequest = new()
-			{
-				DaggersFired = Scanner.DaggersFired,
-				DaggersHit = Scanner.DaggersHit,
-				ClientVersion = LocalVersion.ToString(),
-				DeathType = Scanner.DeathType,
-				EnemiesAlive = Scanner.EnemiesAlive,
-				GemsCollected = Scanner.GemsCollected,
-				GemsDespawned = Scanner.GemsDespawned,
-				GemsEaten = Scanner.GemsEaten,
-				GemsTotal = Scanner.GemsTotal,
-				HomingDaggers = Scanner.HomingDaggers,
-				HomingDaggersEaten = Scanner.HomingDaggersEaten,
-				EnemiesKilled = Scanner.EnemiesKilled,
-				LevelUpTime2 = Scanner.LevelUpTime2.ConvertToTimeInt(),
-				LevelUpTime3 = Scanner.LevelUpTime3.ConvertToTimeInt(),
-				LevelUpTime4 = Scanner.LevelUpTime4.ConvertToTimeInt(),
-				PlayerId = Scanner.PlayerId,
-				SurvivalHashMd5 = Scanner.SurvivalHashMd5,
-				Time = Scanner.Time.ConvertToTimeInt(),
-				PlayerName = Scanner.PlayerName,
-				IsReplay = Scanner.IsReplay,
-				Validation = HttpUtility.HtmlEncode(validation),
-				GameStates = Scanner.GetGameStates(),
+		Console.Clear();
+		Cmd.WriteLine("Uploading...");
+		Cmd.WriteLine();
+
+		string toEncrypt = string.Join(
+			";",
+			Scanner.PlayerId,
+			Scanner.Time.ConvertToTimeInt(),
+			Scanner.GemsCollected,
+			Scanner.GemsDespawned,
+			Scanner.GemsEaten,
+			Scanner.GemsTotal,
+			Scanner.EnemiesKilled,
+			Scanner.DeathType,
+			Scanner.DaggersHit,
+			Scanner.DaggersFired,
+			Scanner.EnemiesAlive,
+			Scanner.HomingDaggers,
+			Scanner.HomingDaggersEaten,
+			Scanner.IsReplay ? 1 : 0,
+			HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5),
+			string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
+		string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
+
+		AddUploadRequest uploadRequest = new()
+		{
+			DaggersFired = Scanner.DaggersFired,
+			DaggersHit = Scanner.DaggersHit,
+			ClientVersion = LocalVersion.ToString(),
+			DeathType = Scanner.DeathType,
+			EnemiesAlive = Scanner.EnemiesAlive,
+			GemsCollected = Scanner.GemsCollected,
+			GemsDespawned = Scanner.GemsDespawned,
+			GemsEaten = Scanner.GemsEaten,
+			GemsTotal = Scanner.GemsTotal,
+			HomingDaggers = Scanner.HomingDaggers,
+			HomingDaggersEaten = Scanner.HomingDaggersEaten,
+			EnemiesKilled = Scanner.EnemiesKilled,
+			LevelUpTime2 = Scanner.LevelUpTime2.ConvertToTimeInt(),
+			LevelUpTime3 = Scanner.LevelUpTime3.ConvertToTimeInt(),
+			LevelUpTime4 = Scanner.LevelUpTime4.ConvertToTimeInt(),
+			PlayerId = Scanner.PlayerId,
+			SurvivalHashMd5 = Scanner.SurvivalHashMd5,
+			Time = Scanner.Time.ConvertToTimeInt(),
+			PlayerName = Scanner.PlayerName,
+			IsReplay = Scanner.IsReplay,
+			Validation = HttpUtility.HtmlEncode(validation),
+			GameStates = Scanner.GetGameStates(),
 #if DEBUG
-				BuildMode = "Debug",
+			BuildMode = "Debug",
 #else
-				BuildMode = "Release",
+			BuildMode = "Release",
 #endif
-				OperatingSystem = "Windows",
-				ProhibitedMods = Scanner.ProhibitedMods,
-				Client = "DevilDaggersCustomLeaderboards",
-				ReplayData = Scanner.GetReplay(),
-				Status = Scanner.Status,
-				ReplayPlayerId = Scanner.ReplayPlayerId,
-			};
+			OperatingSystem = "Windows",
+			ProhibitedMods = Scanner.ProhibitedMods,
+			Client = "DevilDaggersCustomLeaderboards",
+			ReplayData = Scanner.GetReplay(),
+			Status = Scanner.Status,
+			ReplayPlayerId = Scanner.ReplayPlayerId,
+		};
 
+		try
+		{
 			return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreForDdclAsync(uploadRequest);
 		}
 		catch (DevilDaggersInfoApiException<ProblemDetails> ex)
