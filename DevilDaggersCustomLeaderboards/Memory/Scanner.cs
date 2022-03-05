@@ -360,7 +360,7 @@ public static class Scanner
 		}
 	}
 
-	public static List<AddGameState> GetGameStates()
+	public static AddGameData GetGameData()
 	{
 		if (Process == null)
 			return new();
@@ -368,66 +368,62 @@ public static class Scanner
 		byte[] buffer = new byte[_statesBufferSize * StatsCount];
 		OperatingSystemUtils.ReadMemory(Process, StatsBase.Value, buffer, buffer.Length);
 
-		List<AddGameState> gameStates = new();
+		AddGameData gameData = new();
 
 		using MemoryStream ms = new(buffer);
 		using BinaryReader br = new(ms);
 		for (int i = 0; i < StatsCount; i++)
 		{
-			AddGameState gameState = new();
-
-			gameState.GemsCollected = br.ReadInt32();
-			gameState.EnemiesKilled = br.ReadInt32();
-			gameState.DaggersFired = br.ReadInt32();
-			gameState.DaggersHit = br.ReadInt32();
-			gameState.EnemiesAlive = br.ReadInt32();
+			(gameData.GemsCollected ??= new()).Add(br.ReadInt32());
+			(gameData.EnemiesKilled ??= new()).Add(br.ReadInt32());
+			(gameData.DaggersFired ??= new()).Add(br.ReadInt32());
+			(gameData.DaggersHit ??= new()).Add(br.ReadInt32());
+			(gameData.EnemiesAlive ??= new()).Add(br.ReadInt32());
 			_ = br.ReadInt32(); // Skip level gems.
-			gameState.HomingDaggers = br.ReadInt32();
-			gameState.GemsDespawned = br.ReadInt32();
-			gameState.GemsEaten = br.ReadInt32();
-			gameState.GemsTotal = br.ReadInt32();
-			gameState.HomingDaggersEaten = br.ReadInt32();
+			(gameData.HomingDaggers ??= new()).Add(br.ReadInt32());
+			(gameData.GemsDespawned ??= new()).Add(br.ReadInt32());
+			(gameData.GemsEaten ??= new()).Add(br.ReadInt32());
+			(gameData.GemsTotal ??= new()).Add(br.ReadInt32());
+			(gameData.HomingDaggersEaten ??= new()).Add(br.ReadInt32());
 
-			gameState.Skull1sAlive = br.ReadInt16();
-			gameState.Skull2sAlive = br.ReadInt16();
-			gameState.Skull3sAlive = br.ReadInt16();
-			gameState.SpiderlingsAlive = br.ReadInt16();
-			gameState.Skull4sAlive = br.ReadInt16();
-			gameState.Squid1sAlive = br.ReadInt16();
-			gameState.Squid2sAlive = br.ReadInt16();
-			gameState.Squid3sAlive = br.ReadInt16();
-			gameState.CentipedesAlive = br.ReadInt16();
-			gameState.GigapedesAlive = br.ReadInt16();
-			gameState.Spider1sAlive = br.ReadInt16();
-			gameState.Spider2sAlive = br.ReadInt16();
-			gameState.LeviathansAlive = br.ReadInt16();
-			gameState.OrbsAlive = br.ReadInt16();
-			gameState.ThornsAlive = br.ReadInt16();
-			gameState.GhostpedesAlive = br.ReadInt16();
-			gameState.SpiderEggsAlive = br.ReadInt16();
+			(gameData.Skull1sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.Skull2sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.Skull3sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.SpiderlingsAlive ??= new()).Add(br.ReadInt16());
+			(gameData.Skull4sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.Squid1sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.Squid2sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.Squid3sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.CentipedesAlive ??= new()).Add(br.ReadInt16());
+			(gameData.GigapedesAlive ??= new()).Add(br.ReadInt16());
+			(gameData.Spider1sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.Spider2sAlive ??= new()).Add(br.ReadInt16());
+			(gameData.LeviathansAlive ??= new()).Add(br.ReadInt16());
+			(gameData.OrbsAlive ??= new()).Add(br.ReadInt16());
+			(gameData.ThornsAlive ??= new()).Add(br.ReadInt16());
+			(gameData.GhostpedesAlive ??= new()).Add(br.ReadInt16());
+			(gameData.SpiderEggsAlive ??= new()).Add(br.ReadInt16());
 
-			gameState.Skull1sKilled = br.ReadInt16();
-			gameState.Skull2sKilled = br.ReadInt16();
-			gameState.Skull3sKilled = br.ReadInt16();
-			gameState.SpiderlingsKilled = br.ReadInt16();
-			gameState.Skull4sKilled = br.ReadInt16();
-			gameState.Squid1sKilled = br.ReadInt16();
-			gameState.Squid2sKilled = br.ReadInt16();
-			gameState.Squid3sKilled = br.ReadInt16();
-			gameState.CentipedesKilled = br.ReadInt16();
-			gameState.GigapedesKilled = br.ReadInt16();
-			gameState.Spider1sKilled = br.ReadInt16();
-			gameState.Spider2sKilled = br.ReadInt16();
-			gameState.LeviathansKilled = br.ReadInt16();
-			gameState.OrbsKilled = br.ReadInt16();
-			gameState.ThornsKilled = br.ReadInt16();
-			gameState.GhostpedesKilled = br.ReadInt16();
-			gameState.SpiderEggsKilled = br.ReadInt16();
-
-			gameStates.Add(gameState);
+			(gameData.Skull1sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.Skull2sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.Skull3sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.SpiderlingsKilled ??= new()).Add(br.ReadInt16());
+			(gameData.Skull4sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.Squid1sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.Squid2sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.Squid3sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.CentipedesKilled ??= new()).Add(br.ReadInt16());
+			(gameData.GigapedesKilled ??= new()).Add(br.ReadInt16());
+			(gameData.Spider1sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.Spider2sKilled ??= new()).Add(br.ReadInt16());
+			(gameData.LeviathansKilled ??= new()).Add(br.ReadInt16());
+			(gameData.OrbsKilled ??= new()).Add(br.ReadInt16());
+			(gameData.ThornsKilled ??= new()).Add(br.ReadInt16());
+			(gameData.GhostpedesKilled ??= new()).Add(br.ReadInt16());
+			(gameData.SpiderEggsKilled ??= new()).Add(br.ReadInt16());
 		}
 
-		return gameStates;
+		return gameData;
 	}
 
 	public static byte[] GetReplay()

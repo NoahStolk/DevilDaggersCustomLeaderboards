@@ -317,7 +317,7 @@ public static class Program
 			PlayerName = Scanner.PlayerName,
 			IsReplay = Scanner.IsReplay,
 			Validation = HttpUtility.HtmlEncode(validation),
-			GameStates = Scanner.GetGameStates(),
+			GameData = Scanner.GetGameData(),
 #if DEBUG
 			BuildMode = "Debug",
 #else
