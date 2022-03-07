@@ -4486,6 +4486,7 @@ namespace DevilDaggersCustomLeaderboards.Clients
     /// 1 = Default
     /// <br/>2 = TimeAttack
     /// <br/>3 = Speedrun
+    /// <br/>4 = Race
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum CustomLeaderboardCategory
@@ -4496,6 +4497,8 @@ namespace DevilDaggersCustomLeaderboards.Clients
         TimeAttack = 2,
 
         Speedrun = 3,
+
+        Race = 4,
 
     }
 
@@ -4716,6 +4719,7 @@ namespace DevilDaggersCustomLeaderboards.Clients
     public partial class AddUploadRequest
     {
         [Newtonsoft.Json.JsonProperty("survivalHashMd5", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(16, MinimumLength = 16)]
         public byte[] SurvivalHashMd5 { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("playerId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -4795,12 +4799,14 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("prohibitedMods", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool ProhibitedMods { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("gameStates", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GameData instead.")]
-        public System.Collections.Generic.List<AddGameState>? GameStates { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("gameMode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public byte GameMode { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("gameData", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public AddGameData? GameData { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("timeAttackOrRaceFinished", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool TimeAttackOrRaceFinished { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("gameData", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public AddGameData GameData { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("replayData", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(31457280)]
@@ -4808,144 +4814,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Status { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    [System.Obsolete("Use AddGameData instead.")]
-    public partial class AddGameState
-    {
-        [Newtonsoft.Json.JsonProperty("gemsCollected", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GemsCollected { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("enemiesKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int EnemiesKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("daggersFired", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int DaggersFired { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("daggersHit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int DaggersHit { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("enemiesAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int EnemiesAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("homingDaggers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int HomingDaggers { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("homingDaggersEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int HomingDaggersEaten { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsDespawned", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GemsDespawned { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GemsEaten { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GemsTotal { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("skull1sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Skull1sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("skull2sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Skull2sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("skull3sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Skull3sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("spiderlingsAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int SpiderlingsAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("skull4sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Skull4sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("squid1sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Squid1sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("squid2sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Squid2sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("squid3sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Squid3sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("centipedesAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int CentipedesAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gigapedesAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GigapedesAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("spider1sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Spider1sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("spider2sAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Spider2sAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("leviathansAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LeviathansAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("orbsAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int OrbsAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("thornsAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ThornsAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("ghostpedesAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GhostpedesAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("spiderEggsAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int SpiderEggsAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("skull1sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Skull1sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("skull2sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Skull2sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("skull3sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Skull3sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("spiderlingsKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int SpiderlingsKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("skull4sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Skull4sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("squid1sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Squid1sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("squid2sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Squid2sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("squid3sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Squid3sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("centipedesKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int CentipedesKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gigapedesKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GigapedesKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("spider1sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Spider1sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("spider2sKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Spider2sKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("leviathansKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LeviathansKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("orbsKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int OrbsKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("thornsKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ThornsKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("ghostpedesKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GhostpedesKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("spiderEggsKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int SpiderEggsKilled { get; set; } = default!;
 
     }
 
