@@ -44,7 +44,4 @@ public abstract class AbstractVariable<TVariable> : IVariable
 
 	public override string? ToString()
 		=> Value?.ToString();
-
-	public TVariable ToTVariable()
-		=> Value;
 }
