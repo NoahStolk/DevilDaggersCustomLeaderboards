@@ -186,7 +186,7 @@ public static class Program
 		Thread.Sleep(_mainLoopSleepMilliseconds);
 		Console.SetCursorPosition(0, 0);
 
-		if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious)
+		if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious && (Scanner.GameMode == 0 || Scanner.TimeAttackOrRaceFinished))
 		{
 			Console.Clear();
 			Cmd.WriteLine("Waiting for stats to be loaded...");
@@ -329,6 +329,8 @@ public static class Program
 			ReplayData = Scanner.GetReplay(),
 			Status = Scanner.Status,
 			ReplayPlayerId = Scanner.ReplayPlayerId,
+			GameMode = Scanner.GameMode,
+			TimeAttackOrRaceFinished = Scanner.TimeAttackOrRaceFinished,
 		};
 
 		try

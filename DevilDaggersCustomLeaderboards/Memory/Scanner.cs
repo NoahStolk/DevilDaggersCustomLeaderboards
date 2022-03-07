@@ -2,7 +2,6 @@ using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory.Variables;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -10,7 +9,7 @@ namespace DevilDaggersCustomLeaderboards.Memory;
 
 public static class Scanner
 {
-	private const int _bufferSize = 316;
+	private const int _bufferSize = 319;
 	private const int _statesBufferSize = 112;
 	private const string _markerValue = "__ddstats__\0";
 
@@ -111,6 +110,10 @@ public static class Scanner
 
 	public static LongVariable ReplayBase { get; private set; } = new(0);
 	public static IntVariable ReplayLength { get; private set; } = new(0);
+
+	public static BoolVariable PlayReplayFromMemory { get; private set; } = new(0);
+	public static ByteVariable GameMode { get; private set; } = new(0);
+	public static BoolVariable TimeAttackOrRaceFinished { get; private set; } = new(0);
 
 	#endregion Variables
 
@@ -228,6 +231,10 @@ public static class Scanner
 		ReplayBase = InitiateVariable(addr => new LongVariable(addr), ref offset);
 		ReplayLength = InitiateVariable(addr => new IntVariable(addr), ref offset);
 
+		PlayReplayFromMemory = InitiateVariable(addr => new BoolVariable(addr), ref offset);
+		GameMode = InitiateVariable(addr => new ByteVariable(addr), ref offset);
+		TimeAttackOrRaceFinished = InitiateVariable(addr => new BoolVariable(addr), ref offset);
+
 		IsInitialized = true;
 
 		static TVariable InitiateVariable<TVariable>(Func<int, TVariable> constructor, ref int offset)
@@ -292,6 +299,9 @@ public static class Scanner
 
 		ReplayBase.Scan();
 		ReplayLength.Scan();
+		PlayReplayFromMemory.Scan();
+		GameMode.Scan();
+		TimeAttackOrRaceFinished.Scan();
 
 		if (IsPlayerAlive)
 		{

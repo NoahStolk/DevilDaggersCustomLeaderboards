@@ -158,6 +158,9 @@ public static class GuiUtils
 		Cmd.WriteLine("Replay Base", Scanner.ReplayBase);
 		Cmd.WriteLine("Replay Length", Scanner.ReplayLength);
 		Cmd.WriteLine();
+		Cmd.WriteLine("Game Mode", Scanner.GameMode);
+		Cmd.WriteLine("TA/R Finished", Scanner.TimeAttackOrRaceFinished);
+		Cmd.WriteLine();
 	}
 #endif
 
