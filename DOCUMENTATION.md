@@ -84,6 +84,9 @@
 | N/A (padding)              |    301 | N/A                      |             3 |
 | Replay base address        |    304 | 64-bit integer (pointer) |             8 |
 | Replay buffer length       |    312 | 32-bit integer           |             4 |
+| Play replay from memory    |    316 | 8-bit integer (boolean)  |             1 |
+| Game mode                  |    317 | 8-bit integer            |             1 |
+| TimeAttack / Race finished |    318 | 8-bit integer (boolean)  |             1 |
 
 ## Graph stats
 
