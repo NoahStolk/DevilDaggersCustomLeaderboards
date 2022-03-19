@@ -1,6 +1,6 @@
-namespace DevilDaggersCustomLeaderboards.Memory;
+namespace DevilDaggersCustomLeaderboards.Enums;
 
-public enum Status
+public enum GameStatus
 {
 	Title = 0,
 	Menu = 1,

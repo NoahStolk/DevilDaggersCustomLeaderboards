@@ -2,73 +2,72 @@ using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Enums;
 using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Memory;
-using DevilDaggersCustomLeaderboards.Memory.Variables;
 using System;
-using Cmd = DevilDaggersCustomLeaderboards.Utils.ConsoleUtils;
+using System.Diagnostics;
 
 namespace DevilDaggersCustomLeaderboards.Utils;
 
 public static class GuiUtils
 {
-	public static void WriteRecording()
+	public static void WriteRecording(Process process, MainBlock mainBlock, MainBlock mainBlockPrevious)
 	{
-		Cmd.WriteLine($"Scanning process '{Scanner.Process?.ProcessName ?? "No process"}' ({Scanner.Process?.MainWindowTitle ?? "No title"})...");
+		Cmd.WriteLine($"Scanning process '{process.ProcessName ?? "Nameless"}' ({process.MainWindowTitle ?? "No title"})...");
 		Cmd.WriteLine();
 
-		Cmd.WriteLine("Player ID", Scanner.PlayerId);
-		Cmd.WriteLine("Player Name", Scanner.PlayerName);
+		Cmd.WriteLine("Player ID", mainBlock.PlayerId);
+		Cmd.WriteLine("Player Name", mainBlock.PlayerName);
 		Cmd.WriteLine();
 
 #if DEBUG
 		WriteDebug();
 #endif
 
-		if (Scanner.IsInGame)
+		if (mainBlock.IsInGame)
 		{
-			Cmd.WriteLine("Player", Scanner.IsPlayerAlive ? "Alive" : DeathUtils.GetName(Scanner.DeathType), Scanner.IsPlayerAlive ? CustomColor.Gray : ColorUtils.GetDeathColor(Scanner.DeathType));
+			Cmd.WriteLine("Player", mainBlock.IsPlayerAlive ? "Alive" : DeathUtils.GetName(mainBlock.DeathType), mainBlock.IsPlayerAlive ? CustomColor.Gray : ColorUtils.GetDeathColor(mainBlock.DeathType));
 			Cmd.WriteLine();
-			Cmd.WriteLine("Time", Scanner.Time.Value.ToString("0.0000"));
+			Cmd.WriteLine("Time", mainBlock.Time.ToString("0.0000"));
 			Cmd.WriteLine();
-			Cmd.WriteLine("Hand", $"Level {GetHand(Scanner.LevelGems)}");
-			Cmd.WriteLine("Level 2", Scanner.LevelUpTime2.Value.ToString("0.0000"));
-			Cmd.WriteLine("Level 3", Scanner.LevelUpTime3.Value.ToString("0.0000"));
-			Cmd.WriteLine("Level 4", Scanner.LevelUpTime4.Value.ToString("0.0000"));
+			Cmd.WriteLine("Hand", $"Level {GetHand(mainBlock.LevelGems)}");
+			Cmd.WriteLine("Level 2", mainBlock.LevelUpTime2.ToString("0.0000"));
+			Cmd.WriteLine("Level 3", mainBlock.LevelUpTime3.ToString("0.0000"));
+			Cmd.WriteLine("Level 4", mainBlock.LevelUpTime4.ToString("0.0000"));
 			Cmd.WriteLine();
-			WriteVariable("Gems Collected", Scanner.GemsCollected, CustomColor.Red);
-			WriteVariable("Gems Despawned", Scanner.GemsDespawned, CustomColor.Red);
-			WriteVariable("Gems Eaten", Scanner.GemsEaten, CustomColor.Green);
-			WriteVariable("Gems Total", Scanner.GemsTotal, CustomColor.Red);
-			Cmd.WriteLine("Gems In Arena", Math.Max(0, Scanner.GemsTotal - Scanner.GemsCollected - Scanner.GemsDespawned - Scanner.GemsEaten));
+			WriteVariable("Gems Collected", mainBlock.GemsCollected, mainBlockPrevious.GemsCollected, CustomColor.Red);
+			WriteVariable("Gems Despawned", mainBlock.GemsDespawned, mainBlockPrevious.GemsDespawned, CustomColor.Red);
+			WriteVariable("Gems Eaten", mainBlock.GemsEaten, mainBlockPrevious.GemsEaten, CustomColor.Green);
+			WriteVariable("Gems Total", mainBlock.GemsTotal, mainBlockPrevious.GemsTotal, CustomColor.Red);
+			Cmd.WriteLine("Gems In Arena", Math.Max(0, mainBlock.GemsTotal - mainBlock.GemsCollected - mainBlock.GemsDespawned - mainBlock.GemsEaten));
 			Cmd.WriteLine();
-			WriteVariable("Homing Stored", Scanner.HomingDaggers, CustomColor.Magenta);
-			WriteVariable("Homing Eaten", Scanner.HomingDaggersEaten, CustomColor.Ghostpede);
+			WriteVariable("Homing Stored", mainBlock.HomingDaggers, mainBlockPrevious.HomingDaggers, CustomColor.Magenta);
+			WriteVariable("Homing Eaten", mainBlock.HomingDaggersEaten, mainBlockPrevious.HomingDaggersEaten, CustomColor.Ghostpede);
 			Cmd.WriteLine();
 			WriteEnemyHeaders("Enemies", "Alive", "Killed");
-			WriteEnemyVariables("Total", Scanner.EnemiesAlive, Scanner.EnemiesKilled, ColorUtils.Entangled);
-			WriteEnemyVariables("Skull I", Scanner.Skull1sAlive, Scanner.Skull1sKilled, ColorUtils.Swarmed);
-			WriteEnemyVariables("Skull II", Scanner.Skull2sAlive, Scanner.Skull2sKilled, ColorUtils.Impaled);
-			WriteEnemyVariables("Skull III", Scanner.Skull3sAlive, Scanner.Skull3sKilled, ColorUtils.Gored);
-			WriteEnemyVariables("Skull IV", Scanner.Skull4sAlive, Scanner.Skull4sKilled, ColorUtils.Opened);
-			WriteEnemyVariables("Squid I", Scanner.Squid1sAlive, Scanner.Squid1sKilled, ColorUtils.Purged);
-			WriteEnemyVariables("Squid II", Scanner.Squid2sAlive, Scanner.Squid2sKilled, ColorUtils.Desecrated);
-			WriteEnemyVariables("Squid III", Scanner.Squid3sAlive, Scanner.Squid3sKilled, ColorUtils.Sacrificed);
-			WriteEnemyVariables("Spiderling", Scanner.SpiderlingsAlive, Scanner.SpiderlingsKilled, ColorUtils.Infested);
-			WriteEnemyVariables("Spider I", Scanner.Spider1sAlive, Scanner.Spider1sKilled, ColorUtils.Intoxicated);
-			WriteEnemyVariables("Spider II", Scanner.Spider2sAlive, Scanner.Spider2sKilled, ColorUtils.Envenomated);
-			WriteEnemyVariables("Spider Egg", Scanner.SpiderEggsAlive, Scanner.SpiderEggsKilled, ColorUtils.Intoxicated);
-			WriteEnemyVariables("Centipede", Scanner.CentipedesAlive, Scanner.CentipedesKilled, ColorUtils.Eviscerated);
-			WriteEnemyVariables("Gigapede", Scanner.GigapedesAlive, Scanner.GigapedesKilled, ColorUtils.Annihilated);
-			WriteEnemyVariables("Ghostpede", Scanner.GhostpedesAlive, Scanner.GhostpedesKilled, ColorUtils.Haunted);
-			WriteEnemyVariables("Thorn", Scanner.ThornsAlive, Scanner.ThornsKilled, ColorUtils.Entangled);
-			WriteEnemyVariables("Leviathan", Scanner.LeviathansAlive, Scanner.LeviathansKilled, ColorUtils.Incarnated);
-			WriteEnemyVariables("Orb", Scanner.OrbsAlive, Scanner.OrbsKilled, ColorUtils.Discarnated);
+			WriteEnemyVariables("Total", mainBlock.EnemiesAlive, mainBlock.EnemiesKilled, mainBlockPrevious.EnemiesAlive, mainBlockPrevious.EnemiesKilled, ColorUtils.Entangled);
+			WriteEnemyVariables("Skull I", mainBlock.Skull1sAlive, mainBlock.Skull1sKilled, mainBlockPrevious.Skull1sAlive, mainBlockPrevious.Skull1sKilled, ColorUtils.Swarmed);
+			WriteEnemyVariables("Skull II", mainBlock.Skull2sAlive, mainBlock.Skull2sKilled, mainBlockPrevious.Skull2sAlive, mainBlockPrevious.Skull2sKilled, ColorUtils.Impaled);
+			WriteEnemyVariables("Skull III", mainBlock.Skull3sAlive, mainBlock.Skull3sKilled, mainBlockPrevious.Skull3sAlive, mainBlockPrevious.Skull3sKilled, ColorUtils.Gored);
+			WriteEnemyVariables("Skull IV", mainBlock.Skull4sAlive, mainBlock.Skull4sKilled, mainBlockPrevious.Skull4sAlive, mainBlockPrevious.Skull4sKilled, ColorUtils.Opened);
+			WriteEnemyVariables("Squid I", mainBlock.Squid1sAlive, mainBlock.Squid1sKilled, mainBlockPrevious.Squid1sAlive, mainBlockPrevious.Squid1sKilled, ColorUtils.Purged);
+			WriteEnemyVariables("Squid II", mainBlock.Squid2sAlive, mainBlock.Squid2sKilled, mainBlockPrevious.Squid2sAlive, mainBlockPrevious.Squid2sKilled, ColorUtils.Desecrated);
+			WriteEnemyVariables("Squid III", mainBlock.Squid3sAlive, mainBlock.Squid3sKilled, mainBlockPrevious.Squid3sAlive, mainBlockPrevious.Squid3sKilled, ColorUtils.Sacrificed);
+			WriteEnemyVariables("Spiderling", mainBlock.SpiderlingsAlive, mainBlock.SpiderlingsKilled, mainBlockPrevious.SpiderlingsAlive, mainBlockPrevious.SpiderlingsKilled, ColorUtils.Infested);
+			WriteEnemyVariables("Spider I", mainBlock.Spider1sAlive, mainBlock.Spider1sKilled, mainBlockPrevious.Spider1sAlive, mainBlockPrevious.Spider1sKilled, ColorUtils.Intoxicated);
+			WriteEnemyVariables("Spider II", mainBlock.Spider2sAlive, mainBlock.Spider2sKilled, mainBlockPrevious.Spider2sAlive, mainBlockPrevious.Spider2sKilled, ColorUtils.Envenomated);
+			WriteEnemyVariables("Spider Egg", mainBlock.SpiderEggsAlive, mainBlock.SpiderEggsKilled, mainBlockPrevious.SpiderEggsAlive, mainBlockPrevious.SpiderEggsKilled, ColorUtils.Intoxicated);
+			WriteEnemyVariables("Centipede", mainBlock.CentipedesAlive, mainBlock.CentipedesKilled, mainBlockPrevious.CentipedesAlive, mainBlockPrevious.CentipedesKilled, ColorUtils.Eviscerated);
+			WriteEnemyVariables("Gigapede", mainBlock.GigapedesAlive, mainBlock.GigapedesKilled, mainBlockPrevious.GigapedesAlive, mainBlockPrevious.GigapedesKilled, ColorUtils.Annihilated);
+			WriteEnemyVariables("Ghostpede", mainBlock.GhostpedesAlive, mainBlock.GhostpedesKilled, mainBlockPrevious.GhostpedesAlive, mainBlockPrevious.GhostpedesKilled, ColorUtils.Haunted);
+			WriteEnemyVariables("Thorn", mainBlock.ThornsAlive, mainBlock.ThornsKilled, mainBlockPrevious.ThornsAlive, mainBlockPrevious.ThornsKilled, ColorUtils.Entangled);
+			WriteEnemyVariables("Leviathan", mainBlock.LeviathansAlive, mainBlock.LeviathansKilled, mainBlockPrevious.LeviathansAlive, mainBlockPrevious.LeviathansKilled, ColorUtils.Incarnated);
+			WriteEnemyVariables("Orb", mainBlock.OrbsAlive, mainBlock.OrbsKilled, mainBlockPrevious.OrbsAlive, mainBlockPrevious.OrbsKilled, ColorUtils.Discarnated);
 			Cmd.WriteLine();
-			WriteVariable("Daggers Hit", Scanner.DaggersHit, CustomColor.Green);
-			WriteVariable("Daggers Fired", Scanner.DaggersFired, CustomColor.Yellow);
-			Cmd.WriteLine("Accuracy", $"{(Scanner.DaggersFired == 0 ? 0 : Scanner.DaggersHit / (float)Scanner.DaggersFired * 100):0.00}%");
+			WriteVariable("Daggers Hit", mainBlock.DaggersHit, mainBlockPrevious.DaggersHit, CustomColor.Green);
+			WriteVariable("Daggers Fired", mainBlock.DaggersFired, mainBlockPrevious.DaggersFired, CustomColor.Yellow);
+			Cmd.WriteLine("Accuracy", $"{(mainBlock.DaggersFired == 0 ? 0 : mainBlock.DaggersHit / (float)mainBlock.DaggersFired * 100):0.00}%");
 			Cmd.WriteLine();
-			Cmd.WriteLine("Leviathan Down", Scanner.LeviathanDownTime.Value.ToString("0.0000"));
-			Cmd.WriteLine("Orb Down", Scanner.OrbDownTime.Value.ToString("0.0000"));
+			Cmd.WriteLine("Leviathan Down", mainBlock.LeviathanDownTime.ToString("0.0000"));
+			Cmd.WriteLine("Orb Down", mainBlock.OrbDownTime.ToString("0.0000"));
 			Cmd.WriteLine();
 		}
 		else
@@ -89,16 +88,17 @@ public static class GuiUtils
 			return 4;
 		}
 
-		static void WriteVariable<T>(object textLeft, AbstractVariable<T> variable, CustomColor foregroundColorModify, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
+		static void WriteVariable<T>(object textLeft, T value, T valuePrevious, CustomColor foregroundColorModify, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
+			where T : struct, IComparable<T>
 		{
 			Console.ForegroundColor = (ConsoleColor)foregroundColor;
 
 			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.Write($"{textLeft,-Cmd.TextWidthLeft}");
 
-			if (variable.IsChanged)
+			if (value.CompareTo(valuePrevious) != 0)
 				Console.ForegroundColor = (ConsoleColor)foregroundColorModify;
-			Console.Write($"{variable,Cmd.TextWidthRight}");
+			Console.Write($"{value,Cmd.TextWidthRight}");
 
 			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.WriteLine($"{new string(' ', Cmd.TextWidthFull)}");
@@ -115,16 +115,17 @@ public static class GuiUtils
 			Console.WriteLine($"{new string(' ', Cmd.TextWidthFull)}");
 		}
 
-		static void WriteEnemyVariables<T>(object textLeft, AbstractVariable<T> variableLeft, AbstractVariable<T> variableRight, CustomColor enemyColor, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
+		static void WriteEnemyVariables<T>(object textLeft, T valueLeft, T valueRight, T valueLeftPrevious, T valueRightPrevious, CustomColor enemyColor, CustomColor foregroundColor = ColorUtils.ForegroundDefault, CustomColor backgroundColor = ColorUtils.BackgroundDefault)
+			where T : struct, IComparable<T>
 		{
 			Console.ForegroundColor = (ConsoleColor)enemyColor;
 			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.Write($"{textLeft,-Cmd.TextWidthLeft}");
 
-			Console.ForegroundColor = (ConsoleColor)(variableLeft.IsChanged ? enemyColor : foregroundColor);
-			Console.Write($"{variableLeft,Cmd.TextWidthRight - Cmd.LeftMargin}");
-			Console.ForegroundColor = (ConsoleColor)(variableRight.IsChanged ? enemyColor : foregroundColor);
-			Console.Write($"{variableRight,Cmd.TextWidthRight - Cmd.RightMargin}");
+			Console.ForegroundColor = (ConsoleColor)(valueLeft.CompareTo(valueLeftPrevious) != 0 ? enemyColor : foregroundColor);
+			Console.Write($"{valueLeft,Cmd.TextWidthRight - Cmd.LeftMargin}");
+			Console.ForegroundColor = (ConsoleColor)(valueRight.CompareTo(valueRightPrevious) != 0 ? enemyColor : foregroundColor);
+			Console.Write($"{valueRight,Cmd.TextWidthRight - Cmd.RightMargin}");
 
 			Console.BackgroundColor = (ConsoleColor)backgroundColor;
 			Console.WriteLine($"{new string(' ', Cmd.TextWidthFull)}");
@@ -164,7 +165,7 @@ public static class GuiUtils
 	}
 #endif
 
-	public static void WriteStats(GetCustomLeaderboardDdcl leaderboard, GetCustomEntryDdcl? entry)
+	public static void WriteStats(MainBlock mainBlock, GetCustomLeaderboardDdcl leaderboard, GetCustomEntryDdcl? entry)
 	{
 		if (entry == null)
 		{
@@ -173,36 +174,36 @@ public static class GuiUtils
 			return;
 		}
 
-		double accuracy = Scanner.DaggersFired == 0 ? 0 : Scanner.DaggersHit / (double)Scanner.DaggersFired;
+		double accuracy = mainBlock.DaggersFired == 0 ? 0 : mainBlock.DaggersHit / (double)mainBlock.DaggersFired;
 		double accuracyOld = entry.DaggersFired == 0 ? 0 : entry.DaggersHit / (double)entry.DaggersFired;
 
-		Cmd.Write(DeathUtils.GetName(Scanner.DeathType), ColorUtils.GetDeathColor(Scanner.DeathType));
+		Cmd.Write(DeathUtils.GetName(mainBlock.DeathType), ColorUtils.GetDeathColor(mainBlock.DeathType));
 		Cmd.WriteLine();
 		Cmd.WriteLine();
 
-		int timeDiff = Scanner.Time.ConvertToTimeInt() - entry.Time;
+		int timeDiff = mainBlock.Time.ConvertToTimeInt() - entry.Time;
 		Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
-		Cmd.Write($"{Scanner.Time.Value,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(Scanner.Time.ConvertToTimeInt(), leaderboard));
+		Cmd.Write($"{mainBlock.Time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(mainBlock.Time.ConvertToTimeInt(), leaderboard));
 		Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
 
 #if DEBUG
 		WriteDebug();
 #endif
 
-		WriteIntField("Gems Collected", Scanner.GemsCollected, Scanner.GemsCollected - entry.GemsCollected);
-		WriteIntField("Gems Despawned", Scanner.GemsDespawned, Scanner.GemsDespawned - entry.GemsDespawned, true);
-		WriteIntField("Gems Eaten", Scanner.GemsEaten, Scanner.GemsEaten - entry.GemsEaten, true);
-		WriteIntField("Gems Total", Scanner.GemsTotal, Scanner.GemsTotal - entry.GemsTotal);
-		WriteIntField("Enemies Killed", Scanner.EnemiesKilled, Scanner.EnemiesKilled - entry.EnemiesKilled);
-		WriteIntField("Enemies Alive", Scanner.EnemiesAlive, Scanner.EnemiesAlive - entry.EnemiesAlive);
-		WriteIntField("Daggers Fired", Scanner.DaggersFired, Scanner.DaggersFired - entry.DaggersFired);
-		WriteIntField("Daggers Hit", Scanner.DaggersHit, Scanner.DaggersHit - entry.DaggersHit);
+		WriteIntField("Gems Collected", mainBlock.GemsCollected, mainBlock.GemsCollected - entry.GemsCollected);
+		WriteIntField("Gems Despawned", mainBlock.GemsDespawned, mainBlock.GemsDespawned - entry.GemsDespawned, true);
+		WriteIntField("Gems Eaten", mainBlock.GemsEaten, mainBlock.GemsEaten - entry.GemsEaten, true);
+		WriteIntField("Gems Total", mainBlock.GemsTotal, mainBlock.GemsTotal - entry.GemsTotal);
+		WriteIntField("Enemies Killed", mainBlock.EnemiesKilled, mainBlock.EnemiesKilled - entry.EnemiesKilled);
+		WriteIntField("Enemies Alive", mainBlock.EnemiesAlive, mainBlock.EnemiesAlive - entry.EnemiesAlive);
+		WriteIntField("Daggers Fired", mainBlock.DaggersFired, mainBlock.DaggersFired - entry.DaggersFired);
+		WriteIntField("Daggers Hit", mainBlock.DaggersHit, mainBlock.DaggersHit - entry.DaggersHit);
 		WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
-		WriteIntField("Homing Stored", Scanner.HomingDaggers, Scanner.HomingDaggers - entry.HomingDaggers);
-		WriteIntField("Homing Eaten", Scanner.HomingDaggersEaten, Scanner.HomingDaggersEaten - entry.HomingDaggersEaten);
-		WriteTimeField("Level 2", Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime2.ConvertToTimeInt() - entry.LevelUpTime2);
-		WriteTimeField("Level 3", Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt() - entry.LevelUpTime3);
-		WriteTimeField("Level 4", Scanner.LevelUpTime4.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() - entry.LevelUpTime4);
+		WriteIntField("Homing Stored", mainBlock.HomingDaggers, mainBlock.HomingDaggers - entry.HomingDaggers);
+		WriteIntField("Homing Eaten", mainBlock.HomingDaggersEaten, mainBlock.HomingDaggersEaten - entry.HomingDaggersEaten);
+		WriteTimeField("Level 2", mainBlock.LevelUpTime2.ConvertToTimeInt(), mainBlock.LevelUpTime2.ConvertToTimeInt() - entry.LevelUpTime2);
+		WriteTimeField("Level 3", mainBlock.LevelUpTime3.ConvertToTimeInt(), mainBlock.LevelUpTime3.ConvertToTimeInt() - entry.LevelUpTime3);
+		WriteTimeField("Level 4", mainBlock.LevelUpTime4.ConvertToTimeInt(), mainBlock.LevelUpTime4.ConvertToTimeInt() - entry.LevelUpTime4);
 
 		static void WriteIntField(string fieldName, int value, int valueDiff, bool negate = false)
 		{
@@ -251,7 +252,7 @@ public static class GuiUtils
 		Console.BackgroundColor = (ConsoleColor)ColorUtils.BackgroundDefault;
 	}
 
-	public static void WriteHighscoreStats(this GetUploadSuccess us)
+	public static void WriteHighscoreStats(this GetUploadSuccess us, MainBlock mainBlock)
 	{
 		int deathType = us.Entries[us.Rank - 1].DeathType;
 
@@ -262,7 +263,7 @@ public static class GuiUtils
 		double accuracyOld = shotsFiredOld == 0 ? 0 : shotsHitOld / (double)shotsFiredOld;
 		double accuracyDiff = accuracy - accuracyOld;
 
-		Cmd.Write(DeathUtils.GetName(Scanner.DeathType), ColorUtils.GetDeathColor(deathType));
+		Cmd.Write(DeathUtils.GetName(mainBlock.DeathType), ColorUtils.GetDeathColor(deathType));
 		Cmd.WriteLine();
 		Cmd.WriteLine();
 

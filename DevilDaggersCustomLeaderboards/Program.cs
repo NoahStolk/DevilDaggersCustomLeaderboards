@@ -1,104 +1,34 @@
-using DevilDaggersCustomLeaderboards.Clients;
-using DevilDaggersCustomLeaderboards.Extensions;
-using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Network;
 using DevilDaggersCustomLeaderboards.Utils;
-using log4net;
-using log4net.Config;
-using log4net.Repository;
+using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using Cmd = DevilDaggersCustomLeaderboards.Utils.ConsoleUtils;
 
 namespace DevilDaggersCustomLeaderboards;
 
 public static class Program
 {
-	private const int _mainLoopSleepMilliseconds = 50;
-
-	/// <summary>
-	/// Only accepts submissions of at least one second.
-	/// </summary>
-	private const float _minimalTime = 1f;
-
-#pragma warning disable IDE1006, SA1310 // Field names should not contain underscore
-	private const int MF_BYCOMMAND = 0x00000000;
-	private const int SC_MINIMIZE = 0xF020;
-	private const int SC_MAXIMIZE = 0xF030;
-	private const int SC_SIZE = 0xF000;
-#pragma warning restore IDE1006, SA1310 // Field names should not contain underscore
-
-	private static bool _isRecording = true;
-
-	public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType ?? throw new("Could not retrieve logger declaring type."));
-
-	private static long _marker;
-
-	public static string ApplicationName => "DevilDaggersCustomLeaderboards";
-	public static string ApplicationDisplayName => "Devil Daggers Custom Leaderboards";
-
-	public static Assembly Assembly { get; } = Assembly.GetExecutingAssembly();
-	public static Version LocalVersion { get; } = Version.Parse(FileVersionInfo.GetVersionInfo(Path.Combine(AppContext.BaseDirectory, $"{ApplicationName}.exe")).FileVersion ?? throw new("Could not get file version from current assembly."));
-
-#pragma warning disable S2190 // Recursion should not be infinite
 	public static async Task Main()
-#pragma warning restore S2190 // Recursion should not be infinite
 	{
 		Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 		Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
-		ILoggerRepository? logRepository = LogManager.GetRepository(Assembly);
-		XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
-
 		InitializeConsole();
 
-		Cmd.WriteLine("Checking for updates...");
-		GetTool tool = await NetworkHandler.Instance.ApiClient.Tools_GetToolAsync(ApplicationName);
-		Console.Clear();
+		ServiceProvider serviceProvider = new ServiceCollection()
+			.AddLogging(lb => lb.AddSerilog(new LoggerConfiguration().WriteTo.File("DDCL.log").CreateLogger()))
+			.AddSingleton<NetworkService>()
+			.AddSingleton<RecorderService>()
+			.AddSingleton<ScannerService>()
+			.AddSingleton<UploadService>()
+			.BuildServiceProvider();
 
-		if (tool != null)
-		{
-			if (LocalVersion < Version.Parse(tool.VersionNumberRequired))
-			{
-				Cmd.WriteLine($"You are using an unsupported and outdated version of {ApplicationDisplayName} ({LocalVersion}).\n\nYou must use version {tool.VersionNumberRequired} or higher.\n\nPlease update the program.\n\n(Press any key to continue.)", ColorUtils.Error);
-				Console.ReadKey();
-			}
-			else if (LocalVersion < Version.Parse(tool.VersionNumber))
-			{
-				Cmd.WriteLine($"{ApplicationDisplayName} version {tool.VersionNumber} is available.\n\n(Press any key to continue.)", ColorUtils.Warning);
-				Console.ReadKey();
-			}
-		}
-		else
-		{
-			Cmd.WriteLine($"Failed to check for updates (host: {NetworkHandler.BaseUrl}).\n\n(Press any key to continue.)", ColorUtils.Error);
-			Console.ReadKey();
-		}
-
-		Cmd.WriteLine("Retrieving marker...");
-		Marker marker = await NetworkHandler.Instance.ApiClient.ProcessMemory_GetMarkerAsync(SupportedOperatingSystem.Windows);
-		_marker = marker.Value;
-		Console.Clear();
-
-		while (true)
-		{
-			try
-			{
-				await ExecuteMainLoop();
-			}
-			catch (Win32Exception)
-			{
-				// Ignore exceptions when Devil Daggers is closed.
-			}
-		}
+		RecorderService recorderService = serviceProvider.GetRequiredService<RecorderService>();
+		await recorderService.Record();
 	}
 
 	private static void InitializeConsole()
@@ -122,6 +52,10 @@ public static class Program
 		}
 
 #pragma warning disable CA1806 // Do not ignore method results
+		const int MF_BYCOMMAND = 0x00000000;
+		const int SC_MINIMIZE = 0xF020;
+		const int SC_MAXIMIZE = 0xF030;
+		const int SC_SIZE = 0xF000;
 		NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MINIMIZE, MF_BYCOMMAND);
 		NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_MAXIMIZE, MF_BYCOMMAND);
 		NativeMethods.DeleteMenu(NativeMethods.GetSystemMenu(NativeMethods.GetConsoleWindow(), false), SC_SIZE, MF_BYCOMMAND);
@@ -138,229 +72,9 @@ public static class Program
 		ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
 
 #if DEBUG
-		Console.Title = $"{ApplicationDisplayName} {LocalVersion} DEBUG";
+		Console.Title = $"{Constants.ApplicationDisplayName} {Constants.LocalVersion} DEBUG";
 #else
-		Console.Title = $"{ApplicationDisplayName} {LocalVersion}";
+		Console.Title = $"{Constants.ApplicationDisplayName} {Constants.LocalVersion}";
 #endif
-	}
-
-	private static async Task ExecuteMainLoop()
-	{
-		Scanner.FindWindow();
-
-		if (Scanner.Process == null)
-		{
-			Scanner.IsInitialized = false;
-			Cmd.WriteLine("Devil Daggers not found. Make sure the game is running. Retrying in a second...");
-			Thread.Sleep(1000);
-			Console.Clear();
-			return;
-		}
-
-		Scanner.Initialize(_marker);
-		if (!Scanner.IsInitialized)
-		{
-			Cmd.WriteLine("Could not find memory block starting address. Retrying in a second...");
-			Thread.Sleep(1000);
-			Console.Clear();
-			return;
-		}
-
-		Scanner.Scan();
-
-		if (!_isRecording)
-		{
-#if DEBUG
-			Console.SetCursorPosition(0, 0);
-			GuiUtils.WriteRecording();
-#endif
-			if (Scanner.Time == Scanner.Time.ValuePrevious)
-				return;
-
-			Console.Clear();
-			_isRecording = true;
-		}
-
-		GuiUtils.WriteRecording();
-
-		Thread.Sleep(_mainLoopSleepMilliseconds);
-		Console.SetCursorPosition(0, 0);
-
-		if (!Scanner.IsPlayerAlive && Scanner.IsPlayerAlive.ValuePrevious && (Scanner.GameMode == 0 || Scanner.TimeAttackOrRaceFinished))
-		{
-			Console.Clear();
-			Cmd.WriteLine("Waiting for stats to be loaded...");
-
-			while (!Scanner.StatsLoaded)
-			{
-				Scanner.StatsLoaded.Scan();
-				Thread.Sleep(500);
-			}
-
-			Console.Clear();
-			Cmd.WriteLine("Waiting for replay to be loaded...");
-
-			while (Scanner.ReplayLength == 0)
-			{
-				Scanner.ReplayLength.Scan();
-				Thread.Sleep(500);
-			}
-
-			_isRecording = false;
-
-			Console.Clear();
-			Cmd.WriteLine("Validating...");
-			Cmd.WriteLine();
-
-			string? errorMessage = ValidateRunLocally();
-			if (errorMessage == null)
-			{
-				// Thread is being blocked by the upload.
-				GetUploadSuccess? uploadSuccess = await UploadRun();
-
-				if (uploadSuccess != null)
-				{
-					Cmd.WriteLine("Upload successful", ColorUtils.Success);
-					Cmd.WriteLine(uploadSuccess.Message);
-					Cmd.WriteLine();
-					uploadSuccess.WriteLeaderboard(Scanner.PlayerId);
-
-					Cmd.WriteLine();
-
-					if (uploadSuccess.IsHighscore())
-						uploadSuccess.WriteHighscoreStats();
-					else
-						GuiUtils.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == Scanner.PlayerId));
-
-					Cmd.WriteLine();
-				}
-				else
-				{
-					Thread.Sleep(500);
-				}
-			}
-			else
-			{
-				Cmd.WriteLine("Validation failed", ColorUtils.Error);
-				Cmd.WriteLine(errorMessage);
-				Log.Warn($"Validation failed - {errorMessage}");
-
-				Thread.Sleep(500);
-			}
-
-			Console.SetCursorPosition(0, 0);
-			Cmd.WriteLine("Ready to restart", string.Empty);
-			Cmd.WriteLine();
-		}
-	}
-
-	private static async Task<GetUploadSuccess?> UploadRun()
-	{
-		Console.Clear();
-		Cmd.WriteLine("Checking if this spawnset has a leaderboard...");
-		Cmd.WriteLine();
-
-		try
-		{
-			await NetworkHandler.Instance.ApiClient.CustomLeaderboards_CustomLeaderboardExistsBySpawnsetHashAsync(Scanner.SurvivalHashMd5);
-		}
-		catch (DevilDaggersInfoApiException ex) when (ex.StatusCode == 404)
-		{
-			Cmd.WriteLine("This spawnset does not have a leaderboard.", string.Empty, ColorUtils.Warning);
-			return null;
-		}
-
-		Console.Clear();
-		Cmd.WriteLine("Uploading...");
-		Cmd.WriteLine();
-
-		string toEncrypt = string.Join(
-			";",
-			Scanner.PlayerId,
-			Scanner.Time.ConvertToTimeInt(),
-			Scanner.GemsCollected,
-			Scanner.GemsDespawned,
-			Scanner.GemsEaten,
-			Scanner.GemsTotal,
-			Scanner.EnemiesKilled,
-			Scanner.DeathType,
-			Scanner.DaggersHit,
-			Scanner.DaggersFired,
-			Scanner.EnemiesAlive,
-			Scanner.HomingDaggers,
-			Scanner.HomingDaggersEaten,
-			Scanner.IsReplay ? 1 : 0,
-			HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5),
-			string.Join(",", new[] { Scanner.LevelUpTime2.ConvertToTimeInt(), Scanner.LevelUpTime3.ConvertToTimeInt(), Scanner.LevelUpTime4.ConvertToTimeInt() }));
-		string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
-
-		AddUploadRequest uploadRequest = new()
-		{
-			DaggersFired = Scanner.DaggersFired,
-			DaggersHit = Scanner.DaggersHit,
-			ClientVersion = LocalVersion.ToString(),
-			DeathType = Scanner.DeathType,
-			EnemiesAlive = Scanner.EnemiesAlive,
-			GemsCollected = Scanner.GemsCollected,
-			GemsDespawned = Scanner.GemsDespawned,
-			GemsEaten = Scanner.GemsEaten,
-			GemsTotal = Scanner.GemsTotal,
-			HomingDaggers = Scanner.HomingDaggers,
-			HomingDaggersEaten = Scanner.HomingDaggersEaten,
-			EnemiesKilled = Scanner.EnemiesKilled,
-			LevelUpTime2 = Scanner.LevelUpTime2.ConvertToTimeInt(),
-			LevelUpTime3 = Scanner.LevelUpTime3.ConvertToTimeInt(),
-			LevelUpTime4 = Scanner.LevelUpTime4.ConvertToTimeInt(),
-			PlayerId = Scanner.PlayerId,
-			SurvivalHashMd5 = Scanner.SurvivalHashMd5,
-			Time = Scanner.Time.ConvertToTimeInt(),
-			PlayerName = Scanner.PlayerName,
-			IsReplay = Scanner.IsReplay,
-			Validation = HttpUtility.HtmlEncode(validation),
-			GameData = Scanner.GetGameData(),
-#if DEBUG
-			BuildMode = "Debug",
-#else
-			BuildMode = "Release",
-#endif
-			OperatingSystem = "Windows",
-			ProhibitedMods = Scanner.ProhibitedMods,
-			Client = "DevilDaggersCustomLeaderboards",
-			ReplayData = Scanner.GetReplay(),
-			Status = Scanner.Status,
-			ReplayPlayerId = Scanner.ReplayPlayerId,
-			GameMode = Scanner.GameMode,
-			TimeAttackOrRaceFinished = Scanner.TimeAttackOrRaceFinished,
-		};
-
-		try
-		{
-			return await NetworkHandler.Instance.ApiClient.CustomEntries_SubmitScoreForDdclAsync(uploadRequest);
-		}
-		catch (DevilDaggersInfoApiException<ProblemDetails> ex)
-		{
-			Cmd.WriteLine("Upload failed", ex.Result?.Title ?? "Empty response", ColorUtils.Error);
-			return null;
-		}
-		catch (Exception ex)
-		{
-			Cmd.WriteLine("Upload failed", ex.Message, ColorUtils.Error);
-			Log.Error("Error trying to submit score", ex);
-			return null;
-		}
-	}
-
-	private static string? ValidateRunLocally()
-	{
-		if (Scanner.PlayerId <= 0)
-		{
-			Log.Warn($"Invalid player ID: {Scanner.PlayerId}");
-			return "Invalid player ID.";
-		}
-
-		if (Scanner.Time < _minimalTime)
-			return $"Timer is under {_minimalTime:0.0000}. Unable to validate.";
-
-		return null;
 	}
 }
