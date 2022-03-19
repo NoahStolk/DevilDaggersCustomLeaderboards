@@ -75,7 +75,7 @@ public class UploadService
 			PlayerName = _scannerService.MainBlock.PlayerName,
 			IsReplay = _scannerService.MainBlock.IsReplay,
 			Validation = HttpUtility.HtmlEncode(validation),
-			GameData = _scannerService.GetGameData(),
+			GameData = _scannerService.GetGameDataForUpload(),
 #if DEBUG
 			BuildMode = "Debug",
 #else
@@ -84,7 +84,7 @@ public class UploadService
 			OperatingSystem = "Windows",
 			ProhibitedMods = _scannerService.MainBlock.ProhibitedMods,
 			Client = "DevilDaggersCustomLeaderboards",
-			ReplayData = _scannerService.GetReplay(),
+			ReplayData = _scannerService.GetReplayForUpload(),
 			Status = _scannerService.MainBlock.Status,
 			ReplayPlayerId = _scannerService.MainBlock.ReplayPlayerId,
 			GameMode = _scannerService.MainBlock.GameMode,

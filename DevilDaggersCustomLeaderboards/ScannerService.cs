@@ -1,7 +1,6 @@
 using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Native;
-using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -54,7 +53,7 @@ public class ScannerService
 		MainBlock = new(Buffer);
 	}
 
-	public AddGameData GetGameData()
+	public AddGameData GetGameDataForUpload()
 	{
 		if (Process == null)
 			return new();
@@ -120,7 +119,7 @@ public class ScannerService
 		return gameData;
 	}
 
-	public byte[] GetReplay()
+	public byte[] GetReplayForUpload()
 	{
 		if (Process == null)
 			return Array.Empty<byte>();
