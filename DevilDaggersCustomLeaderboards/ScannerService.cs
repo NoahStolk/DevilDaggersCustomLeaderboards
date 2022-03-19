@@ -1,5 +1,6 @@
 using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Memory;
+using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Diagnostics;
@@ -25,7 +26,7 @@ public class ScannerService
 
 	public void FindWindow()
 	{
-		Process = OperatingSystemUtils.GetDevilDaggersProcess();
+		Process = GetDevilDaggersProcess();
 	}
 
 	public void Initialize(long ddstatsMarkerOffset)
@@ -33,7 +34,7 @@ public class ScannerService
 		if (IsInitialized || Process?.MainModule == null)
 			return;
 
-		long? memoryBlockAddress = OperatingSystemUtils.GetMemoryBlockAddress(Process, ddstatsMarkerOffset);
+		long? memoryBlockAddress = GetMemoryBlockAddress(Process, ddstatsMarkerOffset);
 		if (!memoryBlockAddress.HasValue)
 			return;
 
@@ -47,7 +48,7 @@ public class ScannerService
 		if (Process == null)
 			return;
 
-		OperatingSystemUtils.ReadMemory(Process, _memoryBlockAddress, Buffer, _bufferSize);
+		ReadMemory(Process, _memoryBlockAddress, Buffer, _bufferSize);
 
 		MainBlockPrevious = MainBlock;
 		MainBlock = new(Buffer);
@@ -59,7 +60,7 @@ public class ScannerService
 			return new();
 
 		byte[] buffer = new byte[_statesBufferSize * MainBlock.StatsCount];
-		OperatingSystemUtils.ReadMemory(Process, MainBlock.StatsBase, buffer, buffer.Length);
+		ReadMemory(Process, MainBlock.StatsBase, buffer, buffer.Length);
 
 		AddGameData gameData = new();
 
@@ -125,8 +126,24 @@ public class ScannerService
 			return Array.Empty<byte>();
 
 		byte[] buffer = new byte[MainBlock.ReplayLength];
-		OperatingSystemUtils.ReadMemory(Process, MainBlock.ReplayBase, buffer, buffer.Length);
+		ReadMemory(Process, MainBlock.ReplayBase, buffer, buffer.Length);
 
 		return buffer;
 	}
+
+	private static void ReadMemory(Process process, long address, byte[] bytes, int size)
+		=> NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
+
+	private static long? GetMemoryBlockAddress(Process process, long ddstatsMarkerOffset)
+	{
+		if (process.MainModule == null)
+			return null;
+
+		byte[] pointerBytes = new byte[sizeof(long)];
+		ReadMemory(process, process.MainModule.BaseAddress.ToInt64() + ddstatsMarkerOffset, pointerBytes, sizeof(long));
+		return BitConverter.ToInt64(pointerBytes);
+	}
+
+	private static Process? GetDevilDaggersProcess()
+		=> Array.Find(Process.GetProcessesByName("dd"), p => p.MainWindowTitle == "Devil Daggers");
 }

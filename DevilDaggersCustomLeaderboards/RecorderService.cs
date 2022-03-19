@@ -50,7 +50,6 @@ public class RecorderService
 	private async Task ExecuteMainLoop()
 	{
 		_scannerService.FindWindow();
-
 		if (_scannerService.Process == null)
 		{
 			_scannerService.IsInitialized = false;

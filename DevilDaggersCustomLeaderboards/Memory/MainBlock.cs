@@ -5,104 +5,103 @@ using System.Text;
 namespace DevilDaggersCustomLeaderboards.Memory;
 
 #pragma warning disable IDE1006 // Naming Styles
-#pragma warning disable S1104 // Fields should not have public accessibility
-public struct MainBlock
+public readonly record struct MainBlock
 {
-	public string Marker;
-	public int FormatVersion;
+	public readonly string Marker;
+	public readonly int FormatVersion;
 
-	public int PlayerId;
-	public string PlayerName;
-	public float Time;
-	public int GemsCollected;
-	public int EnemiesKilled;
-	public int DaggersFired;
-	public int DaggersHit;
-	public int EnemiesAlive;
-	public int LevelGems;
-	public int HomingDaggers;
-	public int GemsDespawned;
-	public int GemsEaten;
-	public int GemsTotal;
-	public int HomingDaggersEaten;
+	public readonly int PlayerId;
+	public readonly string PlayerName;
+	public readonly float Time;
+	public readonly int GemsCollected;
+	public readonly int EnemiesKilled;
+	public readonly int DaggersFired;
+	public readonly int DaggersHit;
+	public readonly int EnemiesAlive;
+	public readonly int LevelGems;
+	public readonly int HomingDaggers;
+	public readonly int GemsDespawned;
+	public readonly int GemsEaten;
+	public readonly int GemsTotal;
+	public readonly int HomingDaggersEaten;
 
-	public short Skull1sAlive;
-	public short Skull2sAlive;
-	public short Skull3sAlive;
-	public short SpiderlingsAlive;
-	public short Skull4sAlive;
-	public short Squid1sAlive;
-	public short Squid2sAlive;
-	public short Squid3sAlive;
-	public short CentipedesAlive;
-	public short GigapedesAlive;
-	public short Spider1sAlive;
-	public short Spider2sAlive;
-	public short LeviathansAlive;
-	public short OrbsAlive;
-	public short ThornsAlive;
-	public short GhostpedesAlive;
-	public short SpiderEggsAlive;
+	public readonly short Skull1sAlive;
+	public readonly short Skull2sAlive;
+	public readonly short Skull3sAlive;
+	public readonly short SpiderlingsAlive;
+	public readonly short Skull4sAlive;
+	public readonly short Squid1sAlive;
+	public readonly short Squid2sAlive;
+	public readonly short Squid3sAlive;
+	public readonly short CentipedesAlive;
+	public readonly short GigapedesAlive;
+	public readonly short Spider1sAlive;
+	public readonly short Spider2sAlive;
+	public readonly short LeviathansAlive;
+	public readonly short OrbsAlive;
+	public readonly short ThornsAlive;
+	public readonly short GhostpedesAlive;
+	public readonly short SpiderEggsAlive;
 
-	public short Skull1sKilled;
-	public short Skull2sKilled;
-	public short Skull3sKilled;
-	public short SpiderlingsKilled;
-	public short Skull4sKilled;
-	public short Squid1sKilled;
-	public short Squid2sKilled;
-	public short Squid3sKilled;
-	public short CentipedesKilled;
-	public short GigapedesKilled;
-	public short Spider1sKilled;
-	public short Spider2sKilled;
-	public short LeviathansKilled;
-	public short OrbsKilled;
-	public short ThornsKilled;
-	public short GhostpedesKilled;
-	public short SpiderEggsKilled;
+	public readonly short Skull1sKilled;
+	public readonly short Skull2sKilled;
+	public readonly short Skull3sKilled;
+	public readonly short SpiderlingsKilled;
+	public readonly short Skull4sKilled;
+	public readonly short Squid1sKilled;
+	public readonly short Squid2sKilled;
+	public readonly short Squid3sKilled;
+	public readonly short CentipedesKilled;
+	public readonly short GigapedesKilled;
+	public readonly short Spider1sKilled;
+	public readonly short Spider2sKilled;
+	public readonly short LeviathansKilled;
+	public readonly short OrbsKilled;
+	public readonly short ThornsKilled;
+	public readonly short GhostpedesKilled;
+	public readonly short SpiderEggsKilled;
 
-	public bool IsPlayerAlive;
-	public bool IsReplay;
-	public byte DeathType;
-	public bool IsInGame;
+	public readonly bool IsPlayerAlive;
+	public readonly bool IsReplay;
+	public readonly byte DeathType;
+	public readonly bool IsInGame;
 
-	public int ReplayPlayerId;
-	public string ReplayPlayerName;
+	public readonly int ReplayPlayerId;
+	public readonly string ReplayPlayerName;
 
-	public byte[] SurvivalHashMd5;
+	public readonly byte[] SurvivalHashMd5;
 
-	public float LevelUpTime2;
-	public float LevelUpTime3;
-	public float LevelUpTime4;
+	public readonly float LevelUpTime2;
+	public readonly float LevelUpTime3;
+	public readonly float LevelUpTime4;
 
-	public float LeviathanDownTime;
-	public float OrbDownTime;
+	public readonly float LeviathanDownTime;
+	public readonly float OrbDownTime;
 
-	public int Status;
+	public readonly int Status;
 
-	public int HomingMax;
-	public float HomingMaxTime;
-	public int EnemiesAliveMax;
-	public float EnemiesAliveMaxTime;
-	public float MaxTime;
+	public readonly int HomingMax;
+	public readonly float HomingMaxTime;
+	public readonly int EnemiesAliveMax;
+	public readonly float EnemiesAliveMaxTime;
+	public readonly float MaxTime;
 
-	public long StatsBase;
-	public int StatsCount;
-	public bool StatsLoaded;
+	public readonly long StatsBase;
+	public readonly int StatsCount;
+	public readonly bool StatsLoaded;
 
-	public int StartHandLevel;
-	public int StartAdditionalGems;
-	public float StartTimer;
+	public readonly int StartHandLevel;
+	public readonly int StartAdditionalGems;
+	public readonly float StartTimer;
 
-	public bool ProhibitedMods;
+	public readonly bool ProhibitedMods;
 
-	public long ReplayBase;
-	public int ReplayLength;
+	public readonly long ReplayBase;
+	public readonly int ReplayLength;
 
-	public bool PlayReplayFromMemory;
-	public byte GameMode;
-	public bool TimeAttackOrRaceFinished;
+	public readonly bool PlayReplayFromMemory;
+	public readonly byte GameMode;
+	public readonly bool TimeAttackOrRaceFinished;
 
 	public MainBlock(byte[] buffer)
 	{
