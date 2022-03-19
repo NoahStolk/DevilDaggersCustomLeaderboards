@@ -129,7 +129,7 @@ public class RecorderService
 			{
 				_uploadSuccess = uploadSuccess;
 				_finalRecordedMainBlock = _scannerService.MainBlock;
-				RenderSuccessfulSubmit(uploadSuccess);
+				RenderSuccessfulSubmit();
 			}
 			else
 			{
@@ -150,24 +150,27 @@ public class RecorderService
 		Cmd.WriteLine();
 	}
 
-	private void RenderSuccessfulSubmit(GetUploadSuccess uploadSuccess)
+	private void RenderSuccessfulSubmit()
 	{
+		if (_uploadSuccess == null)
+			return;
+
 		Console.SetCursorPosition(0, 2);
 
 		Cmd.WriteLine("Upload successful", ColorUtils.Success);
-		Cmd.WriteLine(uploadSuccess.Message);
+		Cmd.WriteLine(_uploadSuccess.Message);
 		Cmd.WriteLine();
-		Cmd.WriteLine("Press UP and DOWN arrows to navigate. Press ENTER to load replay into Devil Daggers.");
-		Cmd.WriteLine();
-
-		uploadSuccess.WriteLeaderboard(_scannerService.MainBlock.PlayerId, _selectedIndex);
-
+		Cmd.WriteLine("Use the arrow keys to navigate. Press [Enter] to load selected replay into Devil Daggers.");
 		Cmd.WriteLine();
 
-		if (uploadSuccess.IsHighscore)
-			uploadSuccess.WriteHighscoreStats(_finalRecordedMainBlock);
+		_uploadSuccess.WriteLeaderboard(_scannerService.MainBlock.PlayerId, _selectedIndex);
+
+		Cmd.WriteLine();
+
+		if (_uploadSuccess.IsHighscore)
+			_uploadSuccess.WriteHighscoreStats(_finalRecordedMainBlock);
 		else
-			uploadSuccess.WriteStats(_finalRecordedMainBlock);
+			_uploadSuccess.WriteStats(_finalRecordedMainBlock);
 
 		Cmd.WriteLine();
 	}
@@ -203,11 +206,11 @@ public class RecorderService
 				break;
 			case ConsoleKey.UpArrow:
 				_selectedIndex = Math.Max(0, _selectedIndex - 1);
-				RenderSuccessfulSubmit(_uploadSuccess);
+				RenderSuccessfulSubmit();
 				break;
 			case ConsoleKey.DownArrow:
 				_selectedIndex = Math.Min(customEntryIds.Count - 1, _selectedIndex + 1);
-				RenderSuccessfulSubmit(_uploadSuccess);
+				RenderSuccessfulSubmit();
 				break;
 		}
 	}
