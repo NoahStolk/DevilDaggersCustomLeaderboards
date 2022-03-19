@@ -18,6 +18,9 @@ internal static class NativeMethods
 	internal static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, uint size, out uint lpNumberOfBytesRead);
 
 	[DllImport("kernel32.dll", SetLastError = true)]
+	internal static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, uint size, out uint lpNumberOfBytesWritten);
+
+	[DllImport("kernel32.dll", SetLastError = true)]
 	internal static extern bool SetConsoleScreenBufferInfoEx(IntPtr hConsoleOutput, ref ConsoleScreenBufferInfoEx csbe);
 
 	[DllImport("user32.dll")]

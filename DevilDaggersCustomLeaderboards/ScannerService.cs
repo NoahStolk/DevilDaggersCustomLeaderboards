@@ -130,6 +130,16 @@ public class ScannerService
 		return buffer;
 	}
 
+	public void WriteReplayToMemory(byte[] replay)
+	{
+		if (Process == null)
+			return;
+
+		NativeMethods.WriteProcessMemory(Process.Handle, new(MainBlock.ReplayBase), replay, (uint)replay.Length, out _);
+		NativeMethods.WriteProcessMemory(Process.Handle, new(_memoryBlockAddress + 312), BitConverter.GetBytes(replay.Length), sizeof(int), out _);
+		NativeMethods.WriteProcessMemory(Process.Handle, new(_memoryBlockAddress + 316), new byte[] { 1 }, 1, out _);
+	}
+
 	private static void ReadMemory(Process process, long address, byte[] bytes, int size)
 		=> NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
 
