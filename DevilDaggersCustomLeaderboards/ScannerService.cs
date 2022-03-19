@@ -5,124 +5,124 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace DevilDaggersCustomLeaderboards.Memory;
+namespace DevilDaggersCustomLeaderboards;
 
-public static class Scanner
+public class ScannerService
 {
 	private const int _bufferSize = 319;
 	private const int _statesBufferSize = 112;
 	private const string _markerValue = "__ddstats__\0";
 
-	private static long _memoryBlockAddress;
+	private long _memoryBlockAddress;
 
-	public static bool IsInitialized { get; set; }
+	public bool IsInitialized { get; set; }
 
-	public static Process? Process { get; private set; }
+	public Process? Process { get; private set; }
 
-	public static byte[] Buffer { get; } = new byte[_bufferSize];
+	public byte[] Buffer { get; } = new byte[_bufferSize];
 
 	#region Variables
 
-	public static StringVariable Marker { get; private set; } = new(0, 12);
-	public static IntVariable FormatVersion { get; private set; } = new(0);
+	public StringVariable Marker { get; private set; } = new(0, 12);
+	public IntVariable FormatVersion { get; private set; } = new(0);
 
-	public static IntVariable PlayerId { get; private set; } = new(0);
-	public static StringVariable PlayerName { get; private set; } = new(0, 32);
-	public static FloatVariable Time { get; private set; } = new(0);
-	public static IntVariable GemsCollected { get; private set; } = new(0);
-	public static IntVariable EnemiesKilled { get; private set; } = new(0);
-	public static IntVariable DaggersFired { get; private set; } = new(0);
-	public static IntVariable DaggersHit { get; private set; } = new(0);
-	public static IntVariable EnemiesAlive { get; private set; } = new(0);
-	public static IntVariable LevelGems { get; private set; } = new(0);
-	public static IntVariable HomingDaggers { get; private set; } = new(0);
-	public static IntVariable GemsDespawned { get; private set; } = new(0);
-	public static IntVariable GemsEaten { get; private set; } = new(0);
-	public static IntVariable GemsTotal { get; private set; } = new(0);
-	public static IntVariable HomingDaggersEaten { get; private set; } = new(0);
+	public IntVariable PlayerId { get; private set; } = new(0);
+	public StringVariable PlayerName { get; private set; } = new(0, 32);
+	public FloatVariable Time { get; private set; } = new(0);
+	public IntVariable GemsCollected { get; private set; } = new(0);
+	public IntVariable EnemiesKilled { get; private set; } = new(0);
+	public IntVariable DaggersFired { get; private set; } = new(0);
+	public IntVariable DaggersHit { get; private set; } = new(0);
+	public IntVariable EnemiesAlive { get; private set; } = new(0);
+	public IntVariable LevelGems { get; private set; } = new(0);
+	public IntVariable HomingDaggers { get; private set; } = new(0);
+	public IntVariable GemsDespawned { get; private set; } = new(0);
+	public IntVariable GemsEaten { get; private set; } = new(0);
+	public IntVariable GemsTotal { get; private set; } = new(0);
+	public IntVariable HomingDaggersEaten { get; private set; } = new(0);
 
-	public static ShortVariable Skull1sAlive { get; private set; } = new(0);
-	public static ShortVariable Skull2sAlive { get; private set; } = new(0);
-	public static ShortVariable Skull3sAlive { get; private set; } = new(0);
-	public static ShortVariable SpiderlingsAlive { get; private set; } = new(0);
-	public static ShortVariable Skull4sAlive { get; private set; } = new(0);
-	public static ShortVariable Squid1sAlive { get; private set; } = new(0);
-	public static ShortVariable Squid2sAlive { get; private set; } = new(0);
-	public static ShortVariable Squid3sAlive { get; private set; } = new(0);
-	public static ShortVariable CentipedesAlive { get; private set; } = new(0);
-	public static ShortVariable GigapedesAlive { get; private set; } = new(0);
-	public static ShortVariable Spider1sAlive { get; private set; } = new(0);
-	public static ShortVariable Spider2sAlive { get; private set; } = new(0);
-	public static ShortVariable LeviathansAlive { get; private set; } = new(0);
-	public static ShortVariable OrbsAlive { get; private set; } = new(0);
-	public static ShortVariable ThornsAlive { get; private set; } = new(0);
-	public static ShortVariable GhostpedesAlive { get; private set; } = new(0);
-	public static ShortVariable SpiderEggsAlive { get; private set; } = new(0);
+	public ShortVariable Skull1sAlive { get; private set; } = new(0);
+	public ShortVariable Skull2sAlive { get; private set; } = new(0);
+	public ShortVariable Skull3sAlive { get; private set; } = new(0);
+	public ShortVariable SpiderlingsAlive { get; private set; } = new(0);
+	public ShortVariable Skull4sAlive { get; private set; } = new(0);
+	public ShortVariable Squid1sAlive { get; private set; } = new(0);
+	public ShortVariable Squid2sAlive { get; private set; } = new(0);
+	public ShortVariable Squid3sAlive { get; private set; } = new(0);
+	public ShortVariable CentipedesAlive { get; private set; } = new(0);
+	public ShortVariable GigapedesAlive { get; private set; } = new(0);
+	public ShortVariable Spider1sAlive { get; private set; } = new(0);
+	public ShortVariable Spider2sAlive { get; private set; } = new(0);
+	public ShortVariable LeviathansAlive { get; private set; } = new(0);
+	public ShortVariable OrbsAlive { get; private set; } = new(0);
+	public ShortVariable ThornsAlive { get; private set; } = new(0);
+	public ShortVariable GhostpedesAlive { get; private set; } = new(0);
+	public ShortVariable SpiderEggsAlive { get; private set; } = new(0);
 
-	public static ShortVariable Skull1sKilled { get; private set; } = new(0);
-	public static ShortVariable Skull2sKilled { get; private set; } = new(0);
-	public static ShortVariable Skull3sKilled { get; private set; } = new(0);
-	public static ShortVariable SpiderlingsKilled { get; private set; } = new(0);
-	public static ShortVariable Skull4sKilled { get; private set; } = new(0);
-	public static ShortVariable Squid1sKilled { get; private set; } = new(0);
-	public static ShortVariable Squid2sKilled { get; private set; } = new(0);
-	public static ShortVariable Squid3sKilled { get; private set; } = new(0);
-	public static ShortVariable CentipedesKilled { get; private set; } = new(0);
-	public static ShortVariable GigapedesKilled { get; private set; } = new(0);
-	public static ShortVariable Spider1sKilled { get; private set; } = new(0);
-	public static ShortVariable Spider2sKilled { get; private set; } = new(0);
-	public static ShortVariable LeviathansKilled { get; private set; } = new(0);
-	public static ShortVariable OrbsKilled { get; private set; } = new(0);
-	public static ShortVariable ThornsKilled { get; private set; } = new(0);
-	public static ShortVariable GhostpedesKilled { get; private set; } = new(0);
-	public static ShortVariable SpiderEggsKilled { get; private set; } = new(0);
+	public ShortVariable Skull1sKilled { get; private set; } = new(0);
+	public ShortVariable Skull2sKilled { get; private set; } = new(0);
+	public ShortVariable Skull3sKilled { get; private set; } = new(0);
+	public ShortVariable SpiderlingsKilled { get; private set; } = new(0);
+	public ShortVariable Skull4sKilled { get; private set; } = new(0);
+	public ShortVariable Squid1sKilled { get; private set; } = new(0);
+	public ShortVariable Squid2sKilled { get; private set; } = new(0);
+	public ShortVariable Squid3sKilled { get; private set; } = new(0);
+	public ShortVariable CentipedesKilled { get; private set; } = new(0);
+	public ShortVariable GigapedesKilled { get; private set; } = new(0);
+	public ShortVariable Spider1sKilled { get; private set; } = new(0);
+	public ShortVariable Spider2sKilled { get; private set; } = new(0);
+	public ShortVariable LeviathansKilled { get; private set; } = new(0);
+	public ShortVariable OrbsKilled { get; private set; } = new(0);
+	public ShortVariable ThornsKilled { get; private set; } = new(0);
+	public ShortVariable GhostpedesKilled { get; private set; } = new(0);
+	public ShortVariable SpiderEggsKilled { get; private set; } = new(0);
 
-	public static BoolVariable IsPlayerAlive { get; private set; } = new(0);
-	public static BoolVariable IsReplay { get; private set; } = new(0);
-	public static ByteVariable DeathType { get; private set; } = new(0);
-	public static BoolVariable IsInGame { get; private set; } = new(0);
+	public BoolVariable IsPlayerAlive { get; private set; } = new(0);
+	public BoolVariable IsReplay { get; private set; } = new(0);
+	public ByteVariable DeathType { get; private set; } = new(0);
+	public BoolVariable IsInGame { get; private set; } = new(0);
 
-	public static IntVariable ReplayPlayerId { get; private set; } = new(0);
-	public static StringVariable ReplayPlayerName { get; private set; } = new(0, 32);
+	public IntVariable ReplayPlayerId { get; private set; } = new(0);
+	public StringVariable ReplayPlayerName { get; private set; } = new(0, 32);
 
-	public static ByteArrayVariable SurvivalHashMd5 { get; private set; } = new(0, 16);
+	public ByteArrayVariable SurvivalHashMd5 { get; private set; } = new(0, 16);
 
-	public static FloatVariable LevelUpTime2 { get; private set; } = new(0);
-	public static FloatVariable LevelUpTime3 { get; private set; } = new(0);
-	public static FloatVariable LevelUpTime4 { get; private set; } = new(0);
+	public FloatVariable LevelUpTime2 { get; private set; } = new(0);
+	public FloatVariable LevelUpTime3 { get; private set; } = new(0);
+	public FloatVariable LevelUpTime4 { get; private set; } = new(0);
 
-	public static FloatVariable LeviathanDownTime { get; private set; } = new(0);
-	public static FloatVariable OrbDownTime { get; private set; } = new(0);
+	public FloatVariable LeviathanDownTime { get; private set; } = new(0);
+	public FloatVariable OrbDownTime { get; private set; } = new(0);
 
-	public static IntVariable Status { get; private set; } = new(0);
+	public IntVariable Status { get; private set; } = new(0);
 
-	public static IntVariable HomingMax { get; private set; } = new(0);
-	public static FloatVariable HomingMaxTime { get; private set; } = new(0);
-	public static IntVariable EnemiesAliveMax { get; private set; } = new(0);
-	public static FloatVariable EnemiesAliveMaxTime { get; private set; } = new(0);
-	public static FloatVariable MaxTime { get; private set; } = new(0);
+	public IntVariable HomingMax { get; private set; } = new(0);
+	public FloatVariable HomingMaxTime { get; private set; } = new(0);
+	public IntVariable EnemiesAliveMax { get; private set; } = new(0);
+	public FloatVariable EnemiesAliveMaxTime { get; private set; } = new(0);
+	public FloatVariable MaxTime { get; private set; } = new(0);
 
-	public static LongVariable StatsBase { get; private set; } = new(0);
-	public static IntVariable StatsCount { get; private set; } = new(0);
-	public static BoolVariable StatsLoaded { get; private set; } = new(0);
+	public LongVariable StatsBase { get; private set; } = new(0);
+	public IntVariable StatsCount { get; private set; } = new(0);
+	public BoolVariable StatsLoaded { get; private set; } = new(0);
 
-	public static BoolVariable ProhibitedMods { get; private set; } = new(0);
+	public BoolVariable ProhibitedMods { get; private set; } = new(0);
 
-	public static LongVariable ReplayBase { get; private set; } = new(0);
-	public static IntVariable ReplayLength { get; private set; } = new(0);
+	public LongVariable ReplayBase { get; private set; } = new(0);
+	public IntVariable ReplayLength { get; private set; } = new(0);
 
-	public static BoolVariable PlayReplayFromMemory { get; private set; } = new(0);
-	public static ByteVariable GameMode { get; private set; } = new(0);
-	public static BoolVariable TimeAttackOrRaceFinished { get; private set; } = new(0);
+	public BoolVariable PlayReplayFromMemory { get; private set; } = new(0);
+	public ByteVariable GameMode { get; private set; } = new(0);
+	public BoolVariable TimeAttackOrRaceFinished { get; private set; } = new(0);
 
 	#endregion Variables
 
-	public static void FindWindow()
+	public void FindWindow()
 	{
 		Process = OperatingSystemUtils.GetDevilDaggersProcess();
 	}
 
-	public static void Initialize(long ddstatsMarkerOffset)
+	public void Initialize(long ddstatsMarkerOffset)
 	{
 		if (IsInitialized || Process?.MainModule == null)
 			return;
@@ -260,15 +260,17 @@ public static class Scanner
 		}
 	}
 
-	public static void Scan()
+	public void Scan()
 	{
 		if (Process == null)
 			return;
 
 		OperatingSystemUtils.ReadMemory(Process, _memoryBlockAddress, Buffer, _bufferSize);
 
-		// TODO: Emit warning when this value does not hold _markerValue.
 		Marker.Scan();
+		if (Marker != _markerValue)
+			return;
+
 		FormatVersion.Scan();
 
 		PlayerId.Scan();
@@ -370,7 +372,7 @@ public static class Scanner
 		}
 	}
 
-	public static AddGameData GetGameData()
+	public AddGameData GetGameData()
 	{
 		if (Process == null)
 			return new();
@@ -436,7 +438,7 @@ public static class Scanner
 		return gameData;
 	}
 
-	public static byte[] GetReplay()
+	public byte[] GetReplay()
 	{
 		if (Process == null)
 			return Array.Empty<byte>();

@@ -7,9 +7,7 @@ namespace DevilDaggersCustomLeaderboards.Utils;
 public static class OperatingSystemUtils
 {
 	public static void ReadMemory(Process process, long address, byte[] bytes, int size)
-	{
-		NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
-	}
+		=> NativeMethods.ReadProcessMemory(process.Handle, new(address), bytes, (uint)size, out _);
 
 	public static long? GetMemoryBlockAddress(Process process, long ddstatsMarkerOffset)
 	{
@@ -22,13 +20,5 @@ public static class OperatingSystemUtils
 	}
 
 	public static Process? GetDevilDaggersProcess()
-	{
-		foreach (Process process in Process.GetProcessesByName("dd"))
-		{
-			if (process.MainWindowTitle == "Devil Daggers")
-				return process;
-		}
-
-		return null;
-	}
+		=> Array.Find(Process.GetProcessesByName("dd"), p => p.MainWindowTitle == "Devil Daggers");
 }

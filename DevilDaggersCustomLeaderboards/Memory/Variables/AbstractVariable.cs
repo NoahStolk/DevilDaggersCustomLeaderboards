@@ -27,7 +27,7 @@ public abstract class AbstractVariable<TVariable> : IVariable
 	public void Scan()
 	{
 		Buffer.BlockCopy(Bytes, 0, BytesPrevious, 0, Size);
-		Buffer.BlockCopy(Scanner.Buffer, Offset, Bytes, 0, Size);
+		Buffer.BlockCopy(ScannerService.Buffer, Offset, Bytes, 0, Size);
 		IsChanged = !AreBytesEqual();
 	}
 
