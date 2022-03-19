@@ -2,6 +2,7 @@ using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Utils;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace DevilDaggersCustomLeaderboards.Network;
@@ -137,6 +138,30 @@ public class NetworkService
 		{
 			Cmd.WriteLine("Upload failed", ex.Message, ColorUtils.Error);
 			_logger.LogError(ex, "Error trying to submit score");
+			return null;
+		}
+	}
+
+	public async Task<byte[]?> GetReplay(int customEntryId)
+	{
+		try
+		{
+			FileResponse fr = await _apiClient.CustomEntries_GetCustomEntryReplayByIdAsync(customEntryId);
+
+			using MemoryStream ms = new();
+			fr.Stream.CopyTo(ms);
+			return ms.ToArray();
+		}
+		catch (DevilDaggersInfoApiException ex) when (ex.StatusCode == 404)
+		{
+			Cmd.WriteLine("Replay doesn't exist", string.Empty, ColorUtils.Error);
+			return null;
+		}
+		catch (Exception ex)
+		{
+			const string message = "Error while trying to download replay.";
+			Cmd.WriteLine(message, ex.Message, ColorUtils.Error);
+			_logger.LogError(ex, message);
 			return null;
 		}
 	}
