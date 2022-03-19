@@ -74,7 +74,7 @@ public class RecorderService
 		{
 #if DEBUG
 			Console.SetCursorPosition(0, 0);
-			GuiUtils.WriteRecording();
+			GuiUtils.WriteRecording(_scannerService.Process, _scannerService.MainBlock, _scannerService.MainBlockPrevious);
 #endif
 			if (_scannerService.MainBlock.Time == _scannerService.MainBlockPrevious.Time)
 				return;

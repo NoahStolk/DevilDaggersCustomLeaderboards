@@ -19,7 +19,7 @@ public static class GuiUtils
 		Cmd.WriteLine();
 
 #if DEBUG
-		WriteDebug();
+		WriteDebug(mainBlock);
 #endif
 
 		if (mainBlock.IsInGame)
@@ -133,34 +133,34 @@ public static class GuiUtils
 	}
 
 #if DEBUG
-	private static void WriteDebug()
+	private static void WriteDebug(MainBlock mainBlock)
 	{
-		Cmd.WriteLine("Is Player Alive", Scanner.IsPlayerAlive);
-		Cmd.WriteLine("Is Replay", Scanner.IsReplay);
-		Cmd.WriteLine("Is In-Game", Scanner.IsInGame);
-		Cmd.WriteLine("Status", (Status)Scanner.Status.Value);
-		Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(Scanner.SurvivalHashMd5));
+		Cmd.WriteLine("Is Player Alive", mainBlock.IsPlayerAlive);
+		Cmd.WriteLine("Is Replay", mainBlock.IsReplay);
+		Cmd.WriteLine("Is In-Game", mainBlock.IsInGame);
+		Cmd.WriteLine("Status", (GameStatus)mainBlock.Status);
+		Cmd.WriteLine("SurvivalHash", HashUtils.ByteArrayToHexString(mainBlock.SurvivalHashMd5));
 		Cmd.WriteLine();
-		Cmd.WriteLine("Replay Player ID", Scanner.ReplayPlayerId);
-		Cmd.WriteLine("Replay Player Name", Scanner.ReplayPlayerName);
+		Cmd.WriteLine("Replay Player ID", mainBlock.ReplayPlayerId);
+		Cmd.WriteLine("Replay Player Name", mainBlock.ReplayPlayerName);
 		Cmd.WriteLine();
-		Cmd.WriteLine("Homing Max", Scanner.HomingMax);
-		Cmd.WriteLine("Homing Max Time", Scanner.HomingMaxTime.Value.ToString("0.0000"));
-		Cmd.WriteLine("Enemies Alive Max", Scanner.EnemiesAliveMax);
-		Cmd.WriteLine("Enemies Alive Max Time", Scanner.EnemiesAliveMaxTime.Value.ToString("0.0000"));
-		Cmd.WriteLine("Max Time", Scanner.MaxTime.Value.ToString("0.0000"));
+		Cmd.WriteLine("Homing Max", mainBlock.HomingMax);
+		Cmd.WriteLine("Homing Max Time", mainBlock.HomingMaxTime.ToString("0.0000"));
+		Cmd.WriteLine("Enemies Alive Max", mainBlock.EnemiesAliveMax);
+		Cmd.WriteLine("Enemies Alive Max Time", mainBlock.EnemiesAliveMaxTime.ToString("0.0000"));
+		Cmd.WriteLine("Max Time", mainBlock.MaxTime.ToString("0.0000"));
 		Cmd.WriteLine();
-		Cmd.WriteLine("Stats Base", Scanner.StatsBase);
-		Cmd.WriteLine("Stats Count", Scanner.StatsCount);
-		Cmd.WriteLine("Stats Loaded", Scanner.StatsLoaded);
+		Cmd.WriteLine("Stats Base", mainBlock.StatsBase);
+		Cmd.WriteLine("Stats Count", mainBlock.StatsCount);
+		Cmd.WriteLine("Stats Loaded", mainBlock.StatsLoaded);
 		Cmd.WriteLine();
-		Cmd.WriteLine("Prohibited Mods", Scanner.ProhibitedMods);
+		Cmd.WriteLine("Prohibited Mods", mainBlock.ProhibitedMods);
 		Cmd.WriteLine();
-		Cmd.WriteLine("Replay Base", Scanner.ReplayBase);
-		Cmd.WriteLine("Replay Length", Scanner.ReplayLength);
+		Cmd.WriteLine("Replay Base", mainBlock.ReplayBase);
+		Cmd.WriteLine("Replay Length", mainBlock.ReplayLength);
 		Cmd.WriteLine();
-		Cmd.WriteLine("Game Mode", Scanner.GameMode);
-		Cmd.WriteLine("TA/R Finished", Scanner.TimeAttackOrRaceFinished);
+		Cmd.WriteLine("Game Mode", mainBlock.GameMode);
+		Cmd.WriteLine("TA/R Finished", mainBlock.TimeAttackOrRaceFinished);
 		Cmd.WriteLine();
 	}
 #endif
@@ -188,7 +188,7 @@ public static class GuiUtils
 		Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
 
 #if DEBUG
-		WriteDebug();
+		WriteDebug(mainBlock);
 #endif
 
 		WriteIntField("Gems Collected", mainBlock.GemsCollected, mainBlock.GemsCollected - entry.GemsCollected);
@@ -232,9 +232,6 @@ public static class GuiUtils
 	{
 		for (int i = 0; i < us.TotalPlayers; i++)
 		{
-			int spaceCountCurrent = (i + 1).ToString().Length;
-			int spaceCountTotal = us.TotalPlayers.ToString().Length;
-
 			GetCustomEntryDdcl entry = us.Entries[i];
 			CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard);
 
@@ -242,6 +239,8 @@ public static class GuiUtils
 			CustomColor foregroundColor = isCurrentPlayer ? ColorUtils.GetDaggerHighlightColor(daggerColor) : daggerColor;
 			CustomColor backgroundColor = isCurrentPlayer ? daggerColor : ColorUtils.BackgroundDefault;
 
+			int spaceCountCurrent = (i + 1).ToString().Length;
+			int spaceCountTotal = us.TotalPlayers.ToString().Length;
 			Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ", foregroundColor, backgroundColor);
 			Cmd.Write($"{entry.PlayerName[..Math.Min(entry.PlayerName.Length, Cmd.TextWidthLeft)]}", foregroundColor, backgroundColor);
 			Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", foregroundColor, backgroundColor);
