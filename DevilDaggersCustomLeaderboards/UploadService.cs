@@ -25,7 +25,7 @@ public class UploadService
 		Cmd.WriteLine("Checking if this spawnset has a leaderboard...");
 		Cmd.WriteLine();
 
-		if (!await _networkService.CheckIfLeaderboardExists(_scannerService.SurvivalHashMd5))
+		if (!await _networkService.CheckIfLeaderboardExists(_scannerService.MainBlock.SurvivalHashMd5))
 			return null;
 
 		Console.Clear();
@@ -34,46 +34,46 @@ public class UploadService
 
 		string toEncrypt = string.Join(
 			";",
-			_scannerService.PlayerId,
-			_scannerService.Time.ConvertToTimeInt(),
-			_scannerService.GemsCollected,
-			_scannerService.GemsDespawned,
-			_scannerService.GemsEaten,
-			_scannerService.GemsTotal,
-			_scannerService.EnemiesKilled,
-			_scannerService.DeathType,
-			_scannerService.DaggersHit,
-			_scannerService.DaggersFired,
-			_scannerService.EnemiesAlive,
-			_scannerService.HomingDaggers,
-			_scannerService.HomingDaggersEaten,
-			_scannerService.IsReplay ? 1 : 0,
-			HashUtils.ByteArrayToHexString(_scannerService.SurvivalHashMd5),
-			string.Join(",", new[] { _scannerService.LevelUpTime2.ConvertToTimeInt(), _scannerService.LevelUpTime3.ConvertToTimeInt(), _scannerService.LevelUpTime4.ConvertToTimeInt() }));
+			_scannerService.MainBlock.PlayerId,
+			_scannerService.MainBlock.Time.ConvertToTimeInt(),
+			_scannerService.MainBlock.GemsCollected,
+			_scannerService.MainBlock.GemsDespawned,
+			_scannerService.MainBlock.GemsEaten,
+			_scannerService.MainBlock.GemsTotal,
+			_scannerService.MainBlock.EnemiesKilled,
+			_scannerService.MainBlock.DeathType,
+			_scannerService.MainBlock.DaggersHit,
+			_scannerService.MainBlock.DaggersFired,
+			_scannerService.MainBlock.EnemiesAlive,
+			_scannerService.MainBlock.HomingDaggers,
+			_scannerService.MainBlock.HomingDaggersEaten,
+			_scannerService.MainBlock.IsReplay ? 1 : 0,
+			HashUtils.ByteArrayToHexString(_scannerService.MainBlock.SurvivalHashMd5),
+			string.Join(",", new[] { _scannerService.MainBlock.LevelUpTime2.ConvertToTimeInt(), _scannerService.MainBlock.LevelUpTime3.ConvertToTimeInt(), _scannerService.MainBlock.LevelUpTime4.ConvertToTimeInt() }));
 		string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 		AddUploadRequest uploadRequest = new()
 		{
-			DaggersFired = _scannerService.DaggersFired,
-			DaggersHit = _scannerService.DaggersHit,
+			DaggersFired = _scannerService.MainBlock.DaggersFired,
+			DaggersHit = _scannerService.MainBlock.DaggersHit,
 			ClientVersion = Constants.LocalVersion.ToString(),
-			DeathType = _scannerService.DeathType,
-			EnemiesAlive = _scannerService.EnemiesAlive,
-			GemsCollected = _scannerService.GemsCollected,
-			GemsDespawned = _scannerService.GemsDespawned,
-			GemsEaten = _scannerService.GemsEaten,
-			GemsTotal = _scannerService.GemsTotal,
-			HomingDaggers = _scannerService.HomingDaggers,
-			HomingDaggersEaten = _scannerService.HomingDaggersEaten,
-			EnemiesKilled = _scannerService.EnemiesKilled,
-			LevelUpTime2 = _scannerService.LevelUpTime2.ConvertToTimeInt(),
-			LevelUpTime3 = _scannerService.LevelUpTime3.ConvertToTimeInt(),
-			LevelUpTime4 = _scannerService.LevelUpTime4.ConvertToTimeInt(),
-			PlayerId = _scannerService.PlayerId,
-			SurvivalHashMd5 = _scannerService.SurvivalHashMd5,
-			Time = _scannerService.Time.ConvertToTimeInt(),
-			PlayerName = _scannerService.PlayerName,
-			IsReplay = _scannerService.IsReplay,
+			DeathType = _scannerService.MainBlock.DeathType,
+			EnemiesAlive = _scannerService.MainBlock.EnemiesAlive,
+			GemsCollected = _scannerService.MainBlock.GemsCollected,
+			GemsDespawned = _scannerService.MainBlock.GemsDespawned,
+			GemsEaten = _scannerService.MainBlock.GemsEaten,
+			GemsTotal = _scannerService.MainBlock.GemsTotal,
+			HomingDaggers = _scannerService.MainBlock.HomingDaggers,
+			HomingDaggersEaten = _scannerService.MainBlock.HomingDaggersEaten,
+			EnemiesKilled = _scannerService.MainBlock.EnemiesKilled,
+			LevelUpTime2 = _scannerService.MainBlock.LevelUpTime2.ConvertToTimeInt(),
+			LevelUpTime3 = _scannerService.MainBlock.LevelUpTime3.ConvertToTimeInt(),
+			LevelUpTime4 = _scannerService.MainBlock.LevelUpTime4.ConvertToTimeInt(),
+			PlayerId = _scannerService.MainBlock.PlayerId,
+			SurvivalHashMd5 = _scannerService.MainBlock.SurvivalHashMd5,
+			Time = _scannerService.MainBlock.Time.ConvertToTimeInt(),
+			PlayerName = _scannerService.MainBlock.PlayerName,
+			IsReplay = _scannerService.MainBlock.IsReplay,
 			Validation = HttpUtility.HtmlEncode(validation),
 			GameData = _scannerService.GetGameData(),
 #if DEBUG
@@ -82,13 +82,13 @@ public class UploadService
 			BuildMode = "Release",
 #endif
 			OperatingSystem = "Windows",
-			ProhibitedMods = _scannerService.ProhibitedMods,
+			ProhibitedMods = _scannerService.MainBlock.ProhibitedMods,
 			Client = "DevilDaggersCustomLeaderboards",
 			ReplayData = _scannerService.GetReplay(),
-			Status = _scannerService.Status,
-			ReplayPlayerId = _scannerService.ReplayPlayerId,
-			GameMode = _scannerService.GameMode,
-			TimeAttackOrRaceFinished = _scannerService.TimeAttackOrRaceFinished,
+			Status = _scannerService.MainBlock.Status,
+			ReplayPlayerId = _scannerService.MainBlock.ReplayPlayerId,
+			GameMode = _scannerService.MainBlock.GameMode,
+			TimeAttackOrRaceFinished = _scannerService.MainBlock.TimeAttackOrRaceFinished,
 		};
 
 		return await _networkService.SubmitScore(uploadRequest);

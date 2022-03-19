@@ -77,39 +77,39 @@ public class RecorderService
 			Console.SetCursorPosition(0, 0);
 			GuiUtils.WriteRecording();
 #endif
-			if (_scannerService.Time == _scannerService.Time.ValuePrevious)
+			if (_scannerService.MainBlock.Time == _scannerService.MainBlockPrevious.Time)
 				return;
 
 			Console.Clear();
 			_isRecording = true;
 		}
 
-		GuiUtils.WriteRecording();
+		GuiUtils.WriteRecording(_scannerService.Process, _scannerService.MainBlock, _scannerService.MainBlockPrevious);
 
 		await Task.Delay(TimeSpan.FromMilliseconds(_mainLoopSleepMilliseconds));
 		Console.SetCursorPosition(0, 0);
 
-		bool justDied = !_scannerService.IsPlayerAlive && _scannerService.IsPlayerAlive.ValuePrevious;
-		bool uploadRun = justDied && (_scannerService.GameMode == 0 || _scannerService.TimeAttackOrRaceFinished);
+		bool justDied = !_scannerService.MainBlock.IsPlayerAlive && _scannerService.MainBlockPrevious.IsPlayerAlive;
+		bool uploadRun = justDied && (_scannerService.MainBlock.GameMode == 0 || _scannerService.MainBlock.TimeAttackOrRaceFinished);
 		if (!uploadRun)
 			return;
 
-		Console.Clear();
-		Cmd.WriteLine("Waiting for stats to be loaded...");
-
-		while (!_scannerService.StatsLoaded)
+		if (!_scannerService.MainBlock.StatsLoaded)
 		{
-			_scannerService.StatsLoaded.Scan();
+			Console.Clear();
+			Cmd.WriteLine("Waiting for stats to be loaded...");
+
 			await Task.Delay(TimeSpan.FromSeconds(0.5));
+			return;
 		}
 
-		Console.Clear();
-		Cmd.WriteLine("Waiting for replay to be loaded...");
-
-		while (_scannerService.ReplayLength == 0)
+		if (_scannerService.MainBlock.ReplayLength <= 0)
 		{
-			_scannerService.ReplayLength.Scan();
+			Console.Clear();
+			Cmd.WriteLine("Waiting for replay to be loaded...");
+
 			await Task.Delay(TimeSpan.FromSeconds(0.5));
+			return;
 		}
 
 		_isRecording = false;
@@ -121,7 +121,6 @@ public class RecorderService
 		string? errorMessage = ValidateRunLocally();
 		if (errorMessage == null)
 		{
-			// Thread is being blocked by the upload.
 			GetUploadSuccess? uploadSuccess = await _uploadService.UploadRun();
 
 			if (uploadSuccess != null)
@@ -129,14 +128,14 @@ public class RecorderService
 				Cmd.WriteLine("Upload successful", ColorUtils.Success);
 				Cmd.WriteLine(uploadSuccess.Message);
 				Cmd.WriteLine();
-				uploadSuccess.WriteLeaderboard(_scannerService.PlayerId);
+				uploadSuccess.WriteLeaderboard(_scannerService.MainBlock.PlayerId);
 
 				Cmd.WriteLine();
 
 				if (uploadSuccess.IsHighscore())
-					uploadSuccess.WriteHighscoreStats();
+					uploadSuccess.WriteHighscoreStats(_scannerService.MainBlock);
 				else
-					GuiUtils.WriteStats(uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == _scannerService.PlayerId));
+					GuiUtils.WriteStats(_scannerService.MainBlock, uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == _scannerService.MainBlock.PlayerId));
 
 				Cmd.WriteLine();
 			}
@@ -163,13 +162,13 @@ public class RecorderService
 	{
 		const float minimalTime = 1f;
 
-		if (_scannerService.PlayerId <= 0)
+		if (_scannerService.MainBlock.PlayerId <= 0)
 		{
-			_logger.LogWarning("Invalid player ID: {playerId}", _scannerService.PlayerId);
+			_logger.LogWarning("Invalid player ID: {playerId}", _scannerService.MainBlock.PlayerId);
 			return "Invalid player ID.";
 		}
 
-		if (_scannerService.Time < minimalTime)
+		if (_scannerService.MainBlock.Time < minimalTime)
 			return $"Timer is under {minimalTime:0.0000}. Unable to validate.";
 
 		return null;
