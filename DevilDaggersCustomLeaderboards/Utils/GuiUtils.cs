@@ -246,7 +246,7 @@ public static class GuiUtils
 			Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}", foregroundColor, backgroundColor);
 
 			if (selectedIndex == i)
-				Cmd.WriteLine(" < WATCH", CustomColor.White, CustomColor.Black);
+				Cmd.WriteLine(entry.HasReplay ? " < WATCH" : " < Replay not available", CustomColor.White, CustomColor.Black);
 			else
 				Cmd.WriteLine();
 		}

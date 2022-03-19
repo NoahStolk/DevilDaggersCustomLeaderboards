@@ -154,14 +154,11 @@ public class NetworkService
 		}
 		catch (DevilDaggersInfoApiException ex) when (ex.StatusCode == 404)
 		{
-			Cmd.WriteLine("Replay doesn't exist", string.Empty, ColorUtils.Error);
 			return null;
 		}
 		catch (Exception ex)
 		{
-			const string message = "Error while trying to download replay.";
-			Cmd.WriteLine(message, ex.Message, ColorUtils.Error);
-			_logger.LogError(ex, message);
+			_logger.LogError(ex, "Error while trying to download replay.");
 			return null;
 		}
 	}
