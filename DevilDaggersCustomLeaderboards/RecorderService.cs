@@ -188,6 +188,9 @@ public class RecorderService
 		if (_scannerService.MainBlock.Time < minimalTime)
 			return $"Timer is under {minimalTime:0.0000}. Unable to validate.";
 
+		if (_scannerService.MainBlock.Status == (int)GameStatus.LocalReplay)
+			return "Local replays are not uploaded.";
+
 		return null;
 	}
 
