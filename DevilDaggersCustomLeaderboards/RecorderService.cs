@@ -23,6 +23,7 @@ public class RecorderService
 	private bool _isRecording = true;
 	private long _marker;
 	private int _selectedIndex;
+	private int _pageIndex;
 	private GetUploadSuccess? _uploadSuccess;
 	private MainBlock _finalRecordedMainBlock;
 
@@ -129,6 +130,8 @@ public class RecorderService
 			{
 				_uploadSuccess = uploadSuccess;
 				_finalRecordedMainBlock = _memoryService.MainBlock;
+				_selectedIndex = 0;
+				_pageIndex = 0;
 				RenderSuccessfulSubmit();
 			}
 			else
@@ -157,13 +160,7 @@ public class RecorderService
 
 		Console.SetCursorPosition(0, 2);
 
-		Cmd.WriteLine("Upload successful", ColorUtils.Success);
-		Cmd.WriteLine(_uploadSuccess.Message);
-		Cmd.WriteLine();
-		Cmd.WriteLine("Use the arrow keys to navigate. Press [Enter] to load selected replay into Devil Daggers.");
-		Cmd.WriteLine();
-
-		_uploadSuccess.WriteLeaderboard(_memoryService.MainBlock.PlayerId, _selectedIndex);
+		_uploadSuccess.WriteLeaderboard(_memoryService.MainBlock.PlayerId, _selectedIndex, _pageIndex);
 
 		Cmd.WriteLine();
 
@@ -208,13 +205,25 @@ public class RecorderService
 					_memoryService.WriteReplayToMemory(replay);
 				break;
 			case ConsoleKey.UpArrow:
-				_selectedIndex = Math.Max(0, _selectedIndex - 1);
-				RenderSuccessfulSubmit();
+				ChangeSelection(_selectedIndex - 1);
 				break;
 			case ConsoleKey.DownArrow:
-				_selectedIndex = Math.Min(customEntryIds.Count - 1, _selectedIndex + 1);
+				ChangeSelection(_selectedIndex + 1);
+				break;
+			case ConsoleKey.LeftArrow:
+				ChangeSelection(_selectedIndex - GuiUtils.PageSize);
+				break;
+			case ConsoleKey.RightArrow:
+				ChangeSelection(_selectedIndex + GuiUtils.PageSize);
 				RenderSuccessfulSubmit();
 				break;
+		}
+
+		void ChangeSelection(int newIndex)
+		{
+			_selectedIndex = Math.Clamp(newIndex, 0, customEntryIds.Count - 1);
+			_pageIndex = _selectedIndex / GuiUtils.PageSize;
+			RenderSuccessfulSubmit();
 		}
 	}
 }

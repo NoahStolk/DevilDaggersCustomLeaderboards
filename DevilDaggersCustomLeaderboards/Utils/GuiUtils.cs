@@ -9,6 +9,8 @@ namespace DevilDaggersCustomLeaderboards.Utils;
 
 public static class GuiUtils
 {
+	public const int PageSize = 20;
+
 	public static void WriteRecording(Process process, MainBlock mainBlock, MainBlock mainBlockPrevious)
 	{
 		Cmd.WriteLine($"Scanning process '{process.ProcessName ?? "Nameless"}' ({process.MainWindowTitle ?? "No title"})...");
@@ -228,10 +230,29 @@ public static class GuiUtils
 		}
 	}
 
-	public static void WriteLeaderboard(this GetUploadSuccess us, int currentPlayerId, int selectedIndex)
+	public static void WriteLeaderboard(this GetUploadSuccess us, int currentPlayerId, int selectedIndex, int pageIndex)
 	{
-		for (int i = 0; i < us.TotalPlayers; i++)
+		int pageCount = (int)Math.Ceiling(us.TotalPlayers / (float)PageSize);
+
+		Cmd.WriteLine("Upload successful", ColorUtils.Success);
+		Cmd.WriteLine(us.Message);
+		Cmd.WriteLine();
+		Cmd.WriteLine("Use the arrow keys to navigate. Press [Enter] to load selected replay into Devil Daggers.");
+		Cmd.WriteLine();
+		Cmd.WriteLine($"PAGE {pageIndex + 1} / {pageCount}");
+		Cmd.WriteLine();
+
+		pageIndex = Math.Min(pageIndex, pageCount - 1);
+
+		int start = pageIndex * PageSize;
+		for (int i = start; i < start + PageSize; i++)
 		{
+			if (i >= us.Entries.Count)
+			{
+				Cmd.WriteLine();
+				continue;
+			}
+
 			GetCustomEntryDdcl entry = us.Entries[i];
 			CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard);
 
@@ -245,10 +266,11 @@ public static class GuiUtils
 			Cmd.Write($"{entry.PlayerName[..Math.Min(entry.PlayerName.Length, Cmd.TextWidthLeft)]}", foregroundColor, backgroundColor);
 			Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}", foregroundColor, backgroundColor);
 
+			const int replayUiSize = 25;
 			if (selectedIndex == i)
-				Cmd.WriteLine(entry.HasReplay ? " < WATCH" : " < Replay not available", CustomColor.White, CustomColor.Black);
+				Cmd.WriteLine(entry.HasReplay ? " < Watch replay".PadRight(replayUiSize) : " < Replay not available".PadRight(replayUiSize), entry.HasReplay ? CustomColor.Green : CustomColor.Yellow, CustomColor.Black);
 			else
-				Cmd.WriteLine();
+				Cmd.WriteLine(new string(' ', replayUiSize));
 		}
 
 		Console.BackgroundColor = (ConsoleColor)ColorUtils.BackgroundDefault;

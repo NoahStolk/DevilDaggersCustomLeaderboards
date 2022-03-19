@@ -9,7 +9,7 @@ namespace DevilDaggersCustomLeaderboards.Utils;
 /// </summary>
 public static class ConsoleUtils
 {
-	public const int TextWidthFull = 50;
+	public const int TextWidthFull = 90;
 	public const int TextWidthLeft = 20;
 	public const int TextWidthRight = 25;
 	public const int LeftMargin = 15;
