@@ -1,7 +1,6 @@
 using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Network;
-using DevilDaggersCustomLeaderboards.Utils;
 using System;
 using System.Threading.Tasks;
 using System.Web;
@@ -48,7 +47,7 @@ public class UploadService
 			_scannerService.MainBlock.HomingDaggers,
 			_scannerService.MainBlock.HomingDaggersEaten,
 			_scannerService.MainBlock.IsReplay ? 1 : 0,
-			HashUtils.ByteArrayToHexString(_scannerService.MainBlock.SurvivalHashMd5),
+			ByteArrayToHexString(_scannerService.MainBlock.SurvivalHashMd5),
 			string.Join(",", new[] { _scannerService.MainBlock.LevelUpTime2.ConvertToTimeInt(), _scannerService.MainBlock.LevelUpTime3.ConvertToTimeInt(), _scannerService.MainBlock.LevelUpTime4.ConvertToTimeInt() }));
 		string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
@@ -93,4 +92,7 @@ public class UploadService
 
 		return await _networkService.SubmitScore(uploadRequest);
 	}
+
+	private static string ByteArrayToHexString(byte[] byteArray)
+		=> BitConverter.ToString(byteArray).Replace("-", string.Empty);
 }
