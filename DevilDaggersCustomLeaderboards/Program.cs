@@ -2,6 +2,7 @@ using DevilDaggersCustomLeaderboards.Native;
 using DevilDaggersCustomLeaderboards.Network;
 using DevilDaggersCustomLeaderboards.Utils;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
 using System.Globalization;
 using System.Threading;
@@ -19,7 +20,7 @@ public static class Program
 		InitializeConsole();
 
 		ServiceProvider serviceProvider = new ServiceCollection()
-			.AddLogging()
+			.AddLogging(lb => lb.AddSerilog(new LoggerConfiguration().WriteTo.File("DDCL.log").CreateLogger()))
 			.AddSingleton<NetworkService>()
 			.AddSingleton<RecorderService>()
 			.AddSingleton<ScannerService>()
