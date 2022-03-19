@@ -23,7 +23,7 @@ public static class Program
 			.AddLogging(lb => lb.AddSerilog(new LoggerConfiguration().WriteTo.File("DDCL.log").CreateLogger()))
 			.AddSingleton<NetworkService>()
 			.AddSingleton<RecorderService>()
-			.AddSingleton<ScannerService>()
+			.AddSingleton<MemoryService>()
 			.AddSingleton<UploadService>()
 			.BuildServiceProvider();
 

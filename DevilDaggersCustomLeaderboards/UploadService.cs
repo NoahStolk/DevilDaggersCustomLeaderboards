@@ -11,12 +11,12 @@ namespace DevilDaggersCustomLeaderboards;
 public class UploadService
 {
 	private readonly NetworkService _networkService;
-	private readonly ScannerService _scannerService;
+	private readonly MemoryService _memoryService;
 
-	public UploadService(NetworkService networkService, ScannerService scannerService)
+	public UploadService(NetworkService networkService, MemoryService memoryService)
 	{
 		_networkService = networkService;
-		_scannerService = scannerService;
+		_memoryService = memoryService;
 	}
 
 	public async Task<GetUploadSuccess?> UploadRun()
@@ -25,7 +25,7 @@ public class UploadService
 		Cmd.WriteLine("Checking if this spawnset has a leaderboard...");
 		Cmd.WriteLine();
 
-		if (!await _networkService.CheckIfLeaderboardExists(_scannerService.MainBlock.SurvivalHashMd5))
+		if (!await _networkService.CheckIfLeaderboardExists(_memoryService.MainBlock.SurvivalHashMd5))
 			return null;
 
 		Console.Clear();
@@ -34,61 +34,61 @@ public class UploadService
 
 		string toEncrypt = string.Join(
 			";",
-			_scannerService.MainBlock.PlayerId,
-			_scannerService.MainBlock.Time.ConvertToTimeInt(),
-			_scannerService.MainBlock.GemsCollected,
-			_scannerService.MainBlock.GemsDespawned,
-			_scannerService.MainBlock.GemsEaten,
-			_scannerService.MainBlock.GemsTotal,
-			_scannerService.MainBlock.EnemiesKilled,
-			_scannerService.MainBlock.DeathType,
-			_scannerService.MainBlock.DaggersHit,
-			_scannerService.MainBlock.DaggersFired,
-			_scannerService.MainBlock.EnemiesAlive,
-			_scannerService.MainBlock.HomingDaggers,
-			_scannerService.MainBlock.HomingDaggersEaten,
-			_scannerService.MainBlock.IsReplay ? 1 : 0,
-			HashUtils.ByteArrayToHexString(_scannerService.MainBlock.SurvivalHashMd5),
-			string.Join(",", new[] { _scannerService.MainBlock.LevelUpTime2.ConvertToTimeInt(), _scannerService.MainBlock.LevelUpTime3.ConvertToTimeInt(), _scannerService.MainBlock.LevelUpTime4.ConvertToTimeInt() }));
+			_memoryService.MainBlock.PlayerId,
+			_memoryService.MainBlock.Time.ConvertToTimeInt(),
+			_memoryService.MainBlock.GemsCollected,
+			_memoryService.MainBlock.GemsDespawned,
+			_memoryService.MainBlock.GemsEaten,
+			_memoryService.MainBlock.GemsTotal,
+			_memoryService.MainBlock.EnemiesKilled,
+			_memoryService.MainBlock.DeathType,
+			_memoryService.MainBlock.DaggersHit,
+			_memoryService.MainBlock.DaggersFired,
+			_memoryService.MainBlock.EnemiesAlive,
+			_memoryService.MainBlock.HomingDaggers,
+			_memoryService.MainBlock.HomingDaggersEaten,
+			_memoryService.MainBlock.IsReplay ? 1 : 0,
+			HashUtils.ByteArrayToHexString(_memoryService.MainBlock.SurvivalHashMd5),
+			string.Join(",", new[] { _memoryService.MainBlock.LevelUpTime2.ConvertToTimeInt(), _memoryService.MainBlock.LevelUpTime3.ConvertToTimeInt(), _memoryService.MainBlock.LevelUpTime4.ConvertToTimeInt() }));
 		string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 		AddUploadRequest uploadRequest = new()
 		{
-			DaggersFired = _scannerService.MainBlock.DaggersFired,
-			DaggersHit = _scannerService.MainBlock.DaggersHit,
+			DaggersFired = _memoryService.MainBlock.DaggersFired,
+			DaggersHit = _memoryService.MainBlock.DaggersHit,
 			ClientVersion = Constants.LocalVersion.ToString(),
-			DeathType = _scannerService.MainBlock.DeathType,
-			EnemiesAlive = _scannerService.MainBlock.EnemiesAlive,
-			GemsCollected = _scannerService.MainBlock.GemsCollected,
-			GemsDespawned = _scannerService.MainBlock.GemsDespawned,
-			GemsEaten = _scannerService.MainBlock.GemsEaten,
-			GemsTotal = _scannerService.MainBlock.GemsTotal,
-			HomingDaggers = _scannerService.MainBlock.HomingDaggers,
-			HomingDaggersEaten = _scannerService.MainBlock.HomingDaggersEaten,
-			EnemiesKilled = _scannerService.MainBlock.EnemiesKilled,
-			LevelUpTime2 = _scannerService.MainBlock.LevelUpTime2.ConvertToTimeInt(),
-			LevelUpTime3 = _scannerService.MainBlock.LevelUpTime3.ConvertToTimeInt(),
-			LevelUpTime4 = _scannerService.MainBlock.LevelUpTime4.ConvertToTimeInt(),
-			PlayerId = _scannerService.MainBlock.PlayerId,
-			SurvivalHashMd5 = _scannerService.MainBlock.SurvivalHashMd5,
-			Time = _scannerService.MainBlock.Time.ConvertToTimeInt(),
-			PlayerName = _scannerService.MainBlock.PlayerName,
-			IsReplay = _scannerService.MainBlock.IsReplay,
+			DeathType = _memoryService.MainBlock.DeathType,
+			EnemiesAlive = _memoryService.MainBlock.EnemiesAlive,
+			GemsCollected = _memoryService.MainBlock.GemsCollected,
+			GemsDespawned = _memoryService.MainBlock.GemsDespawned,
+			GemsEaten = _memoryService.MainBlock.GemsEaten,
+			GemsTotal = _memoryService.MainBlock.GemsTotal,
+			HomingDaggers = _memoryService.MainBlock.HomingDaggers,
+			HomingDaggersEaten = _memoryService.MainBlock.HomingDaggersEaten,
+			EnemiesKilled = _memoryService.MainBlock.EnemiesKilled,
+			LevelUpTime2 = _memoryService.MainBlock.LevelUpTime2.ConvertToTimeInt(),
+			LevelUpTime3 = _memoryService.MainBlock.LevelUpTime3.ConvertToTimeInt(),
+			LevelUpTime4 = _memoryService.MainBlock.LevelUpTime4.ConvertToTimeInt(),
+			PlayerId = _memoryService.MainBlock.PlayerId,
+			SurvivalHashMd5 = _memoryService.MainBlock.SurvivalHashMd5,
+			Time = _memoryService.MainBlock.Time.ConvertToTimeInt(),
+			PlayerName = _memoryService.MainBlock.PlayerName,
+			IsReplay = _memoryService.MainBlock.IsReplay,
 			Validation = HttpUtility.HtmlEncode(validation),
-			GameData = _scannerService.GetGameDataForUpload(),
+			GameData = _memoryService.GetGameDataForUpload(),
 #if DEBUG
 			BuildMode = "Debug",
 #else
 			BuildMode = "Release",
 #endif
 			OperatingSystem = "Windows",
-			ProhibitedMods = _scannerService.MainBlock.ProhibitedMods,
+			ProhibitedMods = _memoryService.MainBlock.ProhibitedMods,
 			Client = "DevilDaggersCustomLeaderboards",
-			ReplayData = _scannerService.GetReplayForUpload(),
-			Status = _scannerService.MainBlock.Status,
-			ReplayPlayerId = _scannerService.MainBlock.ReplayPlayerId,
-			GameMode = _scannerService.MainBlock.GameMode,
-			TimeAttackOrRaceFinished = _scannerService.MainBlock.TimeAttackOrRaceFinished,
+			ReplayData = _memoryService.GetReplayForUpload(),
+			Status = _memoryService.MainBlock.Status,
+			ReplayPlayerId = _memoryService.MainBlock.ReplayPlayerId,
+			GameMode = _memoryService.MainBlock.GameMode,
+			TimeAttackOrRaceFinished = _memoryService.MainBlock.TimeAttackOrRaceFinished,
 		};
 
 		return await _networkService.SubmitScore(uploadRequest);

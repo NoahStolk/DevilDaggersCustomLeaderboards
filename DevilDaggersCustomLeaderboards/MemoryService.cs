@@ -7,7 +7,7 @@ using System.IO;
 
 namespace DevilDaggersCustomLeaderboards;
 
-public class ScannerService
+public class MemoryService
 {
 	private const int _bufferSize = 319;
 	private const int _statesBufferSize = 112;

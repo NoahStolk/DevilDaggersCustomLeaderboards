@@ -16,7 +16,7 @@ public class RecorderService
 	private const int _mainLoopSleepMilliseconds = 50;
 
 	private readonly NetworkService _networkService;
-	private readonly ScannerService _scannerService;
+	private readonly MemoryService _memoryService;
 	private readonly UploadService _uploadService;
 	private readonly ILogger<RecorderService> _logger;
 
@@ -26,10 +26,10 @@ public class RecorderService
 	private GetUploadSuccess? _uploadSuccess;
 	private MainBlock _finalRecordedMainBlock;
 
-	public RecorderService(NetworkService networkService, ScannerService scannerService, UploadService uploadService, ILogger<RecorderService> logger)
+	public RecorderService(NetworkService networkService, MemoryService memoryService, UploadService uploadService, ILogger<RecorderService> logger)
 	{
 		_networkService = networkService;
-		_scannerService = scannerService;
+		_memoryService = memoryService;
 		_uploadService = uploadService;
 		_logger = logger;
 	}
@@ -56,18 +56,18 @@ public class RecorderService
 
 	private async Task ExecuteMainLoop()
 	{
-		_scannerService.FindWindow();
-		if (_scannerService.Process == null)
+		_memoryService.FindWindow();
+		if (_memoryService.Process == null)
 		{
-			_scannerService.IsInitialized = false;
+			_memoryService.IsInitialized = false;
 			Cmd.WriteLine("Devil Daggers not found. Make sure the game is running. Retrying in a second...");
 			await Task.Delay(TimeSpan.FromSeconds(1));
 			Console.Clear();
 			return;
 		}
 
-		_scannerService.Initialize(_marker);
-		if (!_scannerService.IsInitialized)
+		_memoryService.Initialize(_marker);
+		if (!_memoryService.IsInitialized)
 		{
 			Cmd.WriteLine("Could not find memory block starting address. Retrying in a second...");
 			await Task.Delay(TimeSpan.FromSeconds(1));
@@ -75,11 +75,11 @@ public class RecorderService
 			return;
 		}
 
-		_scannerService.Scan();
+		_memoryService.Scan();
 
 		if (!_isRecording)
 		{
-			if (_scannerService.MainBlock.Time == _scannerService.MainBlockPrevious.Time || _scannerService.MainBlock.Status == (int)GameStatus.LocalReplay)
+			if (_memoryService.MainBlock.Time == _memoryService.MainBlockPrevious.Time || _memoryService.MainBlock.Status == (int)GameStatus.LocalReplay)
 				return;
 
 			Console.Clear();
@@ -87,17 +87,17 @@ public class RecorderService
 			_uploadSuccess = null;
 		}
 
-		GuiUtils.WriteRecording(_scannerService.Process, _scannerService.MainBlock, _scannerService.MainBlockPrevious);
+		GuiUtils.WriteRecording(_memoryService.Process, _memoryService.MainBlock, _memoryService.MainBlockPrevious);
 
 		await Task.Delay(TimeSpan.FromMilliseconds(_mainLoopSleepMilliseconds));
 		Console.SetCursorPosition(0, 0);
 
-		bool justDied = !_scannerService.MainBlock.IsPlayerAlive && _scannerService.MainBlockPrevious.IsPlayerAlive;
-		bool uploadRun = justDied && (_scannerService.MainBlock.GameMode == 0 || _scannerService.MainBlock.TimeAttackOrRaceFinished);
+		bool justDied = !_memoryService.MainBlock.IsPlayerAlive && _memoryService.MainBlockPrevious.IsPlayerAlive;
+		bool uploadRun = justDied && (_memoryService.MainBlock.GameMode == 0 || _memoryService.MainBlock.TimeAttackOrRaceFinished);
 		if (!uploadRun)
 			return;
 
-		if (!_scannerService.MainBlock.StatsLoaded)
+		if (!_memoryService.MainBlock.StatsLoaded)
 		{
 			Console.Clear();
 			Cmd.WriteLine("Waiting for stats to be loaded...");
@@ -106,7 +106,7 @@ public class RecorderService
 			return;
 		}
 
-		if (_scannerService.MainBlock.ReplayLength <= 0)
+		if (_memoryService.MainBlock.ReplayLength <= 0)
 		{
 			Console.Clear();
 			Cmd.WriteLine("Waiting for replay to be loaded...");
@@ -128,7 +128,7 @@ public class RecorderService
 			if (uploadSuccess != null)
 			{
 				_uploadSuccess = uploadSuccess;
-				_finalRecordedMainBlock = _scannerService.MainBlock;
+				_finalRecordedMainBlock = _memoryService.MainBlock;
 				RenderSuccessfulSubmit();
 			}
 			else
@@ -163,7 +163,7 @@ public class RecorderService
 		Cmd.WriteLine("Use the arrow keys to navigate. Press [Enter] to load selected replay into Devil Daggers.");
 		Cmd.WriteLine();
 
-		_uploadSuccess.WriteLeaderboard(_scannerService.MainBlock.PlayerId, _selectedIndex);
+		_uploadSuccess.WriteLeaderboard(_memoryService.MainBlock.PlayerId, _selectedIndex);
 
 		Cmd.WriteLine();
 
@@ -179,16 +179,16 @@ public class RecorderService
 	{
 		const float minimalTime = 1f;
 
-		if (_scannerService.MainBlock.PlayerId <= 0)
+		if (_memoryService.MainBlock.PlayerId <= 0)
 		{
-			_logger.LogWarning("Invalid player ID: {playerId}", _scannerService.MainBlock.PlayerId);
+			_logger.LogWarning("Invalid player ID: {playerId}", _memoryService.MainBlock.PlayerId);
 			return "Invalid player ID.";
 		}
 
-		if (_scannerService.MainBlock.Time < minimalTime)
+		if (_memoryService.MainBlock.Time < minimalTime)
 			return $"Timer is under {minimalTime:0.0000}. Unable to validate.";
 
-		if (_scannerService.MainBlock.Status == (int)GameStatus.LocalReplay)
+		if (_memoryService.MainBlock.Status == (int)GameStatus.LocalReplay)
 			return "Local replays are not uploaded.";
 
 		return null;
@@ -205,7 +205,7 @@ public class RecorderService
 			case ConsoleKey.Enter:
 				byte[]? replay = await _networkService.GetReplay(customEntryIds[Math.Clamp(_selectedIndex, 0, customEntryIds.Count - 1)]);
 				if (replay != null)
-					_scannerService.WriteReplayToMemory(replay);
+					_memoryService.WriteReplayToMemory(replay);
 				break;
 			case ConsoleKey.UpArrow:
 				_selectedIndex = Math.Max(0, _selectedIndex - 1);
