@@ -46,8 +46,8 @@ public static class ColorUtils
 
 	public static CustomColor GetDaggerHighlightColor(CustomColor daggerColor) => daggerColor switch
 	{
-		Devil or Bronze or Default => ForegroundDefault,
-		_ => BackgroundDefault,
+		Silver or Golden => BackgroundDefault,
+		_ => ForegroundDefault,
 	};
 
 	public static int ModifyConsoleColor(byte colorIndex, byte r, byte g, byte b)
