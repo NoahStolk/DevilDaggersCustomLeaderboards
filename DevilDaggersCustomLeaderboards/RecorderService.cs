@@ -131,10 +131,10 @@ public class RecorderService
 
 				Cmd.WriteLine();
 
-				if (uploadSuccess.IsHighscore())
+				if (uploadSuccess.IsHighscore)
 					uploadSuccess.WriteHighscoreStats(_scannerService.MainBlock);
 				else
-					GuiUtils.WriteStats(_scannerService.MainBlock, uploadSuccess.Leaderboard, uploadSuccess.Entries.Find(e => e.PlayerId == _scannerService.MainBlock.PlayerId));
+					uploadSuccess.WriteStats(_scannerService.MainBlock);
 
 				Cmd.WriteLine();
 			}

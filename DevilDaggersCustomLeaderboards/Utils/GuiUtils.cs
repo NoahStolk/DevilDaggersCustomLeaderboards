@@ -165,8 +165,9 @@ public static class GuiUtils
 	}
 #endif
 
-	public static void WriteStats(MainBlock mainBlock, GetCustomLeaderboardDdcl leaderboard, GetCustomEntryDdcl? entry)
+	public static void WriteStats(this GetUploadSuccess us, MainBlock mainBlock)
 	{
+		GetCustomEntryDdcl? entry = us.Entries.Find(e => e.PlayerId == mainBlock.PlayerId);
 		if (entry == null)
 		{
 			// Should never happen.
@@ -183,7 +184,7 @@ public static class GuiUtils
 
 		int timeDiff = mainBlock.Time.ConvertToTimeInt() - entry.Time;
 		Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
-		Cmd.Write($"{mainBlock.Time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(mainBlock.Time.ConvertToTimeInt(), leaderboard));
+		Cmd.Write($"{mainBlock.Time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(mainBlock.Time.ConvertToTimeInt(), us.Leaderboard));
 		Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
 
 #if DEBUG
@@ -226,9 +227,6 @@ public static class GuiUtils
 				Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", ColorUtils.GetImprovementColor(-valueDiff));
 		}
 	}
-
-	public static bool IsHighscore(this GetUploadSuccess us)
-		=> us.Rank != 0;
 
 	public static void WriteLeaderboard(this GetUploadSuccess us, int currentPlayerId)
 	{

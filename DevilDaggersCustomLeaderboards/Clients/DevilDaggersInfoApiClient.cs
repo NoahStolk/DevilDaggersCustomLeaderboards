@@ -4602,6 +4602,9 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("isNewPlayerOnThisLeaderboard", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsNewPlayerOnThisLeaderboard { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("isHighscore", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsHighscore { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("rank", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Rank { get; set; } = default!;
 
