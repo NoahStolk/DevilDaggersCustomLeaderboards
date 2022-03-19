@@ -228,7 +228,7 @@ public static class GuiUtils
 		}
 	}
 
-	public static void WriteLeaderboard(this GetUploadSuccess us, int currentPlayerId)
+	public static void WriteLeaderboard(this GetUploadSuccess us, int currentPlayerId, int selectedIndex)
 	{
 		for (int i = 0; i < us.TotalPlayers; i++)
 		{
@@ -243,7 +243,12 @@ public static class GuiUtils
 			int spaceCountTotal = us.TotalPlayers.ToString().Length;
 			Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ", foregroundColor, backgroundColor);
 			Cmd.Write($"{entry.PlayerName[..Math.Min(entry.PlayerName.Length, Cmd.TextWidthLeft)]}", foregroundColor, backgroundColor);
-			Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}\n", foregroundColor, backgroundColor);
+			Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}", foregroundColor, backgroundColor);
+
+			if (selectedIndex == i)
+				Cmd.WriteLine(" < WATCH", CustomColor.White, CustomColor.Black);
+			else
+				Cmd.WriteLine();
 		}
 
 		Console.BackgroundColor = (ConsoleColor)ColorUtils.BackgroundDefault;

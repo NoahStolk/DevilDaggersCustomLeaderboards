@@ -1,10 +1,12 @@
 using DevilDaggersCustomLeaderboards.Clients;
+using DevilDaggersCustomLeaderboards.Enums;
+using DevilDaggersCustomLeaderboards.Memory;
 using DevilDaggersCustomLeaderboards.Network;
 using DevilDaggersCustomLeaderboards.Utils;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevilDaggersCustomLeaderboards;
@@ -20,6 +22,9 @@ public class RecorderService
 
 	private bool _isRecording = true;
 	private long _marker;
+	private int _selectedIndex;
+	private GetUploadSuccess? _uploadSuccess;
+	private MainBlock _finalRecordedMainBlock;
 
 	public RecorderService(NetworkService networkService, ScannerService scannerService, UploadService uploadService, ILogger<RecorderService> logger)
 	{
@@ -36,11 +41,13 @@ public class RecorderService
 		Console.Clear();
 		while (true)
 		{
+			await HandleInput();
+
 			try
 			{
 				await ExecuteMainLoop();
 			}
-			catch (Win32Exception)
+			catch (Win32Exception) // TODO: Refactor and wrap around native code only.
 			{
 				// Ignore exceptions when Devil Daggers is closed.
 			}
@@ -72,15 +79,12 @@ public class RecorderService
 
 		if (!_isRecording)
 		{
-#if DEBUG
-			Console.SetCursorPosition(0, 0);
-			GuiUtils.WriteRecording(_scannerService.Process, _scannerService.MainBlock, _scannerService.MainBlockPrevious);
-#endif
-			if (_scannerService.MainBlock.Time == _scannerService.MainBlockPrevious.Time)
+			if (_scannerService.MainBlock.Time == _scannerService.MainBlockPrevious.Time || _scannerService.MainBlock.Status == (int)GameStatus.LocalReplay)
 				return;
 
 			Console.Clear();
 			_isRecording = true;
+			_uploadSuccess = null;
 		}
 
 		GuiUtils.WriteRecording(_scannerService.Process, _scannerService.MainBlock, _scannerService.MainBlockPrevious);
@@ -121,22 +125,11 @@ public class RecorderService
 		if (errorMessage == null)
 		{
 			GetUploadSuccess? uploadSuccess = await _uploadService.UploadRun();
-
 			if (uploadSuccess != null)
 			{
-				Cmd.WriteLine("Upload successful", ColorUtils.Success);
-				Cmd.WriteLine(uploadSuccess.Message);
-				Cmd.WriteLine();
-				uploadSuccess.WriteLeaderboard(_scannerService.MainBlock.PlayerId);
-
-				Cmd.WriteLine();
-
-				if (uploadSuccess.IsHighscore)
-					uploadSuccess.WriteHighscoreStats(_scannerService.MainBlock);
-				else
-					uploadSuccess.WriteStats(_scannerService.MainBlock);
-
-				Cmd.WriteLine();
+				_uploadSuccess = uploadSuccess;
+				_finalRecordedMainBlock = _scannerService.MainBlock;
+				RenderSuccessfulSubmit(uploadSuccess);
 			}
 			else
 			{
@@ -157,6 +150,28 @@ public class RecorderService
 		Cmd.WriteLine();
 	}
 
+	private void RenderSuccessfulSubmit(GetUploadSuccess uploadSuccess)
+	{
+		Console.SetCursorPosition(0, 2);
+
+		Cmd.WriteLine("Upload successful", ColorUtils.Success);
+		Cmd.WriteLine(uploadSuccess.Message);
+		Cmd.WriteLine();
+		Cmd.WriteLine("Press UP and DOWN arrows to navigate. Press ENTER to load replay into Devil Daggers.");
+		Cmd.WriteLine();
+
+		uploadSuccess.WriteLeaderboard(_scannerService.MainBlock.PlayerId, _selectedIndex);
+
+		Cmd.WriteLine();
+
+		if (uploadSuccess.IsHighscore)
+			uploadSuccess.WriteHighscoreStats(_finalRecordedMainBlock);
+		else
+			uploadSuccess.WriteStats(_finalRecordedMainBlock);
+
+		Cmd.WriteLine();
+	}
+
 	private string? ValidateRunLocally()
 	{
 		const float minimalTime = 1f;
@@ -171,5 +186,29 @@ public class RecorderService
 			return $"Timer is under {minimalTime:0.0000}. Unable to validate.";
 
 		return null;
+	}
+
+	private async Task HandleInput()
+	{
+		if (!Console.KeyAvailable || _uploadSuccess == null)
+			return;
+
+		List<int> customEntryIds = _uploadSuccess.Entries.ConvertAll(e => e.Id);
+		switch (Console.ReadKey(true).Key)
+		{
+			case ConsoleKey.Enter:
+				byte[]? replay = await _networkService.GetReplay(customEntryIds[Math.Clamp(_selectedIndex, 0, customEntryIds.Count - 1)]);
+				if (replay != null)
+					_scannerService.WriteReplayToMemory(replay);
+				break;
+			case ConsoleKey.UpArrow:
+				_selectedIndex = Math.Max(0, _selectedIndex - 1);
+				RenderSuccessfulSubmit(_uploadSuccess);
+				break;
+			case ConsoleKey.DownArrow:
+				_selectedIndex = Math.Min(customEntryIds.Count - 1, _selectedIndex + 1);
+				RenderSuccessfulSubmit(_uploadSuccess);
+				break;
+		}
 	}
 }
