@@ -140,7 +140,7 @@ public class RecorderService
 			}
 			else
 			{
-				Thread.Sleep(500);
+				await Task.Delay(TimeSpan.FromSeconds(0.5));
 			}
 		}
 		else
@@ -149,7 +149,7 @@ public class RecorderService
 			Cmd.WriteLine(errorMessage);
 			_logger.LogWarning("Validation failed - {errorMessage}", errorMessage);
 
-			Thread.Sleep(500);
+			await Task.Delay(TimeSpan.FromSeconds(0.5));
 		}
 
 		Console.SetCursorPosition(0, 0);
