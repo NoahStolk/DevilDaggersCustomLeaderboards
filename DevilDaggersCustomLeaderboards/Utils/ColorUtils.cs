@@ -113,21 +113,24 @@ public static class ColorUtils
 		_ => Fallen,
 	};
 
-	public static CustomColor GetDaggerColor(int time, GetCustomLeaderboardDdcl leaderboard)
+	public static CustomColor GetDaggerColor(double time, GetCustomLeaderboardDdcl leaderboard)
 	{
-		if (Compare(time, leaderboard.TimeLeviathan))
-			return Leviathan;
-		if (Compare(time, leaderboard.TimeDevil))
+		if (leaderboard.Daggers == null)
 			return Devil;
-		if (Compare(time, leaderboard.TimeGolden))
+
+		if (Compare(time, leaderboard.Daggers.Leviathan))
+			return Leviathan;
+		if (Compare(time, leaderboard.Daggers.Devil))
+			return Devil;
+		if (Compare(time, leaderboard.Daggers.Golden))
 			return Golden;
-		if (Compare(time, leaderboard.TimeSilver))
+		if (Compare(time, leaderboard.Daggers.Silver))
 			return Silver;
-		if (Compare(time, leaderboard.TimeBronze))
+		if (Compare(time, leaderboard.Daggers.Bronze))
 			return Bronze;
 		return Default;
 
-		bool Compare(int time, int daggerTime)
+		bool Compare(double time, double daggerTime)
 		{
 			if (leaderboard.IsAscending)
 				return time <= daggerTime;

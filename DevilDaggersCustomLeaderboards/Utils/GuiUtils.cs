@@ -184,10 +184,10 @@ public static class GuiUtils
 		Cmd.WriteLine();
 		Cmd.WriteLine();
 
-		int timeDiff = mainBlock.Time.ConvertToTimeInt() - entry.Time;
+		double timeDiff = mainBlock.Time - entry.TimeInSeconds;
 		Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
-		Cmd.Write($"{mainBlock.Time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(mainBlock.Time.ConvertToTimeInt(), us.Leaderboard));
-		Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff / 10000f:0.0000})", ColorUtils.Worse);
+		Cmd.Write($"{mainBlock.Time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(mainBlock.Time, us.Leaderboard));
+		Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ColorUtils.Worse);
 
 #if DEBUG
 		WriteDebug(mainBlock);
@@ -204,9 +204,9 @@ public static class GuiUtils
 		WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
 		WriteIntField("Homing Stored", mainBlock.HomingDaggers, mainBlock.HomingDaggers - entry.HomingDaggers);
 		WriteIntField("Homing Eaten", mainBlock.HomingDaggersEaten, mainBlock.HomingDaggersEaten - entry.HomingDaggersEaten);
-		WriteTimeField("Level 2", mainBlock.LevelUpTime2.ConvertToTimeInt(), mainBlock.LevelUpTime2.ConvertToTimeInt() - entry.LevelUpTime2);
-		WriteTimeField("Level 3", mainBlock.LevelUpTime3.ConvertToTimeInt(), mainBlock.LevelUpTime3.ConvertToTimeInt() - entry.LevelUpTime3);
-		WriteTimeField("Level 4", mainBlock.LevelUpTime4.ConvertToTimeInt(), mainBlock.LevelUpTime4.ConvertToTimeInt() - entry.LevelUpTime4);
+		WriteTimeField("Level 2", mainBlock.LevelUpTime2, mainBlock.LevelUpTime2 - entry.LevelUpTime2InSeconds);
+		WriteTimeField("Level 3", mainBlock.LevelUpTime3, mainBlock.LevelUpTime3 - entry.LevelUpTime3InSeconds);
+		WriteTimeField("Level 4", mainBlock.LevelUpTime4, mainBlock.LevelUpTime4 - entry.LevelUpTime4InSeconds);
 
 		static void WriteIntField(string fieldName, int value, int valueDiff, bool negate = false)
 		{
@@ -220,13 +220,13 @@ public static class GuiUtils
 			Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.00%})", ColorUtils.GetImprovementColor(valueDiff));
 		}
 
-		static void WriteTimeField(string fieldName, int value, int valueDiff)
+		static void WriteTimeField(string fieldName, double value, double valueDiff)
 		{
-			Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{(value == 0 ? "N/A" : $"{value / 10000f:0.0000}"),Cmd.TextWidthRight:0.0000}");
+			Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{(value == 0 ? "N/A" : $"{value:0.0000}"),Cmd.TextWidthRight:0.0000}");
 			if (value == 0 || valueDiff == value)
 				Cmd.WriteLine();
 			else
-				Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", ColorUtils.GetImprovementColor(-valueDiff));
+				Cmd.WriteLine($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.0000})", ColorUtils.GetImprovementColor(-valueDiff));
 		}
 	}
 
@@ -254,7 +254,7 @@ public static class GuiUtils
 			}
 
 			GetCustomEntryDdcl entry = us.Entries[i];
-			CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.Time, us.Leaderboard);
+			CustomColor daggerColor = ColorUtils.GetDaggerColor(entry.TimeInSeconds, us.Leaderboard);
 
 			bool isCurrentPlayer = entry.PlayerId == currentPlayerId;
 			CustomColor foregroundColor = isCurrentPlayer ? ColorUtils.GetDaggerHighlightColor(daggerColor) : daggerColor;
@@ -264,7 +264,7 @@ public static class GuiUtils
 			int spaceCountTotal = us.TotalPlayers.ToString().Length;
 			Cmd.Write($"{new string(' ', spaceCountTotal - spaceCountCurrent)}{i + 1}. ", foregroundColor, backgroundColor);
 			Cmd.Write($"{entry.PlayerName[..Math.Min(entry.PlayerName.Length, Cmd.TextWidthLeft)]}", foregroundColor, backgroundColor);
-			Cmd.Write($"{entry.Time / 10000f,Cmd.TextWidthRight:0.0000}", foregroundColor, backgroundColor);
+			Cmd.Write($"{entry.TimeInSeconds,Cmd.TextWidthRight:0.0000}", foregroundColor, backgroundColor);
 
 			const int replayUiSize = 25;
 			if (selectedIndex == i)
@@ -278,12 +278,12 @@ public static class GuiUtils
 
 	public static void WriteHighscoreStats(this GetUploadSuccess us, MainBlock mainBlock)
 	{
-		int deathType = us.Entries[us.Rank - 1].DeathType;
+		int deathType = us.Entries[us.RankState.Value - 1].DeathType;
 
-		double accuracy = us.DaggersFired == 0 ? 0 : us.DaggersHit / (double)us.DaggersFired;
+		double accuracy = us.DaggersFiredState.Value == 0 ? 0 : us.DaggersHitState.Value / (double)us.DaggersFiredState.Value;
 
-		int shotsHitOld = us.DaggersHit - us.DaggersHitDiff;
-		int shotsFiredOld = us.DaggersFired - us.DaggersFiredDiff;
+		int shotsHitOld = us.DaggersHitState.Value - us.DaggersHitState.ValueDifference;
+		int shotsFiredOld = us.DaggersFiredState.Value - us.DaggersFiredState.ValueDifference;
 		double accuracyOld = shotsFiredOld == 0 ? 0 : shotsHitOld / (double)shotsFiredOld;
 		double accuracyDiff = accuracy - accuracyOld;
 
@@ -291,40 +291,40 @@ public static class GuiUtils
 		Cmd.WriteLine();
 		Cmd.WriteLine();
 
-		Cmd.Write($"{"Rank",-Cmd.TextWidthLeft}{$"{us.Rank} / {us.TotalPlayers}",Cmd.TextWidthRight}");
+		Cmd.Write($"{"Rank",-Cmd.TextWidthLeft}{$"{us.RankState.Value} / {us.TotalPlayers}",Cmd.TextWidthRight}");
 		if (!us.IsNewPlayerOnThisLeaderboard)
-			Cmd.Write($" ({us.RankDiff:+0;-#})", ColorUtils.GetImprovementColor(us.RankDiff));
+			Cmd.Write($" ({us.RankState.ValueDifference:+0;-#})", ColorUtils.GetImprovementColor(us.RankState.ValueDifference));
 		Cmd.WriteLine();
 
-		float time = us.Time / 10000f;
-		float timeDiff = us.TimeDiff / 10000f;
+		double time = us.TimeState.Value;
+		double timeDiff = us.TimeState.ValueDifference;
 		Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
-		Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(us.Time, us.Leaderboard));
+		Cmd.Write($"{time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(us.TimeState.Value, us.Leaderboard));
 		if (!us.IsNewPlayerOnThisLeaderboard)
 			Cmd.Write($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ColorUtils.Better);
 		Cmd.WriteLine();
 
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Collected", us.GemsCollected, us.GemsCollectedDiff);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Despawned", us.GemsDespawned, us.GemsDespawnedDiff, true);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Eaten", us.GemsEaten, us.GemsEatenDiff, true);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Total", us.GemsTotal, us.GemsTotalDiff);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Enemies Killed", us.EnemiesKilled, us.EnemiesKilledDiff);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Enemies Alive", us.EnemiesAlive, us.EnemiesAliveDiff);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Daggers Fired", us.DaggersFired, us.DaggersFiredDiff);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Daggers Hit", us.DaggersHit, us.DaggersHitDiff);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Collected", us.GemsCollectedState.Value, us.GemsCollectedState.ValueDifference);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Despawned", us.GemsDespawnedState.Value, us.GemsDespawnedState.ValueDifference, true);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Eaten", us.GemsEatenState.Value, us.GemsEatenState.ValueDifference, true);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Gems Total", us.GemsTotalState.Value, us.GemsTotalState.ValueDifference);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Enemies Killed", us.EnemiesKilledState.Value, us.EnemiesKilledState.ValueDifference);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Enemies Alive", us.EnemiesAliveState.Value, us.EnemiesAliveState.ValueDifference);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Daggers Fired", us.DaggersFiredState.Value, us.DaggersFiredState.ValueDifference);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Daggers Hit", us.DaggersHitState.Value, us.DaggersHitState.ValueDifference);
 		WritePercentageField(!us.IsNewPlayerOnThisLeaderboard, "Accuracy", accuracy, accuracyDiff);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Homing Stored", us.HomingDaggers, us.HomingDaggersDiff);
-		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Homing Eaten", us.HomingDaggersEaten, us.HomingDaggersEatenDiff);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Homing Stored", us.HomingStoredState.Value, us.HomingStoredState.ValueDifference);
+		WriteIntField(!us.IsNewPlayerOnThisLeaderboard, "Homing Eaten", us.HomingEatenState.Value, us.HomingEatenState.ValueDifference);
 
-		WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime2 != us.LevelUpTime2Diff, "Level 2", us.LevelUpTime2, us.LevelUpTime2Diff);
-		WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime3 != us.LevelUpTime3Diff, "Level 3", us.LevelUpTime3, us.LevelUpTime3Diff);
-		WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime4 != us.LevelUpTime4Diff, "Level 4", us.LevelUpTime4, us.LevelUpTime4Diff);
+		WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime2State.Value != us.LevelUpTime2State.ValueDifference, "Level 2", us.LevelUpTime2State.Value, us.LevelUpTime2State.ValueDifference);
+		WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime3State.Value != us.LevelUpTime3State.ValueDifference, "Level 3", us.LevelUpTime3State.Value, us.LevelUpTime3State.ValueDifference);
+		WriteTimeField(!us.IsNewPlayerOnThisLeaderboard && us.LevelUpTime4State.Value != us.LevelUpTime4State.ValueDifference, "Level 4", us.LevelUpTime4State.Value, us.LevelUpTime4State.ValueDifference);
 
-		static void WriteTimeField(bool writeDifference, string fieldName, int value, int valueDiff)
+		static void WriteTimeField(bool writeDifference, string fieldName, double value, double valueDiff)
 		{
-			Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value / 10000f,Cmd.TextWidthRight:0.0000}");
+			Cmd.Write($"{fieldName,-Cmd.TextWidthLeft}{value,Cmd.TextWidthRight:0.0000}");
 			if (writeDifference)
-				Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff / 10000f:0.0000})", ColorUtils.GetImprovementColor(-valueDiff));
+				Cmd.Write($" ({(valueDiff < 0 ? string.Empty : "+")}{valueDiff:0.0000})", ColorUtils.GetImprovementColor(-valueDiff));
 			Cmd.WriteLine();
 		}
 
