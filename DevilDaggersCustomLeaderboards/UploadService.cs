@@ -1,5 +1,4 @@
 using DevilDaggersCustomLeaderboards.Clients;
-using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Network;
 using DevilDaggersCustomLeaderboards.Utils;
 using System;
@@ -35,7 +34,7 @@ public class UploadService
 		string toEncrypt = string.Join(
 			";",
 			_memoryService.MainBlock.PlayerId,
-			_memoryService.MainBlock.Time.ConvertToTimeInt(),
+			ToTimeInt(_memoryService.MainBlock.Time),
 			_memoryService.MainBlock.GemsCollected,
 			_memoryService.MainBlock.GemsDespawned,
 			_memoryService.MainBlock.GemsEaten,
@@ -49,7 +48,10 @@ public class UploadService
 			_memoryService.MainBlock.HomingDaggersEaten,
 			_memoryService.MainBlock.IsReplay ? 1 : 0,
 			HashUtils.ByteArrayToHexString(_memoryService.MainBlock.SurvivalHashMd5),
-			string.Join(",", new[] { _memoryService.MainBlock.LevelUpTime2.ConvertToTimeInt(), _memoryService.MainBlock.LevelUpTime3.ConvertToTimeInt(), _memoryService.MainBlock.LevelUpTime4.ConvertToTimeInt() }));
+			string.Join(",", new[] { ToTimeInt(_memoryService.MainBlock.LevelUpTime2), ToTimeInt(_memoryService.MainBlock.LevelUpTime3), ToTimeInt(_memoryService.MainBlock.LevelUpTime4) }));
+
+		static int ToTimeInt(float timeFloat) => (int)(timeFloat * 10000);
+
 		string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 		AddUploadRequest uploadRequest = new()

@@ -1,6 +1,5 @@
 using DevilDaggersCustomLeaderboards.Clients;
 using DevilDaggersCustomLeaderboards.Enums;
-using DevilDaggersCustomLeaderboards.Extensions;
 using DevilDaggersCustomLeaderboards.Memory;
 using System;
 using System.Diagnostics;
