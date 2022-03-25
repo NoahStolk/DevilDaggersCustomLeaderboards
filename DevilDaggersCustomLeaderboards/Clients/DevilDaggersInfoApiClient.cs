@@ -282,77 +282,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="DevilDaggersInfoApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<GetCustomLeaderboardStatisticsForPlayer>> CustomEntries_GetCustomLeaderboardStatisticsByPlayerIdAsync(int? playerId = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/custom-entries/player-stats?");
-            if (playerId != null)
-            {
-                urlBuilder_.Append(System.Uri.EscapeDataString("playerId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(playerId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            }
-            urlBuilder_.Length--;
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    request_.Method = new System.Net.Http.HttpMethod("GET");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.List<GetCustomLeaderboardStatisticsForPlayer>>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new DevilDaggersInfoApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new DevilDaggersInfoApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="DevilDaggersInfoApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<GetUploadSuccess> CustomEntries_SubmitScoreForDdclAsync(AddUploadRequest uploadRequest, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (uploadRequest == null)
@@ -2715,6 +2644,76 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="DevilDaggersInfoApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.List<GetPlayerCustomLeaderboardStatistics>> Players_GetCustomLeaderboardStatisticsByPlayerIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            if (id == null)
+                throw new System.ArgumentNullException("id");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/players/{id}/custom-leaderboard-statistics");
+            urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.List<GetPlayerCustomLeaderboardStatistics>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new DevilDaggersInfoApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new DevilDaggersInfoApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="DevilDaggersInfoApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<GetPlayerProfile> Players_GetProfileByPlayerIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
@@ -4233,8 +4232,8 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Time { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("customLeaderboardDagger", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public CustomLeaderboardDagger CustomLeaderboardDagger { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("customLeaderboardDagger", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public CustomLeaderboardDagger? CustomLeaderboardDagger { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("gemsCollected", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int GemsCollected { get; set; } = default!;
@@ -4468,61 +4467,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class GetCustomLeaderboardStatisticsForPlayer
-    {
-        [Newtonsoft.Json.JsonProperty("customLeaderboardCategory", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public CustomLeaderboardCategory CustomLeaderboardCategory { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("leviathanDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LeviathanDaggerCount { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("devilDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int DevilDaggerCount { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("goldenDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int GoldenDaggerCount { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("silverDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int SilverDaggerCount { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("bronzeDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int BronzeDaggerCount { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("defaultDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int DefaultDaggerCount { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("leaderboardsPlayedCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LeaderboardsPlayedCount { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("totalCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int TotalCount { get; set; } = default!;
-
-    }
-
-    /// <summary>
-    /// 1 = Survival
-    /// <br/>2 = TimeAttack
-    /// <br/>3 = Speedrun
-    /// <br/>4 = Race
-    /// <br/>5 = Pacifist
-    /// </summary>
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum CustomLeaderboardCategory
-    {
-
-        Survival = 1,
-
-        TimeAttack = 2,
-
-        Speedrun = 3,
-
-        Race = 4,
-
-        Pacifist = 5,
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetUploadSuccess
     {
         [Newtonsoft.Json.JsonProperty("message", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -4591,126 +4535,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("levelUpTime4State", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public GetScoreStateOfDouble LevelUpTime4State { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("rank", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use RankState instead.")]
-        public int Rank { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("rankDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use RankState instead.")]
-        public int RankDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use TimeState instead.")]
-        public int Time { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("timeDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use TimeState instead.")]
-        public int TimeDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsCollected", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GemsCollectedState instead.")]
-        public int GemsCollected { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsCollectedDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GemsCollectedState instead.")]
-        public int GemsCollectedDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("enemiesKilled", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use EnemiesKilledState instead.")]
-        public int EnemiesKilled { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("enemiesKilledDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use EnemiesKilledState instead.")]
-        public int EnemiesKilledDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("daggersFired", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use DaggersFiredState instead.")]
-        public int DaggersFired { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("daggersFiredDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use DaggersFiredState instead.")]
-        public int DaggersFiredDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("daggersHit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use DaggersHitState instead.")]
-        public int DaggersHit { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("daggersHitDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use DaggersHitState instead.")]
-        public int DaggersHitDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("enemiesAlive", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use EnemiesAliveState instead.")]
-        public int EnemiesAlive { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("enemiesAliveDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use EnemiesAliveState instead.")]
-        public int EnemiesAliveDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("homingDaggers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use HomingDaggersStoredState instead.")]
-        public int HomingDaggers { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("homingDaggersDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use HomingDaggersStoredState instead.")]
-        public int HomingDaggersDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("homingDaggersEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use HomingDaggersEatenState instead.")]
-        public int HomingDaggersEaten { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("homingDaggersEatenDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use HomingDaggersEatenState instead.")]
-        public int HomingDaggersEatenDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsDespawned", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GemsDespawnedState instead.")]
-        public int GemsDespawned { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsDespawnedDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GemsDespawnedState instead.")]
-        public int GemsDespawnedDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GemsEatenState instead.")]
-        public int GemsEaten { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsEatenDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GemsEatenState instead.")]
-        public int GemsEatenDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsTotal", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GemsTotalState instead.")]
-        public int GemsTotal { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("gemsTotalDiff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use GemsTotalState instead.")]
-        public int GemsTotalDiff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime2", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime2State instead.")]
-        public int LevelUpTime2 { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime2Diff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime2State instead.")]
-        public int LevelUpTime2Diff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime3", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime3State instead.")]
-        public int LevelUpTime3 { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime3Diff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime3State instead.")]
-        public int LevelUpTime3Diff { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime4", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime4State instead.")]
-        public int LevelUpTime4 { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime4Diff", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime4State instead.")]
-        public int LevelUpTime4Diff { get; set; } = default!;
-
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -4721,26 +4545,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         [Newtonsoft.Json.JsonProperty("daggers", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public GetCustomLeaderboardDaggers? Daggers { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("timeBronze", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use Daggers instead.")]
-        public int TimeBronze { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("timeSilver", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use Daggers instead.")]
-        public int TimeSilver { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("timeGolden", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use Daggers instead.")]
-        public int TimeGolden { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("timeDevil", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use Daggers instead.")]
-        public int TimeDevil { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("timeLeviathan", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use Daggers instead.")]
-        public int TimeLeviathan { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("category", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public CustomLeaderboardCategory Category { get; set; } = default!;
@@ -4770,6 +4574,29 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
     }
 
+    /// <summary>
+    /// 1 = Survival
+    /// <br/>2 = TimeAttack
+    /// <br/>3 = Speedrun
+    /// <br/>4 = Race
+    /// <br/>5 = Pacifist
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum CustomLeaderboardCategory
+    {
+
+        Survival = 1,
+
+        TimeAttack = 2,
+
+        Speedrun = 3,
+
+        Race = 4,
+
+        Pacifist = 5,
+
+    }
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetCustomEntryDdcl
     {
@@ -4781,10 +4608,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         [Newtonsoft.Json.JsonProperty("playerName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string PlayerName { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use TimeInSeconds instead.")]
-        public int Time { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("timeInSeconds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double TimeInSeconds { get; set; } = default!;
@@ -4821,18 +4644,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         [Newtonsoft.Json.JsonProperty("deathType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public byte DeathType { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime2", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime2InSeconds instead.")]
-        public int LevelUpTime2 { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime3", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime3InSeconds instead.")]
-        public int LevelUpTime3 { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("levelUpTime4", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.Obsolete("Use LevelUpTime4InSeconds instead.")]
-        public int LevelUpTime4 { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("levelUpTime2InSeconds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double LevelUpTime2InSeconds { get; set; } = default!;
@@ -4900,6 +4711,10 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("timeInSeconds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double TimeInSeconds { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("timeAsBytes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(4, MinimumLength = 4)]
+        public byte[]? TimeAsBytes { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("gemsCollected", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int GemsCollected { get; set; } = default!;
 
@@ -4916,10 +4731,18 @@ namespace DevilDaggersCustomLeaderboards.Clients
         public int EnemiesAlive { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("homingDaggers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Obsolete("Use HomingStored instead.")]
         public int HomingDaggers { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("homingDaggersEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Obsolete("Use HomingEaten instead.")]
         public int HomingDaggersEaten { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("homingStored", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int HomingStored { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("homingEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int HomingEaten { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("gemsDespawned", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int GemsDespawned { get; set; } = default!;
@@ -4954,6 +4777,18 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("levelUpTime4InSeconds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double LevelUpTime4InSeconds { get; set; } = default!;
 
+        [Newtonsoft.Json.JsonProperty("levelUpTime2AsBytes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(4, MinimumLength = 4)]
+        public byte[]? LevelUpTime2AsBytes { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("levelUpTime3AsBytes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(4, MinimumLength = 4)]
+        public byte[]? LevelUpTime3AsBytes { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("levelUpTime4AsBytes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(4, MinimumLength = 4)]
+        public byte[]? LevelUpTime4AsBytes { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("clientVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(16)]
         public string ClientVersion { get; set; } = default!;
@@ -4969,6 +4804,9 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         [Newtonsoft.Json.JsonProperty("validation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Validation { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("validationVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ValidationVersion { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("isReplay", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsReplay { get; set; } = default!;
@@ -5014,10 +4852,18 @@ namespace DevilDaggersCustomLeaderboards.Clients
         public System.Collections.Generic.List<int> EnemiesAlive { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("homingDaggers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Obsolete("Use HomingStored instead.")]
         public System.Collections.Generic.List<int> HomingDaggers { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("homingDaggersEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Obsolete("Use HomingEaten instead.")]
         public System.Collections.Generic.List<int> HomingDaggersEaten { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("homingStored", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.List<int> HomingStored { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("homingEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.List<int> HomingEaten { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("gemsDespawned", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.List<int> GemsDespawned { get; set; } = default!;
@@ -5179,8 +5025,8 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("worldRecord", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? WorldRecord { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("worldRecordDagger", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public CustomLeaderboardDagger WorldRecordDagger { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("worldRecordDagger", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public CustomLeaderboardDagger? WorldRecordDagger { get; set; } = default!;
 
     }
 
@@ -5273,8 +5119,8 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("worldRecord", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? WorldRecord { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("worldRecordDagger", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public CustomLeaderboardDagger WorldRecordDagger { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("worldRecordDagger", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public CustomLeaderboardDagger? WorldRecordDagger { get; set; } = default!;
 
     }
 
@@ -5357,8 +5203,8 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Time { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("customLeaderboardDagger", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public CustomLeaderboardDagger CustomLeaderboardDagger { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("customLeaderboardDagger", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public CustomLeaderboardDagger? CustomLeaderboardDagger { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("gemsCollected", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int GemsCollected { get; set; } = default!;
@@ -6414,6 +6260,38 @@ namespace DevilDaggersCustomLeaderboards.Clients
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GetPlayerCustomLeaderboardStatistics
+    {
+        [Newtonsoft.Json.JsonProperty("customLeaderboardCategory", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public CustomLeaderboardCategory CustomLeaderboardCategory { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("leviathanDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int LeviathanDaggerCount { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("devilDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int DevilDaggerCount { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("goldenDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int GoldenDaggerCount { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("silverDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int SilverDaggerCount { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("bronzeDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int BronzeDaggerCount { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("defaultDaggerCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int DefaultDaggerCount { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("leaderboardsPlayedCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int LeaderboardsPlayedCount { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("totalCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int TotalCount { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetPlayerProfile
     {
         [Newtonsoft.Json.JsonProperty("countryCode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -6560,9 +6438,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("lastUpdated", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime LastUpdated { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("gameVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string GameVersion { get; set; } = default!;
-
         [Newtonsoft.Json.JsonProperty("gameMode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public GameMode GameMode { get; set; } = default!;
 
@@ -6583,9 +6458,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         [Newtonsoft.Json.JsonProperty("additionalGems", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int AdditionalGems { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("timerStart", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public float TimerStart { get; set; } = default!;
 
     }
 
@@ -6610,7 +6482,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
     /// 0 = Name
     /// <br/>1 = AuthorName
     /// <br/>2 = LastUpdated
-    /// <br/>3 = GameVersion
     /// <br/>4 = GameMode
     /// <br/>5 = LoopLength
     /// <br/>6 = LoopSpawnCount
@@ -6618,7 +6489,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
     /// <br/>8 = PreLoopSpawnCount
     /// <br/>9 = Hand
     /// <br/>10 = AdditionalGems
-    /// <br/>11 = TimerStart
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum SpawnsetSorting
@@ -6629,8 +6499,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
         AuthorName = 1,
 
         LastUpdated = 2,
-
-        GameVersion = 3,
 
         GameMode = 4,
 
@@ -6645,8 +6513,6 @@ namespace DevilDaggersCustomLeaderboards.Clients
         Hand = 9,
 
         AdditionalGems = 10,
-
-        TimerStart = 11,
 
     }
 
