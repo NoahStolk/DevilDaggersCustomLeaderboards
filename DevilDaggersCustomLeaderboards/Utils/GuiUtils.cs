@@ -202,8 +202,8 @@ public static class GuiUtils
 		WriteIntField("Daggers Fired", mainBlock.DaggersFired, mainBlock.DaggersFired - entry.DaggersFired);
 		WriteIntField("Daggers Hit", mainBlock.DaggersHit, mainBlock.DaggersHit - entry.DaggersHit);
 		WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
-		WriteIntField("Homing Stored", mainBlock.HomingStored, mainBlock.HomingStored - entry.HomingDaggers);
-		WriteIntField("Homing Eaten", mainBlock.HomingEaten, mainBlock.HomingEaten - entry.HomingDaggersEaten);
+		WriteIntField("Homing Stored", mainBlock.HomingStored, mainBlock.HomingStored - entry.HomingStored);
+		WriteIntField("Homing Eaten", mainBlock.HomingEaten, mainBlock.HomingEaten - entry.HomingEaten);
 		WriteTimeField("Level 2", mainBlock.LevelUpTime2, mainBlock.LevelUpTime2 - entry.LevelUpTime2InSeconds);
 		WriteTimeField("Level 3", mainBlock.LevelUpTime3, mainBlock.LevelUpTime3 - entry.LevelUpTime3InSeconds);
 		WriteTimeField("Level 4", mainBlock.LevelUpTime4, mainBlock.LevelUpTime4 - entry.LevelUpTime4InSeconds);

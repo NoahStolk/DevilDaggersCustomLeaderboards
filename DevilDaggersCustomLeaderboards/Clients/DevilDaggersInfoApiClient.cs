@@ -4628,10 +4628,18 @@ namespace DevilDaggersCustomLeaderboards.Clients
         public int EnemiesAlive { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("homingDaggers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Obsolete("Use HomingStored instead.")]
         public int HomingDaggers { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("homingDaggersEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Obsolete("Use HomingEaten instead.")]
         public int HomingDaggersEaten { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("homingStored", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int HomingStored { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("homingEaten", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int HomingEaten { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("gemsDespawned", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int GemsDespawned { get; set; } = default!;
