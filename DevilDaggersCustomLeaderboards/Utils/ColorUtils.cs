@@ -116,7 +116,7 @@ public static class ColorUtils
 	public static CustomColor GetDaggerColor(double time, GetCustomLeaderboardDdcl leaderboard)
 	{
 		if (leaderboard.Daggers == null)
-			return Devil;
+			return Silver;
 
 		if (Compare(time, leaderboard.Daggers.Leviathan))
 			return Leviathan;
