@@ -183,11 +183,10 @@ public static class GuiUtils
 		Cmd.WriteLine();
 		Cmd.WriteLine();
 
-		double clampedTime = Math.Min(mainBlock.Time, entry.TimeInSeconds);
-		double timeDiff = clampedTime - entry.TimeInSeconds;
+		double timeDiff = mainBlock.Time - entry.TimeInSeconds;
 		Cmd.Write($"{"Time",-Cmd.TextWidthLeft}");
-		Cmd.Write($"{clampedTime,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(clampedTime, us.Leaderboard));
-		Cmd.WriteLine($" ({timeDiff:0.0000})", ColorUtils.Worse);
+		Cmd.Write($"{mainBlock.Time,Cmd.TextWidthRight:0.0000}", ColorUtils.GetDaggerColor(mainBlock.Time, us.Leaderboard));
+		Cmd.WriteLine($" ({(timeDiff < 0 ? string.Empty : "+")}{timeDiff:0.0000})", ColorUtils.Worse);
 
 #if DEBUG
 		WriteDebug(mainBlock);
