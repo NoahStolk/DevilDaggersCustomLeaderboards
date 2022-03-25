@@ -51,7 +51,7 @@ public class UploadService
 			_memoryService.MainBlock.DaggersFired,
 			_memoryService.MainBlock.HomingStored,
 			_memoryService.MainBlock.HomingEaten,
-			_memoryService.MainBlock.IsReplay ? 1 : 0,
+			_memoryService.MainBlock.IsReplay,
 			_memoryService.MainBlock.Status,
 			HashUtils.ByteArrayToHexString(_memoryService.MainBlock.SurvivalHashMd5),
 			HashUtils.ByteArrayToHexString(levelUpTime2AsBytes),
