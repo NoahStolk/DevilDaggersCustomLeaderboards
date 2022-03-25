@@ -73,11 +73,11 @@ public class MemoryService
 			(gameData.DaggersHit ??= new()).Add(br.ReadInt32());
 			(gameData.EnemiesAlive ??= new()).Add(br.ReadInt32());
 			_ = br.ReadInt32(); // Skip level gems.
-			(gameData.HomingDaggers ??= new()).Add(br.ReadInt32());
+			(gameData.HomingStored ??= new()).Add(br.ReadInt32());
 			(gameData.GemsDespawned ??= new()).Add(br.ReadInt32());
 			(gameData.GemsEaten ??= new()).Add(br.ReadInt32());
 			(gameData.GemsTotal ??= new()).Add(br.ReadInt32());
-			(gameData.HomingDaggersEaten ??= new()).Add(br.ReadInt32());
+			(gameData.HomingEaten ??= new()).Add(br.ReadInt32());
 
 			(gameData.Skull1sAlive ??= new()).Add(br.ReadInt16());
 			(gameData.Skull2sAlive ??= new()).Add(br.ReadInt16());
