@@ -4985,8 +4985,9 @@ namespace DevilDaggersCustomLeaderboards.Clients
         [Newtonsoft.Json.JsonProperty("gameData", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public AddGameData GameData { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("replayData", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(31457280)]
+        [Newtonsoft.Json.JsonProperty("replayData", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(31457280, MinimumLength = 1)]
         public byte[] ReplayData { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -5291,6 +5292,9 @@ namespace DevilDaggersCustomLeaderboards.Clients
 
         [Newtonsoft.Json.JsonProperty("playersPerCategory", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.Dictionary<CustomLeaderboardCategory, int> PlayersPerCategory { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("totalPlayers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int TotalPlayers { get; set; } = default!;
 
     }
 
