@@ -40,8 +40,8 @@ public static class GuiUtils
 			WriteVariable("Gems Total", mainBlock.GemsTotal, mainBlockPrevious.GemsTotal, CustomColor.Red);
 			Cmd.WriteLine("Gems In Arena", Math.Max(0, mainBlock.GemsTotal - mainBlock.GemsCollected - mainBlock.GemsDespawned - mainBlock.GemsEaten));
 			Cmd.WriteLine();
-			WriteVariable("Homing Stored", mainBlock.HomingDaggers, mainBlockPrevious.HomingDaggers, CustomColor.Magenta);
-			WriteVariable("Homing Eaten", mainBlock.HomingDaggersEaten, mainBlockPrevious.HomingDaggersEaten, CustomColor.Ghostpede);
+			WriteVariable("Homing Stored", mainBlock.HomingStored, mainBlockPrevious.HomingStored, CustomColor.Magenta);
+			WriteVariable("Homing Eaten", mainBlock.HomingEaten, mainBlockPrevious.HomingEaten, CustomColor.Ghostpede);
 			Cmd.WriteLine();
 			WriteEnemyHeaders("Enemies", "Alive", "Killed");
 			WriteEnemyVariables("Total", mainBlock.EnemiesAlive, mainBlock.EnemiesKilled, mainBlockPrevious.EnemiesAlive, mainBlockPrevious.EnemiesKilled, ColorUtils.Entangled);
@@ -202,8 +202,8 @@ public static class GuiUtils
 		WriteIntField("Daggers Fired", mainBlock.DaggersFired, mainBlock.DaggersFired - entry.DaggersFired);
 		WriteIntField("Daggers Hit", mainBlock.DaggersHit, mainBlock.DaggersHit - entry.DaggersHit);
 		WritePercentageField("Accuracy", accuracy, accuracy - accuracyOld);
-		WriteIntField("Homing Stored", mainBlock.HomingDaggers, mainBlock.HomingDaggers - entry.HomingDaggers);
-		WriteIntField("Homing Eaten", mainBlock.HomingDaggersEaten, mainBlock.HomingDaggersEaten - entry.HomingDaggersEaten);
+		WriteIntField("Homing Stored", mainBlock.HomingStored, mainBlock.HomingStored - entry.HomingDaggers);
+		WriteIntField("Homing Eaten", mainBlock.HomingEaten, mainBlock.HomingEaten - entry.HomingDaggersEaten);
 		WriteTimeField("Level 2", mainBlock.LevelUpTime2, mainBlock.LevelUpTime2 - entry.LevelUpTime2InSeconds);
 		WriteTimeField("Level 3", mainBlock.LevelUpTime3, mainBlock.LevelUpTime3 - entry.LevelUpTime3InSeconds);
 		WriteTimeField("Level 4", mainBlock.LevelUpTime4, mainBlock.LevelUpTime4 - entry.LevelUpTime4InSeconds);

@@ -19,11 +19,11 @@ public readonly record struct MainBlock
 	public readonly int DaggersHit;
 	public readonly int EnemiesAlive;
 	public readonly int LevelGems;
-	public readonly int HomingDaggers;
+	public readonly int HomingStored;
 	public readonly int GemsDespawned;
 	public readonly int GemsEaten;
 	public readonly int GemsTotal;
-	public readonly int HomingDaggersEaten;
+	public readonly int HomingEaten;
 
 	public readonly short Skull1sAlive;
 	public readonly short Skull2sAlive;
@@ -119,11 +119,11 @@ public readonly record struct MainBlock
 		DaggersHit = br.ReadInt32();
 		EnemiesAlive = br.ReadInt32();
 		LevelGems = br.ReadInt32();
-		HomingDaggers = br.ReadInt32();
+		HomingStored = br.ReadInt32();
 		GemsDespawned = br.ReadInt32();
 		GemsEaten = br.ReadInt32();
 		GemsTotal = br.ReadInt32();
-		HomingDaggersEaten = br.ReadInt32();
+		HomingEaten = br.ReadInt32();
 
 		Skull1sAlive = br.ReadInt16();
 		Skull2sAlive = br.ReadInt16();
