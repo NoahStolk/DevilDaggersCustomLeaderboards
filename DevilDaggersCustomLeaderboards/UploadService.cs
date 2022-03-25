@@ -31,27 +31,35 @@ public class UploadService
 		Cmd.WriteLine("Uploading...");
 		Cmd.WriteLine();
 
+		byte[] timeAsBytes = BitConverter.GetBytes(_memoryService.MainBlock.Time);
+		byte[] levelUpTime2AsBytes = BitConverter.GetBytes(_memoryService.MainBlock.LevelUpTime2);
+		byte[] levelUpTime3AsBytes = BitConverter.GetBytes(_memoryService.MainBlock.LevelUpTime3);
+		byte[] levelUpTime4AsBytes = BitConverter.GetBytes(_memoryService.MainBlock.LevelUpTime4);
+
 		string toEncrypt = string.Join(
 			";",
 			_memoryService.MainBlock.PlayerId,
-			ToTimeInt(_memoryService.MainBlock.Time),
+			HashUtils.ByteArrayToHexString(timeAsBytes),
 			_memoryService.MainBlock.GemsCollected,
 			_memoryService.MainBlock.GemsDespawned,
 			_memoryService.MainBlock.GemsEaten,
 			_memoryService.MainBlock.GemsTotal,
+			_memoryService.MainBlock.EnemiesAlive,
 			_memoryService.MainBlock.EnemiesKilled,
 			_memoryService.MainBlock.DeathType,
 			_memoryService.MainBlock.DaggersHit,
 			_memoryService.MainBlock.DaggersFired,
-			_memoryService.MainBlock.EnemiesAlive,
 			_memoryService.MainBlock.HomingStored,
 			_memoryService.MainBlock.HomingEaten,
 			_memoryService.MainBlock.IsReplay ? 1 : 0,
+			_memoryService.MainBlock.Status,
 			HashUtils.ByteArrayToHexString(_memoryService.MainBlock.SurvivalHashMd5),
-			string.Join(",", new[] { ToTimeInt(_memoryService.MainBlock.LevelUpTime2), ToTimeInt(_memoryService.MainBlock.LevelUpTime3), ToTimeInt(_memoryService.MainBlock.LevelUpTime4) }));
-
-		static int ToTimeInt(float timeFloat) => (int)(timeFloat * 10000);
-
+			HashUtils.ByteArrayToHexString(levelUpTime2AsBytes),
+			HashUtils.ByteArrayToHexString(levelUpTime3AsBytes),
+			HashUtils.ByteArrayToHexString(levelUpTime4AsBytes),
+			_memoryService.MainBlock.GameMode,
+			_memoryService.MainBlock.TimeAttackOrRaceFinished,
+			_memoryService.MainBlock.ProhibitedMods);
 		string validation = Secrets.EncryptionWrapper.EncryptAndEncode(toEncrypt);
 
 		AddUploadRequest uploadRequest = new()
@@ -71,12 +79,17 @@ public class UploadService
 			LevelUpTime2InSeconds = _memoryService.MainBlock.LevelUpTime2,
 			LevelUpTime3InSeconds = _memoryService.MainBlock.LevelUpTime3,
 			LevelUpTime4InSeconds = _memoryService.MainBlock.LevelUpTime4,
+			LevelUpTime2AsBytes = levelUpTime2AsBytes,
+			LevelUpTime3AsBytes = levelUpTime3AsBytes,
+			LevelUpTime4AsBytes = levelUpTime4AsBytes,
 			PlayerId = _memoryService.MainBlock.PlayerId,
 			SurvivalHashMd5 = _memoryService.MainBlock.SurvivalHashMd5,
 			TimeInSeconds = _memoryService.MainBlock.Time,
+			TimeAsBytes = timeAsBytes,
 			PlayerName = _memoryService.MainBlock.PlayerName,
 			IsReplay = _memoryService.MainBlock.IsReplay,
 			Validation = HttpUtility.HtmlEncode(validation),
+			ValidationVersion = 2,
 			GameData = _memoryService.GetGameDataForUpload(),
 #if DEBUG
 			BuildMode = "Debug",
