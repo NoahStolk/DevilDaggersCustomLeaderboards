@@ -10,7 +10,7 @@ namespace DevilDaggersCustomLeaderboards.Network;
 public class NetworkService
 {
 #if TESTING
-	public static readonly string BaseUrl = "https://localhost:5001";
+	public static readonly string BaseUrl = "https://localhost:44318";
 #else
 	public static readonly string BaseUrl = "https://devildaggers.info";
 #endif
