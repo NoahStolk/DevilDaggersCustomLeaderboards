@@ -107,6 +107,7 @@ public class RecorderService
 			return;
 		}
 
+		// TODO: Validate header here. If it's not valid, wait longer.
 		if (_memoryService.MainBlock.ReplayLength <= 0)
 		{
 			Console.Clear();
