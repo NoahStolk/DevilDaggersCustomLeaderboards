@@ -174,7 +174,7 @@ public class RecorderService
 
 	private string? ValidateRunLocally()
 	{
-		const float minimalTime = 1f;
+		const float minimalTime = 0.01f;
 
 		if (_memoryService.MainBlock.PlayerId <= 0)
 		{
