@@ -27,6 +27,9 @@ public static class Program
 			.AddSingleton<UploadService>()
 			.BuildServiceProvider();
 
+		NetworkService networkService = serviceProvider.GetRequiredService<NetworkService>();
+		await networkService.CheckForUpdates();
+
 		RecorderService recorderService = serviceProvider.GetRequiredService<RecorderService>();
 		await recorderService.Record();
 	}
