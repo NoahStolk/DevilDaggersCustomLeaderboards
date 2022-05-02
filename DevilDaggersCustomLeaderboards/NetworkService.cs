@@ -80,6 +80,7 @@ public class NetworkService
 		{
 			try
 			{
+				// TODO: Use ToolPublishMethod.Default for Windows 7.
 				return await _apiClient.Tools_GetLatestToolDistributionAsync(Constants.ApplicationName, ToolPublishMethod.SelfContained, ToolBuildType.WindowsConsole);
 			}
 			catch (Exception ex)
