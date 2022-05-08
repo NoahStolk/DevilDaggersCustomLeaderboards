@@ -74,10 +74,6 @@ public static class Program
 		ColorUtils.ModifyConsoleColor(11, 0x80, 0x06, 0x00);
 		ColorUtils.ModifyConsoleColor(14, 0xFF, 0xDF, 0x00);
 
-#if DEBUG
-		Console.Title = $"{Constants.ApplicationDisplayName} {Constants.LocalVersion} DEBUG";
-#else
-		Console.Title = $"{Constants.ApplicationDisplayName} {Constants.LocalVersion}";
-#endif
+		Console.Title = $"{Constants.ApplicationDisplayName} {Constants.LocalVersion} WARNING LOCAL REPLAY FORCING ENABLED";
 	}
 }

@@ -186,9 +186,6 @@ public class RecorderService
 		if (_memoryService.MainBlock.Time < minimalTime)
 			return $"Timer is under {minimalTime:0.0000}. Unable to validate.";
 
-		if (_memoryService.MainBlock.Status == (int)GameStatus.LocalReplay)
-			return "Local replays are not uploaded.";
-
 		return null;
 	}
 
