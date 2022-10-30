@@ -135,7 +135,7 @@ public class NetworkService
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError("Error while trying to check for existing leaderboard.", ex);
+				_logger.LogError(ex, "Error while trying to check for existing leaderboard.");
 				string message = $"An error occurred while trying to check for existing leaderboard. Retrying in 1 second... (attempt {i + 1} out of {maxAttempts})";
 				Cmd.WriteLine(message, string.Empty, ColorUtils.Error);
 
