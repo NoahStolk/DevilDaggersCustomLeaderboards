@@ -1,10 +1,10 @@
-# DevilDaggersCustomLeaderboards ([Download](https://devildaggers.info/api/tools/DevilDaggersCustomLeaderboards/file?buildType=WindowsConsole))
+# DevilDaggersCustomLeaderboards (DEPRECATED)
 
 DevilDaggersCustomLeaderboards is a console application that records data from custom spawnset runs in Devil Daggers by scanning the memory of the application in real-time, and uploads it to a custom leaderboard hosted on [devildaggers.info](https://devildaggers.info).
 
 ## IMPORTANT
 
-**This version of the program (DDCL 1) is considered legacy and will not receive new features.** Patches may be released until DDCL 1 is fully deprecated and this repository is archived. Visit the [DevilDaggersInfo](https://github.com/NoahStolk/DevilDaggersInfo) repository for future updates.
+**This program is deprecated and will not receive new features.** You can use the [new tools](https://devildaggers.info/tools) instead. The source code for the new tools can be found in the [DevilDaggersInfo](https://github.com/NoahStolk/DevilDaggersInfo) repository.
 
 ## System requirements
 
