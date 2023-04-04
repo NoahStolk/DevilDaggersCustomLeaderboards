@@ -6,17 +6,6 @@ DevilDaggersCustomLeaderboards is a console application that records data from c
 
 **This program is deprecated and will not receive new features.** You can use the [new tools](https://devildaggers.info/tools) instead. The source code for the new tools can be found in the [DevilDaggersInfo](https://github.com/NoahStolk/DevilDaggersInfo) repository.
 
-## System requirements
-
-- Microsoft Windows (64-bit)
-- The Steam version Devil Daggers
-
-## Installation
-
-1. Download the zip file.
-2. Unzip its contents.
-3. Run DevilDaggersCustomLeaderboards.exe inside the folder.
-
 ## Links
 
 - [DevilDaggers.info website](https://devildaggers.info)
