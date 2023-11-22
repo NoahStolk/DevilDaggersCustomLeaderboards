@@ -4,7 +4,7 @@ DevilDaggersCustomLeaderboards is a console application that records data from c
 
 ## IMPORTANT
 
-**This program is deprecated and will not receive new features.** You can use the [new tools](https://devildaggers.info/tools) instead. The source code for the new tools can be found in the [DevilDaggersInfo](https://github.com/NoahStolk/DevilDaggersInfo) repository.
+**This program is deprecated and will not receive new features.** You can use the [new tools](https://devildaggers.info/tools) instead. The source code for the new tools can be found in the [ddinfo-tools](https://github.com/NoahStolk/ddinfo-tools) repository.
 
 ## Links
 
